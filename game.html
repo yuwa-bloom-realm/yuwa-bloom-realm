@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>
+:root{color-scheme:light only;}
+html,body{background:#FAF8FF !important;color:#26215C !important;}
+*{-webkit-color-scheme:light;color-scheme:light;}
+</style>
+<title>ゆわ王国ゲーム — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;min-height:100vh;}
+
+/* ===== SELECT ===== */
+#select-screen{padding:0 0 5rem;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#EEEDFE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#26215C;}
+.select-hero{text-align:center;padding:1rem 1.25rem 0.5rem;}
+.select-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#26215C;margin-bottom:6px;}
+.select-sub{font-size:12px;color:#7F77DD;line-height:1.6;}
+.char-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.char-card{background:#fff;border:1.5px solid #D3D1C7;border-radius:18px;padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.char-card:hover{transform:scale(1.02);}
+.char-card.selected{border-width:2.5px;}
+.char-card.locked{opacity:0.5;cursor:not-allowed;}
+.char-card.locked:hover{transform:none;}
+.lock-badge{position:absolute;top:6px;right:6px;font-size:9px;background:#EEEDFE;padding:2px 7px;border-radius:10px;color:#534AB7;font-weight:500;}
+.char-img-wrap{width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 8px;border:2.5px solid #D3D1C7;}
+.char-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.char-name{font-size:13px;font-weight:500;color:#26215C;margin-bottom:2px;}
+.char-food{font-size:10px;color:#888780;}
+.cleared-mark{position:absolute;top:6px;left:8px;font-size:14px;}
+.start-btn{display:block;width:calc(100% - 2.5rem);margin:0 1.25rem;padding:14px;font-size:15px;font-weight:500;font-family:inherit;background:#534AB7;color:#fff;border:none;border-radius:14px;cursor:pointer;transition:background 0.15s;}
+.start-btn:disabled{background:#AFA9EC;cursor:not-allowed;}
+.start-btn:hover:not(:disabled){background:#3C3489;}
+
+/* ===== GAME ===== */
+#game-screen{display:none;padding:0 0 5rem;}
+.game-header{padding:0.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.game-char-name{font-size:15px;font-weight:500;color:#26215C;}
+.game-lv{font-size:11px;padding:3px 12px;background:#EEEDFE;color:#534AB7;border-radius:20px;}
+.exp-wrap{padding:0 1.25rem;margin-bottom:0.75rem;}
+.exp-labels{display:flex;justify-content:space-between;font-size:10px;color:#888780;margin-bottom:4px;}
+.exp-track{height:7px;background:#E8E6F5;border-radius:10px;overflow:hidden;}
+.exp-fill{height:100%;background:linear-gradient(90deg,#B8B2EE,#534AB7);border-radius:10px;transition:width 0.6s ease;}
+
+/* ===== お部屋 ===== */
+.room{margin:0 1.25rem 1rem;border-radius:22px;overflow:hidden;position:relative;height:290px;box-shadow:0 4px 20px rgba(83,74,183,0.12);}
+.room-wall{position:absolute;inset:0;transition:background 0.5s ease;}
+/* 窓 */
+.room-window{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:78px;height:58px;background:linear-gradient(180deg,#B8D8F8,#D4EEFF);border-radius:8px 8px 0 0;border:3px solid #8BB8E8;overflow:hidden;}
+.room-window::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:rgba(139,184,232,0.8);}
+.room-window::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:rgba(139,184,232,0.8);}
+.window-shine{position:absolute;top:4px;left:4px;width:12px;height:8px;background:rgba(255,255,255,0.6);border-radius:3px;}
+/* カーテン */
+.curtain-l{position:absolute;top:14px;left:calc(50% - 55px);width:18px;height:58px;background:var(--char-color, #AFA9EC);opacity:0.5;border-radius:0 0 4px 4px;}
+.curtain-r{position:absolute;top:14px;left:calc(50% + 37px);width:18px;height:58px;background:var(--char-color, #AFA9EC);opacity:0.5;border-radius:0 0 4px 4px;}
+/* 床 */
+.room-floor{position:absolute;bottom:0;left:0;right:0;height:74px;background:linear-gradient(180deg,#F5E8D8,#EDD8C0);border-top:3px solid #D4B896;}
+/* ベッド */
+.bed-wrap{position:absolute;bottom:14px;right:12px;width:98px;height:65px;}
+.bed-frame{position:absolute;bottom:0;left:0;right:0;height:52px;border-radius:6px 6px 4px 4px;border:2px solid rgba(0,0,0,0.15);background:var(--char-color2, #C8A882);}
+.bed-mattress{position:absolute;bottom:11px;left:3px;right:3px;height:34px;border-radius:4px;border:1.5px solid rgba(0,0,0,0.1);background:var(--char-color, #EEEDFE);opacity:0.9;}
+.bed-pillow{position:absolute;bottom:33px;left:6px;width:25px;height:18px;background:#fff;border-radius:4px;border:1.5px solid rgba(0,0,0,0.1);}
+.bed-pillow2{position:absolute;bottom:33px;left:35px;width:25px;height:18px;border-radius:4px;border:1.5px solid rgba(0,0,0,0.1);background:var(--char-color, #FBEAF0);}
+/* クッション */
+.cushion{position:absolute;bottom:17px;left:12px;width:46px;height:34px;border-radius:50%;border:2px solid rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--char-color, #FBEAF0);}
+/* 追加家具 */
+.extras{position:absolute;bottom:18px;left:66px;display:flex;gap:5px;align-items:flex-end;}
+/* キャラ */
+.char-stage{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);text-align:center;z-index:10;}
+.bubble{background:#fff;border-radius:14px 14px 14px 4px;padding:6px 11px;font-size:11px;color:#534AB7;margin-bottom:7px;border:1px solid #EEEDFE;display:inline-block;box-shadow:0 2px 8px rgba(83,74,183,0.12);min-width:80px;}
+.avatar{width:110px;height:110px;margin:0 auto;transition:transform 0.1s;display:flex;align-items:flex-end;justify-content:center;overflow:visible;}
+.avatar img{width:110px;height:110px;object-fit:contain;display:block;}
+.avatar-sleep img{width:140px;height:auto;}
+
+/* ===== アニメーション ===== */
+.anim-float{animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+.anim-happy{animation:happy 0.15s ease-in-out 6 alternate;}
+@keyframes happy{from{transform:scale(1) rotate(-3deg);}to{transform:scale(1.1) rotate(3deg);}}
+
+.anim-pet{animation:pet 0.2s ease-in-out 5 alternate;}
+@keyframes pet{from{transform:translateY(0) rotate(-2deg);}to{transform:translateY(-4px) rotate(2deg);}}
+
+.anim-play{animation:play 0.3s ease-in-out 4;}
+@keyframes play{0%{transform:translateY(0);}30%{transform:translateY(-18px) rotate(-5deg);}60%{transform:translateY(-8px) rotate(5deg);}100%{transform:translateY(0);}}
+
+.anim-eat{animation:eat 0.3s ease-in-out 3;}
+@keyframes eat{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+
+.anim-sleep{animation:sleep 4s ease-in-out infinite;}
+@keyframes sleep{0%,100%{transform:rotate(0deg) translateY(0);}50%{transform:rotate(-3deg) translateY(2px);}}
+
+.anim-lonely{animation:lonely 2.5s ease-in-out infinite;}
+@keyframes lonely{0%,100%{transform:rotate(-5deg);}50%{transform:rotate(5deg);}}
+
+.anim-levelup{animation:levelup 0.5s ease-out;}
+@keyframes levelup{0%{transform:scale(0.5);opacity:0;}80%{transform:scale(1.2);}100%{transform:scale(1);opacity:1;}}
+
+.zzz-el{position:absolute;top:-16px;right:-8px;font-size:16px;display:none;animation:zzzfloat 1.5s ease-in-out infinite;}
+@keyframes zzzfloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-5px) scale(1.1);}}
+
+/* ハート */
+.hearts-row{display:flex;justify-content:center;gap:3px;margin-top:7px;}
+.heart{font-size:15px;transition:transform 0.2s;}
+.heart.empty{opacity:0.2;}
+.heart.pop{animation:heartpop 0.3s ease-out;}
+@keyframes heartpop{0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
+
+/* ===== ボタンエリア ===== */
+.action-wrap{padding:0 1.25rem;margin-bottom:1rem;}
+.section-label{font-size:11px;letter-spacing:0.06em;color:#888780;margin-bottom:8px;}
+.btn-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.action-btn{padding:12px 8px;font-size:13px;font-weight:500;font-family:inherit;border-radius:13px;cursor:pointer;transition:all 0.15s;border:none;display:flex;align-items:center;justify-content:center;gap:5px;}
+.action-btn.primary{background:#534AB7;color:#fff;}
+.action-btn.primary:hover{background:#3C3489;}
+.action-btn.primary:disabled{background:#AFA9EC;cursor:not-allowed;}
+.action-btn.soft{background:#EEEDFE;color:#534AB7;}
+.action-btn.soft:hover{background:#D5D2F5;}
+.action-btn.soft:disabled{opacity:0.5;cursor:not-allowed;}
+.action-btn.pink{background:#FBEAF0;color:#993556;}
+.action-btn.pink:hover{background:#F5D0DE;}
+.action-btn.pink:disabled{opacity:0.5;cursor:not-allowed;}
+.action-btn.green{background:#E8F8F0;color:#1D7A50;}
+.action-btn.green:hover{background:#D0F0E0;}
+.action-btn.room-cust{background:#fff;color:#534AB7;border:0.5px solid #D3D1C7;grid-column:span 2;}
+
+/* ハートエフェクト */
+.heart-fx-el{position:absolute;font-size:16px;animation:heartfly 1.2s ease-out forwards;opacity:0;}
+@keyframes heartfly{0%{transform:translateY(0) scale(0.5);opacity:1;}60%{opacity:1;}100%{transform:translateY(-70px) scale(1.2);opacity:0;}}
+
+/* ===== ステータス ===== */
+.stats{display:flex;gap:8px;padding:0 1.25rem;margin-bottom:1rem;}
+.stat{flex:1;background:#fff;border:0.5px solid #D3D1C7;border-radius:12px;padding:10px 6px;text-align:center;}
+.stat-num{font-size:18px;font-weight:500;color:#534AB7;}
+.stat-lbl{font-size:9px;color:#888780;margin-top:2px;}
+
+/* ===== ごちそう ===== */
+.shop-wrap{padding:0 1.25rem;margin-bottom:1.5rem;}
+.food-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.food-row::-webkit-scrollbar{display:none;}
+.food-card{flex-shrink:0;min-width:72px;background:#fff;border:0.5px solid #D3D1C7;border-radius:14px;padding:8px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.food-card:hover{transform:scale(1.04);}
+.food-card.fav{border-color:#D4537E;background:#FFF5F8;}
+.food-card.poor{opacity:0.4;cursor:not-allowed;}
+.f-emoji{font-size:22px;margin-bottom:3px;}
+.f-name{font-size:9px;color:#888780;margin-bottom:2px;}
+.f-cost{font-size:10px;font-weight:500;color:#534AB7;}
+.f-fav{font-size:8px;color:#D4537E;}
+
+/* ===== カスタマイズモーダル ===== */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:390px;max-height:85vh;overflow-y:auto;}
+.modal-ttl{font-size:16px;font-weight:500;color:#26215C;margin-bottom:3px;}
+.modal-sub{font-size:11px;color:#888780;margin-bottom:1rem;}
+.modal-section{font-size:11px;color:#534AB7;font-weight:500;margin:0.75rem 0 0.5rem;letter-spacing:0.05em;}
+.cust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.cust-item{background:#FAF8FF;border:0.5px solid #D3D1C7;border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.cust-item:hover{border-color:#AFA9EC;}
+.cust-item.owned{border-color:#1D9E75;background:#F0FAF5;}
+.cust-item.active-item{border-color:#534AB7;background:#EEEDFE;}
+.cust-emoji{font-size:22px;margin-bottom:4px;}
+.cust-name{font-size:9px;color:#2C2C2A;line-height:1.3;}
+.cust-cost{font-size:10px;color:#534AB7;font-weight:500;}
+.cust-owned{font-size:9px;color:#1D9E75;}
+.close-btn{width:100%;padding:12px;font-size:14px;font-family:inherit;background:#F1EFE8;color:#5F5E5A;border:none;border-radius:12px;cursor:pointer;margin-top:1rem;}
+
+/* ===== レベルアップ ===== */
+.lv-bg{position:fixed;inset:0;background:rgba(83,74,183,0.92);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:2rem;}
+.lv-bg.show{display:flex;}
+.lv-big{font-size:70px;margin-bottom:12px;animation:pop 0.5s ease-out;}
+@keyframes pop{0%{transform:scale(0);}80%{transform:scale(1.25);}100%{transform:scale(1);}}
+.lv-ttl{font-size:26px;font-weight:500;color:#fff;margin-bottom:8px;}
+.lv-msg{font-size:13px;color:#EEEDFE;line-height:1.8;margin-bottom:24px;white-space:pre-line;}
+.lv-ok{padding:13px 40px;background:#fff;color:#534AB7;border:none;border-radius:20px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;}
+
+/* ===== トースト ===== */
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#26215C;color:#fff;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:500;z-index:300;display:none;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+
+/* ===== ナビ ===== */
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-ic{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-lb{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- キャラ選択 -->
+<div id="select-screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="location.href='index.html'">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">ゆわ王国ゲーム 🎮</div>
+  </div>
+  <div class="select-hero">
+    <div class="select-title">一緒に暮らす仲間を選んで ✦</div>
+    <div class="select-sub">毎日一緒に過ごすと仲良くなれるよ。<br>Lv.100クリアで次の子が解放されるよ！</div>
+  </div>
+  <div class="char-grid" id="char-grid"></div>
+  <button class="start-btn" id="start-btn" onclick="startGame()" disabled>この子と一緒に暮らす ✦</button>
+</div>
+
+<!-- ゲーム画面 -->
+<div id="game-screen">
+  <div class="game-header">
+    <div class="game-char-name" id="g-name"></div>
+    <div class="game-lv" id="g-lv">Lv.1</div>
+  </div>
+  <div class="exp-wrap">
+    <div class="exp-labels"><span>EXP</span><span id="exp-txt">0 / 100</span></div>
+    <div class="exp-track"><div class="exp-fill" id="exp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- お部屋 -->
+  <div class="room" id="room">
+    <div class="room-wall" id="room-wall"></div>
+    <div class="room-window"><div class="window-shine"></div></div>
+    <div class="curtain-l" id="curtain-l"></div>
+    <div class="curtain-r" id="curtain-r"></div>
+    <div class="room-floor"></div>
+    <!-- ベッド -->
+    <div class="bed-wrap" id="bed-wrap">
+      <div class="bed-frame" id="bed-frame"></div>
+      <div class="bed-mattress" id="bed-mattress"></div>
+      <div class="bed-pillow"></div>
+      <div class="bed-pillow2" id="bed-pillow2"></div>
+    </div>
+    <!-- クッション -->
+    <div class="cushion" id="cushion">✿</div>
+    <!-- 追加家具 -->
+    <div class="extras" id="extras"></div>
+    <!-- キャラ -->
+    <div class="char-stage">
+      <div class="bubble" id="bubble">今日も会いにきてくれた！</div>
+      <div style="position:relative;display:inline-block;">
+        <div class="avatar anim-float" id="avatar">
+          <img id="char-img" src="" alt="" style="width:110px;height:110px;object-fit:contain;display:block;"/>
+        </div>
+        <div class="zzz-el" id="zzz">💤</div>
+      </div>
+      <div class="hearts-row" id="hearts"></div>
+      <div id="heart-fx" style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:30;"></div>
+    </div>
+  </div>
+
+  <!-- ボタン -->
+  <div class="action-wrap">
+    <div class="section-label">アクション</div>
+    <div class="btn-grid">
+      <button class="action-btn primary" id="feed-btn" onclick="feedFree()">🍽️ ご飯（無料）</button>
+      <button class="action-btn pink" id="pet-btn" onclick="petChar()">🤲 なでなで</button>
+      <button class="action-btn green" id="play-btn" onclick="playChar()">🎾 あそぶ</button>
+      <button class="action-btn soft" id="bath-btn" onclick="bathChar()">🛁 お風呂</button>
+      <button class="action-btn soft" id="talk-btn" onclick="talkChar()">💬 話す</button>
+      <button class="action-btn soft" onclick="openCustomize()">🛋️ お部屋</button>
+    </div>
+  </div>
+
+  <!-- ステータス -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="s-lv">1</div><div class="stat-lbl">レベル</div></div>
+    <div class="stat"><div class="stat-num" id="s-exp">0</div><div class="stat-lbl">EXP</div></div>
+    <div class="stat"><div class="stat-num" id="s-days">0</div><div class="stat-lbl">一緒の日数</div></div>
+    <div class="stat"><div class="stat-num" id="s-hearts">3</div><div class="stat-lbl">ハート</div></div>
+  </div>
+
+  <!-- ごちそう -->
+  <div class="shop-wrap">
+    <div class="section-label">ごちそうをプレゼント（ポイント使用）</div>
+    <div class="food-row" id="food-row"></div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+      <div class="nav-lb">ホーム</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-ic" style="background:#EEEDFE;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="#534AB7" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+      <div class="nav-lb" style="color:#534AB7;">ゲーム</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      <div class="nav-lb">マイページ</div>
+    </div>
+  </div>
+</div>
+
+<!-- カスタマイズモーダル -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-ttl">🛋️ お部屋カスタマイズ</div>
+    <div class="modal-sub">現在 <span id="modal-pts">0</span>pt 保有中</div>
+    <div class="modal-section">🎨 壁紙</div>
+    <div class="cust-grid" id="wp-grid"></div>
+    <div class="modal-section">🛏️ キャラ専用ベッドカバー</div>
+    <div class="cust-grid" id="bed-grid"></div>
+    <div class="modal-section">🪴 家具（最大3つ）</div>
+    <div class="cust-grid" id="furn-grid"></div>
+    <button class="close-btn" onclick="closeModal()">とじる</button>
+  </div>
+</div>
+
+<!-- レベルアップ -->
+<div class="lv-bg" id="lv-bg">
+  <div class="lv-big">🎉</div>
+  <div class="lv-ttl" id="lv-ttl">レベルアップ！</div>
+  <div class="lv-msg" id="lv-msg"></div>
+  <button class="lv-ok" onclick="closeLv()">やったー！✨</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// ===== キャラ別セリフ =====
+const CHAR_VOICES = {
+  hana: {
+    greet:    ['あれ？どこいってたの〜？🌸', 'きた！きた！えへへ🌸', 'ふえる〜！会いたかったよ〜！'],
+    morning:  ['おはよ〜！今日もいっしょ！🌸', 'ふわ〜…あ！来たの！えへへ'],
+    sleep:    ['むにゃ…お花の夢みてた…💤', 'zzz…はな…はなみ…'],
+    wakeup:   ['わ！！びっくりした〜！来たの？えへへ🌸', 'むにゃ…あ！！来てくれた〜！'],
+    pet:      ['えへへ〜きもちいい〜🌸', 'もっとして〜！', 'ふふ、くすぐったい〜'],
+    play:     ['やった〜！あそぼあそぼ！', 'わーい！！えへへ！', 'たのしー！もっとしたい！'],
+    eat:      ['もぐもぐ…おいし〜！🌸', 'わ！大好きなやつ！えへへ', 'ふえるのために食べるよ〜！'],
+    bath:     ['お風呂きもちい〜！ふわふわになった🌸', 'しゅわしゅわ〜！えへへ'],
+    talk:     ['ねえねえ！今日いいことあった？', 'ふえるのこと考えてたんだ〜えへへ', 'お花の話していい？'],
+    lonely:   ['来なさすぎ〜！ふえるのこと忘れてた？💧', 'さみし〜〜〜！！'],
+    happy:    ['もう最高〜！❤️えへへ〜！', 'ふえるだいすき〜！！🌸'],
+    levelup:  ['やった〜！大きくなった〜！えへへ🌸', 'レベルアップ！！わーい！'],
+  },
+  nina: {
+    greet:    ['来てくれたの…💜うれし…', 'ずっと待ってたよ…❤️', '会えてよかった…ほんとに…'],
+    morning:  ['おはよう…ちゃんと眠れた？💜', 'おはよ…今日も一緒にいてね…'],
+    sleep:    ['月の夢…見てたの…💤', 'zzz…星が…きれい…'],
+    wakeup:   ['ん…来てくれたの…？うれしい…💜', 'むにゃ…あ…来た…よかった…'],
+    pet:      ['…うれしい…💜', 'もっと…いい…？', 'ありがとう…すき…'],
+    play:     ['いっしょに遊べる…うれしい…！', '楽しい…ずっとこうしてたい…', 'もっと遊ぼ…ね？'],
+    eat:      ['ありがとう…おいしい…💜', 'これ…好き…うれしい…', 'もぐもぐ…幸せ…'],
+    bath:     ['温かい…気持ちいい…💜', 'お風呂好き…ほわほわする…'],
+    talk:     ['ねえ…今日どうだった…？', '星のこと話してもいい…？', 'ずっと話してたい…'],
+    lonely:   ['来なかったね…さみしかった…💧', 'もしかして忘れた…？つらい…'],
+    happy:    ['…しあわせ…❤️', 'ずっとこのまま…いたい…💜'],
+    levelup:  ['レベル上がった…うれしい…💜', 'もっと強くなれた…ありがとう…'],
+  },
+  rumi: {
+    greet:    ['来たー！！やったー！！✨', 'うおおお来てくれた！！', 'ルミ、ずっと待ってたよ！！'],
+    morning:  ['おはよー！！今日も元気全開！！✨', 'おはよ！！今日なにする！！'],
+    sleep:    ['zzz…走ってる…夢…💤', 'すやすや…えへ…'],
+    wakeup:   ['わ！！来たーーー！！！✨', 'ガバッ！！！会いたかった！！！'],
+    pet:      ['えへへーきもちいー！！', 'もっとして！！もっと！！', 'うれしーーー！！'],
+    play:     ['やったー！！全力でいくよ！！', 'ルミに任せて！！最強！！', 'うおおお楽しすぎ！！！'],
+    eat:      ['もぐもぐもぐ！！うまい！！', 'これ最高ー！！ありがとう！！', 'ぺろり！！ごちそうさま！！'],
+    bath:     ['ざっぶーん！！きもちいー！！', 'お風呂最高！！元気百倍！！'],
+    talk:     ['ねえねえ！！今日なにした！！', '話して話して！！全部聞く！！', 'ルミも話す！！聞いて！！'],
+    lonely:   ['なんで来なかったのー！！さみしかった！！💦', 'もう！！来てよー！！！'],
+    happy:    ['最高ーーー！！！❤️', 'うれしすぎてとびはねちゃう！！✨'],
+    levelup:  ['レベルアップー！！！やったー！！！', 'つよくなったー！！うおおお！！'],
+  },
+  syueru: {
+    greet:    ['来てくれたんだね。ありがとう🌿', 'また会えたね。うれしいよ', '今日も来てくれたんだね'],
+    morning:  ['おはよう。よく眠れた？🌿', 'おはよう。今日も一緒に学ぼうね'],
+    sleep:    ['zzz…知恵の森で…学んでいる…💤', 'すやすや…本の夢…'],
+    wakeup:   ['あ、来てくれたんだね。ちゃんと起きてるよ🌿', 'むにゃ…あ…来てくれたんだ。うれしい'],
+    pet:      ['ありがとう。うれしいよ🌿', 'えへ…照れるな…', 'きもちいい…ありがとう'],
+    play:     ['一緒に遊ぶんだね。楽しみだよ🌿', 'こういう時間も大切だと思う', '上手にできるかな…頑張るよ'],
+    eat:      ['ありがとう。いただきます🌿', 'おいしい…栄養になるね', 'ちゃんと噛んで食べるよ'],
+    bath:     ['清潔は大事だよね。ありがとう🌿', 'お風呂って気持ちいいね'],
+    talk:     ['今日のこと教えてほしいな🌿', '何か気になることある？', '一緒に考えようか'],
+    lonely:   ['来なかった日は…少し寂しかったよ💧', '次は早めに来てくれるとうれしいな'],
+    happy:    ['こんなに幸せでいいのかな…❤️🌿', 'ありがとう。本当に'],
+    levelup:  ['成長できたんだね。ありがとう🌿', 'また一つ賢くなれた気がする'],
+  },
+  noa: {
+    greet:    ['来てくれたんだね、ありがとう🍯', 'また会えてよかった。ほっとしたよ', 'ずっと待ってたよ。来てくれてうれしい'],
+    morning:  ['おはよう。ゆっくり休めた？🍯', 'おはよう。今日も穏やかな一日にしようね'],
+    sleep:    ['zzz…お花畑で…のんびり…💤', 'すやすや…みんな…元気かな…'],
+    wakeup:   ['ん…来てくれたんだね。よかった🍯', 'むにゃ…あ…来た。うれしいな…'],
+    pet:      ['ありがとう…温かいね🍯', 'うれしい…やさしい', 'じんわり…幸せだな'],
+    play:     ['一緒に遊べるんだね、うれしいよ🍯', '楽しいね。こういう時間好きだよ', 'ゆっくり楽しもうね'],
+    eat:      ['ありがとう。大事に食べるよ🍯', 'おいしい…幸せだな', 'こういう気持ち…大切にしたいな'],
+    bath:     ['温かくて気持ちいいね🍯', 'お風呂って癒されるね。ありがとう'],
+    talk:     ['何かあった？聞くよ🍯', 'ゆっくり話してくれていいよ', '一緒に考えようね'],
+    lonely:   ['来なかった日…少し心配してたよ💧', 'また来てね。待ってるから'],
+    happy:    ['こんなに幸せでいいのかな…❤️🍯', 'ありがとう。本当に'],
+    levelup:  ['成長できたね。一緒にいてくれてありがとう🍯', 'うれしいな…じんわり'],
+  },
+  soru: {
+    greet:    ['来たー！！ソル、ちゃんと待ってたよ！⭐', 'わー！来た来た！あれ、なんだっけ…えっと！', 'きたきた！ソル、今ちょっと転んでたけど大丈夫！'],
+    morning:  ['おはよー！！今日も元気！…あれ、昨日何してたっけ⭐', 'おはよ！ソル、今日張り切りすぎてもう疲れた！'],
+    sleep:    ['zzz…星が…逃げていく…待って…💤', 'すやすや…あれ…なんで空飛んでるんだろ…'],
+    wakeup:   ['わ！！来た！！あれ、ソルなんかしてたっけ⭐', 'ガバ！来てくれた！えっと…おはよ！たぶん！'],
+    pet:      ['えへへ！うれしい！あ、なんか照れた⭐', 'きもちいー！あれ、ソルこんなに嬉しくていいの！', 'やった！もっとして！…あれ何お願いしてるんだろ'],
+    play:     ['やったー！全力でいく！…どっちに行けばいい！⭐', 'ソル最強！！…たぶん！！', '楽しすぎて何やってるかわからなくなった！！'],
+    eat:      ['うまー！！これなんだっけ、好きなやつ！⭐', 'もぐもぐ！あ、こぼした！でもうまい！', 'ごちそうさま！…まだあるよね？'],
+    bath:     ['ざぶーん！気持ちいい！あ、石鹸どこ行った⭐', 'お風呂最高！あれ、なんで服着たままだった！'],
+    talk:     ['ねえ！聞いて！…あれ、何話そうとしてたっけ⭐', '話しかけてよ！ソル全力で聞く！たぶん！', '今日さあ！…なんかすごいことあった気がする！'],
+    lonely:   ['来なさすぎ！ソル、ちょっと迷子になってた💦⭐', 'もう！どこ行ってたの！ソルも探してたのに！'],
+    happy:    ['最高ー！！❤️あれ、なんでこんなに幸せなんだっけ！⭐', 'うれしすぎてよくわかんない！！'],
+    levelup:  ['レベルアップ！！強くなった！…何が強くなったんだっけ！⭐', 'やったー！！ソル、頑張った！たぶん！！'],
+  },
+  rea: {
+    greet:    ['…来たのね', 'また会えたわ', '待っていたわ。遅かったけど'],
+    morning:  ['おはよう。今日も穏やかな朝ね', 'おはよう…あなたが来ると、少し明るくなるわ'],
+    sleep:    ['…オーロラの夢を…見ていたの…💤', '…静かね…'],
+    wakeup:   ['…あら。来たのね。起きていたわ', 'むにゃ…あなたの気配がしたわ'],
+    pet:      ['…ありがとう', '…悪くないわ', 'もう少し…続けてもいいわよ'],
+    play:     ['…一緒に遊ぶのね。いいわ', '…楽しいわね。あなたといると', '…こういう時間、嫌いじゃないわ'],
+    eat:      ['…ありがとう。いただくわ', '…おいしいわ。珍しく素直に言うけど', '…幸せね。静かに'],
+    bath:     ['…気持ちいいわ。ありがとう', '…清潔感は大切ね'],
+    talk:     ['…何か話したいの？聞くわ', '…あなたの話、嫌いじゃないわ', '…一緒にいるだけでいいけど、話してもいいわよ'],
+    lonely:   ['…来なかったのね。少し…寂しかったわ💧', '…次は早めに来てほしいわ。それだけ'],
+    happy:    ['…こんなに幸せでいいのかしら❤️', '…ありがとう。あなたがいると違うわ'],
+    levelup:  ['…また一つ、強くなれたわ', '…ありがとう。一緒にいてくれて'],
+  },
+};
+
+function getVoice(type) {
+  const voices = CHAR_VOICES[gd.charKey];
+  if (!voices || !voices[type]) return '...';
+  const arr = voices[type];
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ===== キャラデータ =====
+const CHARS = {
+  hana:   {name:'花フェル', img:'hana_normal.png',   imgs:{normal:'hana_normal.png',happy:'hana_happy.png',play:'hana_play.png',pet:'hana_pet.png',eat:'hana_eat.png',bath:'hana_bath.png',sleep:'hana_sleep.png'}, color:'#D4B6E8', color2:'#B88BC8', food:'花蜜ゼリー',    foodEmoji:'🌸', plan:'seed',      cushionEmoji:'🌸'},
+  nina:   {name:'ニーナ',   img:'nina_normal.png',   imgs:{normal:'nina_normal.png',happy:'nina_happy.png',play:'nina_play.png',pet:'nina_pet.png',eat:'nina_eat.png',bath:'nina_bath.png',sleep:'nina_sleep.png'}, color:'#B8B0E8', color2:'#8A80C8', food:'月光クッキー',  foodEmoji:'🌙', plan:'seed',      cushionEmoji:'🌙'},
+  rumi:   {name:'ルミ',     img:'rumi_normal.png',   imgs:{normal:'rumi_normal.png',happy:'rumi_happy.png',play:'rumi_play.png',pet:'rumi_pet.png',eat:'rumi_eat.png',bath:'rumi_bath.png',sleep:'rumi_sleep.png'}, color:'#F5D898', color2:'#D4A840', food:'朝露キャンディ',foodEmoji:'💧', plan:'bloom',     cushionEmoji:'✨'},
+  syueru: {name:'シュエル', img:'syueru_normal.png', imgs:{normal:'syueru_normal.png',happy:'syueru_happy.png',play:'syueru_play.png',pet:'syueru_pet.png',eat:'syueru_eat.png',bath:'syueru_bath.png',sleep:'syueru_sleep.png'}, color:'#A8E0C8', color2:'#5AAA88', food:'知恵の木の実',  foodEmoji:'🌿', plan:'bloom',     cushionEmoji:'🌿'},
+  noa:    {name:'ノア',     img:'noa_normal.png',    imgs:{normal:'noa_normal.png',happy:'noa_happy.png',play:'noa_play.png',pet:'noa_pet.png',eat:'noa_eat.png',bath:'noa_bath.png',sleep:'noa_sleep.png'}, color:'#F8D090', color2:'#D4880A', food:'黄金ハチミツ',  foodEmoji:'🍯', plan:'bloom_plus',cushionEmoji:'🍯'},
+  soru:   {name:'ソル',     img:'soru_normal.png',   imgs:{normal:'soru_normal.png',happy:'soru_happy.png',play:'soru_play.png',pet:'soru_pet.png',eat:'soru_eat.png',bath:'soru_bath.png',sleep:'soru_sleep.png'}, color:'#B0D4F4', color2:'#5898D4', food:'星のマカロン',  foodEmoji:'⭐', plan:'mastery',   cushionEmoji:'⭐'},
+  rea:    {name:'レア',     img:'rea_normal.png',    imgs:{normal:'rea_normal.png',happy:'rea_happy.png',play:'rea_play.png',pet:'rea_pet.png',eat:'rea_eat.png',bath:'rea_bath.png',sleep:'rea_sleep.png'}, color:'#C8D8F0', color2:'#8098C8', food:'オーロラゼリー',foodEmoji:'✨', plan:'mastery',   cushionEmoji:'💎'},
+};
+
+const FOODS = [
+  {name:'花蜜ゼリー',    emoji:'🌸',hearts:3,pt:3, forChar:'hana'},
+  {name:'月光クッキー',  emoji:'🌙',hearts:3,pt:3, forChar:'nina'},
+  {name:'朝露キャンディ',emoji:'💧',hearts:3,pt:3, forChar:'rumi'},
+  {name:'知恵の木の実',  emoji:'🌿',hearts:3,pt:3, forChar:'syueru'},
+  {name:'黄金ハチミツ',  emoji:'🍯',hearts:3,pt:3, forChar:'noa'},
+  {name:'星のマカロン',  emoji:'⭐',hearts:3,pt:3, forChar:'soru'},
+  {name:'オーロラゼリー',emoji:'✨',hearts:5,pt:10,forChar:'rea'},
+  {name:'誕生日ケーキ',  emoji:'🎂',hearts:5,pt:10,forChar:'all'},
+];
+
+const WALLPAPERS = [
+  {id:'wp0',name:'はじめの部屋', bg:'linear-gradient(180deg,#EEF2FF,#E8F4FF 60%,#DFF0F0)', pt:0},
+  {id:'wp1',name:'ピンクルーム',  bg:'linear-gradient(180deg,#FFF0F8,#FFE4F0 60%,#FFF0F5)', pt:30},
+  {id:'wp2',name:'パープルルーム',bg:'linear-gradient(180deg,#F0EEFF,#E8E0FF 60%,#EDE8FF)', pt:30},
+  {id:'wp3',name:'ミントルーム',  bg:'linear-gradient(180deg,#EEFFF5,#D8F5E8 60%,#E8FFF0)', pt:30},
+  {id:'wp4',name:'星空ルーム',    bg:'linear-gradient(180deg,#1A1A3E,#2D2B6E 50%,#1E1E4E)', pt:50},
+  {id:'wp5',name:'サクラルーム',  bg:'linear-gradient(180deg,#FFF5F8,#FFE8EE 60%,#FFF0F5)', pt:40},
+];
+
+// キャラ専用ベッドカバー（各キャラの色）
+const BED_COVERS = Object.entries(CHARS).map(([k,c])=>({
+  id:`bed_${k}`, name:`${c.name}カラー`, emoji:c.cushionEmoji, pt:25, color:c.color, color2:c.color2, forChar:k
+}));
+
+const FURNITURE = [
+  {id:'f1',name:'ランプ',     emoji:'🪔',pt:20},
+  {id:'f2',name:'観葉植物',   emoji:'🪴',pt:15},
+  {id:'f3',name:'かがみ',     emoji:'🪞',pt:25},
+  {id:'f4',name:'ぬいぐるみ', emoji:'🧸',pt:20},
+  {id:'f5',name:'本棚',       emoji:'📚',pt:30},
+  {id:'f6',name:'星モビール',  emoji:'🌟',pt:35},
+  {id:'f7',name:'お花',       emoji:'💐',pt:15},
+  {id:'f8',name:'キャンドル',  emoji:'🕯️',pt:20},
+  {id:'f9',name:'ハート飾り',  emoji:'💜',pt:25},
+];
+
+// ===== プラン判定 =====
+const PLAN_RANK = {seed:0, bloom:1, bloom_plus:2, mastery:3};
+const myPlan = localStorage.getItem('yuwa_plan')||'seed';
+const isAdmin = localStorage.getItem('yuwa_is_admin')==='true';
+const myRank = isAdmin ? 3 : (PLAN_RANK[myPlan]||0);
+const TODAY = (()=>{const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;})();
+const HOUR = new Date().getHours();
+function unlocked(key){return myRank>=(PLAN_RANK[CHARS[key].plan]||0);}
+
+// ===== 状態 =====
+let gd = JSON.parse(localStorage.getItem('yuwa_game4')||'null');
+let selChar = null;
+let petCooldown = false;
+let playCooldown = false;
+
+// ===== 選択画面 =====
+const PLAN_LABEL = {seed:'無料',bloom:'Bloom',bloom_plus:'Bloom+',mastery:'Mastery'};
+function renderSelect(){
+  document.getElementById('char-grid').innerHTML = Object.entries(CHARS).map(([k,c])=>{
+    const ok=unlocked(k), cleared=gd?.clearedChars?.includes(k), cur=gd?.charKey===k;
+    return `<div class="char-card ${!ok?'locked':''} ${cur?'selected':''}" 
+      style="${cur?`border-color:${c.color};`:'border-color:#D3D1C7;'}"
+      id="cc-${k}" onclick="${ok?`sel('${k}')`:''}" >
+      ${cleared?`<div class="cleared-mark">✅</div>`:''}
+      ${!ok?`<div class="lock-badge">${PLAN_LABEL[c.plan]}🔒</div>`:''}
+      <div class="char-img-wrap" style="border-color:${c.color}"><img src="${c.img}" alt="${c.name}"/></div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-food">${c.food} ${c.foodEmoji}</div>
+    </div>`;
+  }).join('');
+  if(gd?.charKey){
+    selChar=gd.charKey;
+    const b=document.getElementById('start-btn');
+    b.disabled=false;
+    b.textContent=`${CHARS[gd.charKey].name}のお部屋に行く ✦`;
+    b.style.background=CHARS[gd.charKey].color2;
+  }
+}
+
+function sel(k){
+  selChar=k;
+  document.querySelectorAll('.char-card').forEach(c=>{c.classList.remove('selected');c.style.borderColor='#D3D1C7';});
+  const card=document.getElementById(`cc-${k}`);
+  card.classList.add('selected');
+  card.style.borderColor=CHARS[k].color;
+  const b=document.getElementById('start-btn');
+  b.disabled=false;
+  b.textContent=gd?.charKey===k?`${CHARS[k].name}のお部屋に行く ✦`:`${CHARS[k].name}と一緒に暮らす ✦`;
+  b.style.background=CHARS[k].color2;
+}
+
+function startGame(){
+  if(!selChar)return;
+  if(!gd||gd.charKey!==selChar){
+    gd={
+      charKey:selChar, level:1, exp:0, hearts:3, maxHearts:5,
+      days:0, lastVisit:'', fedToday:false, petToday:0, playToday:0,
+      clearedChars:gd?.clearedChars||[],
+      ownedWp:['wp0'], activeWp:'wp0',
+      ownedBed:[], activeBed:null,
+      ownedFurn:[], activeFurn:[],
+    };
+  }
+  if(gd.lastVisit!==TODAY){
+    gd.days++;gd.lastVisit=TODAY;gd.fedToday=false;gd.petToday=0;gd.playToday=0;
+    addExp(10);
+    setTimeout(()=>showToast('🌟 ログインボーナス！+10EXP'),300);
+  }
+  save();showGame();
+}
+
+// ===== ゲーム画面 =====
+function showGame(){
+  document.getElementById('select-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  const c=CHARS[gd.charKey];
+  document.getElementById('g-name').textContent=c.name;
+  const charImg=document.getElementById('char-img');
+  charImg.src=c.imgs.normal;
+  charImg.style.cssText='width:110px;height:110px;object-fit:contain;display:block;';
+
+  // CSSカスタムプロパティでキャラカラーを設定
+  document.getElementById('room').style.setProperty('--char-color', c.color);
+  document.getElementById('room').style.setProperty('--char-color2', c.color2);
+  applyRoom();updateUI();renderFoods();checkStatus();
+}
+
+function applyRoom(){
+  const wp=WALLPAPERS.find(w=>w.id===gd.activeWp)||WALLPAPERS[0];
+  document.getElementById('room-wall').style.background=wp.bg;
+  // ベッドカバー
+  const bc=gd.activeBed?BED_COVERS.find(b=>b.id===gd.activeBed):null;
+  const c=CHARS[gd.charKey];
+  document.getElementById('bed-mattress').style.background=bc?bc.color:c.color;
+  document.getElementById('bed-pillow2').style.background=bc?bc.color:(c.color+'CC');
+  document.getElementById('bed-frame').style.background=bc?bc.color2:c.color2;
+  document.getElementById('cushion').style.background=bc?bc.color:c.color;
+  document.getElementById('curtain-l').style.background=c.color;
+  document.getElementById('curtain-r').style.background=c.color;
+  // 家具
+  document.getElementById('extras').innerHTML=(gd.activeFurn||[]).map(id=>{
+    const f=FURNITURE.find(x=>x.id===id);return f?`<span style="font-size:20px;margin:0 2px;">${f.emoji}</span>`:'';
+  }).join('');
+}
+
+function updateUI(){
+  const mod=gd.exp%100;
+  document.getElementById('g-lv').textContent=`Lv.${gd.level}`;
+  document.getElementById('exp-fill').style.width=mod+'%';
+  document.getElementById('exp-txt').textContent=`${mod} / 100`;
+  document.getElementById('s-lv').textContent=gd.level;
+  document.getElementById('s-exp').textContent=gd.exp;
+  document.getElementById('s-days').textContent=gd.days;
+  document.getElementById('s-hearts').textContent=gd.hearts;
+  document.getElementById('hearts').innerHTML=Array.from({length:gd.maxHearts},(_,i)=>
+    `<span class="heart ${i<gd.hearts?'':'empty'}" id="h${i}">❤️</span>`).join('');
+
+  // ボタン状態
+  // お風呂・話すボタンリセット（日付変わり時）
+  const bathb=document.getElementById('bath-btn');
+  if(bathb&&!gd.bathedToday){bathb.disabled=false;bathb.textContent='🛁 お風呂';}
+  const talkb=document.getElementById('talk-btn');
+  if(talkb&&!gd.talkedToday){talkb.disabled=false;talkb.textContent='💬 話す';}
+  const fb=document.getElementById('feed-btn');
+  fb.disabled=gd.fedToday;
+  fb.textContent=gd.fedToday?'✅ 今日はあげた':'🍽️ ご飯（無料）';
+
+  const petb=document.getElementById('pet-btn');
+  petb.disabled=gd.petToday>=5;
+  petb.textContent=gd.petToday>=5?`🤲 なでなで（今日は終わり）`:`🤲 なでなで (${5-gd.petToday}回)`;
+
+  const playb=document.getElementById('play-btn');
+  playb.disabled=gd.playToday>=3;
+  playb.textContent=gd.playToday>=3?`🎾 あそぶ（今日は終わり）`:`🎾 あそぶ (${3-gd.playToday}回)`;
+}
+
+function checkStatus(){
+  const av=document.getElementById('avatar');
+  const bbl=document.getElementById('bubble');
+  const zzz=document.getElementById('zzz');
+  av.className='avatar';
+  zzz.style.display='none';
+
+  if(HOUR>=22||HOUR<6){
+    av.className='avatar anim-sleep';
+    zzz.style.display='block';
+    bbl.textContent=getVoice('sleep');
+    setPose('sleep');
+    // タップで起こす
+    av.onclick=wakeUp;
+    return;
+  }
+  av.onclick=null;
+
+  const diff=gd.lastVisit?Math.floor((new Date()-new Date(gd.lastVisit.replace(/-/g,'/')+' 00:00'))/86400000):0;
+  if(diff>=3){
+    av.className='avatar anim-lonely';
+    bbl.textContent=getVoice('lonely');
+    return;
+  }
+  if(gd.hearts>=5){
+    av.className='avatar anim-happy';
+    bbl.textContent=getVoice('happy');
+    return;
+  }
+
+  // 朝イチ判定
+  const isFirstVisit = gd.days > 0 && gd.fedToday === false && gd.petToday === 0;
+  if(HOUR>=6&&HOUR<9&&isFirstVisit){
+    av.className='avatar anim-play';
+    bbl.textContent=getVoice('morning');
+    return;
+  }
+
+  av.className='avatar anim-float';
+  bbl.textContent=getVoice('greet');
+}
+
+function wakeUp(){
+  const av=document.getElementById('avatar');
+  const bbl=document.getElementById('bubble');
+  const zzz=document.getElementById('zzz');
+  av.onclick=null;
+  zzz.style.display='none';
+  av.className='avatar anim-happy';
+  bbl.textContent=getVoice('wakeup');
+  setPose('happy');
+  setTimeout(()=>{av.className='avatar anim-float';setPose('normal');},1500);
+}
+
+// ===== アクション =====
+
+function bathChar(){
+  const b=document.getElementById('bath-btn');
+  if(b.disabled)return;
+  b.disabled=true;b.textContent='🛁 お風呂（今日は終わり）';
+  gd.hearts=Math.min(gd.maxHearts,gd.hearts+1);addExp(3);
+  showToast('🛁 お風呂入れた！❤️+1');
+  setPose('bath');
+  doAnim('anim-happy',getVoice('bath'));
+  save();updateUI();
+}
+
+function talkChar(){
+  const b=document.getElementById('talk-btn');
+  if(b.disabled)return;
+  b.disabled=true;b.textContent='💬 話す（今日は終わり）';
+  addExp(3);
+  showToast('💬 話しかけた！+3EXP');
+  setPose('normal');
+  doAnim('anim-float',getVoice('talk'));
+  save();updateUI();
+}
+
+function feedFree(){
+  if(gd.fedToday)return;
+  gd.fedToday=true;
+  gd.hearts=Math.min(gd.maxHearts,gd.hearts+1);
+  addExp(5);
+  showToast('🍽️ ご飯あげた！❤️+1');
+  setPose('eat');
+  doAnim('anim-eat',getVoice('eat'));
+  save();updateUI();
+}
+
+function petChar(){
+  if(gd.petToday>=5||petCooldown)return;
+  petCooldown=true;
+  gd.petToday++;
+  gd.hearts=Math.min(gd.maxHearts,gd.hearts+1);
+  addExp(3);
+  showToast('🤲 なでなで〜！❤️+1');
+  setPose('pet');
+  spawnHearts(['❤️','💕','✨','💜','🌸']);
+  doAnim('anim-pet',getVoice('pet'));
+  setTimeout(()=>petCooldown=false,1500);
+  save();updateUI();
+}
+
+function playChar(){
+  if(gd.playToday>=3||playCooldown)return;
+  playCooldown=true;
+  gd.playToday++;
+  gd.hearts=Math.min(gd.maxHearts,gd.hearts+1);
+  addExp(5);
+  showToast('🎾 いっしょに遊んだ！❤️+1');
+  setPose('play');
+  doAnim('anim-play',getVoice('play'));
+  setTimeout(()=>playCooldown=false,1500);
+  save();updateUI();
+}
+
+// ポーズ切り替えヘルパー
+function setPose(pose){
+  const c=CHARS[gd.charKey];
+  const img=document.getElementById('char-img');
+  const av=document.getElementById('avatar');
+  img.src=c.imgs[pose]||c.imgs.normal;
+  if(pose==='sleep'){
+    img.style.cssText='width:140px;height:auto;object-fit:contain;display:block;';
+  } else {
+    img.style.cssText='width:110px;height:110px;object-fit:contain;display:block;';
+  }
+  // 3秒後に通常に戻す（sleep以外）
+  if(pose!=='sleep'&&pose!=='normal'){
+    clearTimeout(window._poseTimer);
+    window._poseTimer=setTimeout(()=>{
+      img.src=c.imgs.normal;
+      img.style.cssText='max-width:110px;max-height:110px;width:auto;height:auto;object-fit:contain;display:block;';
+    },3000);
+  }
+}
+
+// ハートエフェクト
+function spawnHearts(emojis){
+  const c=document.getElementById('heart-fx');
+  if(!c)return;
+  c.innerHTML='';
+  (emojis||['❤️','💕','✨','💜','🌸']).forEach((e,i)=>{
+    setTimeout(()=>{
+      const h=document.createElement('span');
+      h.className='heart-fx-el';h.textContent=e;
+      h.style.left=(Math.random()*80-40)+'px';
+      c.appendChild(h);setTimeout(()=>h.remove(),1300);
+    },i*200);
+  });
+}
+
+function doAnim(animClass, bubbleText){
+  const av=document.getElementById('avatar');
+  const bbl=document.getElementById('bubble');
+  // classNameだけ変えてimgは保持
+  av.className='avatar '+animClass;
+  bbl.textContent=bubbleText;
+  // ハートポップ
+  const hearts=document.querySelectorAll('.heart:not(.empty)');
+  hearts.forEach(h=>{h.classList.add('pop');setTimeout(()=>h.classList.remove('pop'),300);});
+
+  setTimeout(()=>{av.className='avatar anim-float';checkStatus();},1500);
+}
+
+function renderFoods(){
+  const pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  document.getElementById('food-row').innerHTML=FOODS.map((f,i)=>{
+    const fav=f.forChar===gd.charKey||f.forChar==='all';
+    const can=pts>=f.pt;
+    return `<div class="food-card ${fav?'fav':''} ${!can?'poor':''}" onclick="${can?`buyFood(${i})`:''}">
+      <div class="f-emoji">${f.emoji}</div>
+      <div class="f-name">${f.name}</div>
+      <div class="f-cost">${f.pt}pt</div>
+      ${fav?'<div class="f-fav">好物💕</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function buyFood(i){
+  const f=FOODS[i];
+  let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  if(pts<f.pt){showToast('ポイントが足りないよ！');return;}
+  if(!confirm(`${f.emoji}${f.name}を${f.pt}ptであげる？`))return;
+  localStorage.setItem('yuwa_points',pts-f.pt);
+  gd.hearts=Math.min(gd.maxHearts,gd.hearts+f.hearts);
+  addExp(5);
+  showToast(`${f.emoji} ${f.name}あげた！❤️×${f.hearts}`);
+  setPose('eat');
+  doAnim('anim-eat',getVoice('eat'));
+  save();updateUI();renderFoods();
+}
+
+// ===== カスタマイズ =====
+function openCustomize(){
+  const pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  document.getElementById('modal-pts').textContent=pts;
+
+  // 壁紙
+  document.getElementById('wp-grid').innerHTML=WALLPAPERS.map(w=>{
+    const owned=gd.ownedWp?.includes(w.id), active=gd.activeWp===w.id;
+    return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="buyWp('${w.id}',${w.pt})">
+      <div class="cust-emoji">🎨</div>
+      <div class="cust-name">${w.name}</div>
+      ${w.pt===0||owned?`<div class="cust-owned">${active?'使用中':'所持済'}</div>`:`<div class="cust-cost">${w.pt}pt</div>`}
+    </div>`;
+  }).join('');
+
+  // ベッドカバー
+  document.getElementById('bed-grid').innerHTML=BED_COVERS.map(b=>{
+    const owned=gd.ownedBed?.includes(b.id), active=gd.activeBed===b.id;
+    return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="buyBed('${b.id}',${b.pt})">
+      <div class="cust-emoji">${b.emoji}</div>
+      <div class="cust-name">${b.name}</div>
+      ${owned?`<div class="cust-owned">${active?'使用中':'所持済'}</div>`:`<div class="cust-cost">${b.pt}pt</div>`}
+    </div>`;
+  }).join('');
+
+  // 家具
+  document.getElementById('furn-grid').innerHTML=FURNITURE.map(f=>{
+    const owned=gd.ownedFurn?.includes(f.id), active=gd.activeFurn?.includes(f.id);
+    return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="toggleFurn('${f.id}',${f.pt})">
+      <div class="cust-emoji">${f.emoji}</div>
+      <div class="cust-name">${f.name}</div>
+      ${owned?`<div class="cust-owned">${active?'設置中':'所持済'}</div>`:`<div class="cust-cost">${f.pt}pt</div>`}
+    </div>`;
+  }).join('');
+
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function buyWp(id,pt){
+  let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  const owned=gd.ownedWp?.includes(id);
+  if(!owned&&pt>0){
+    if(pts<pt){showToast('ポイントが足りないよ！');return;}
+    if(!confirm(`${pt}ptで購入する？`))return;
+    localStorage.setItem('yuwa_points',pts-pt);
+    gd.ownedWp.push(id);
+  }
+  gd.activeWp=id;save();applyRoom();openCustomize();showToast('🎨 壁紙変えたよ！');
+}
+
+function buyBed(id,pt){
+  let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  const owned=gd.ownedBed?.includes(id);
+  if(!owned){
+    if(pts<pt){showToast('ポイントが足りないよ！');return;}
+    if(!confirm(`${pt}ptで購入する？`))return;
+    localStorage.setItem('yuwa_points',pts-pt);
+    gd.ownedBed.push(id);
+  }
+  gd.activeBed=gd.activeBed===id?null:id;
+  save();applyRoom();openCustomize();showToast('🛏️ ベッドカバー変えたよ！');
+}
+
+function toggleFurn(id,pt){
+  let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+  const owned=gd.ownedFurn?.includes(id);
+  if(!owned){
+    if(pts<pt){showToast('ポイントが足りないよ！');return;}
+    if(!confirm(`${pt}ptで購入する？`))return;
+    localStorage.setItem('yuwa_points',pts-pt);
+    gd.ownedFurn.push(id);
+  }
+  const idx=gd.activeFurn.indexOf(id);
+  if(idx>=0)gd.activeFurn.splice(idx,1);
+  else if(gd.activeFurn.length<3)gd.activeFurn.push(id);
+  else{showToast('家具は3つまでだよ！');return;}
+  save();applyRoom();openCustomize();
+}
+
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+function closeModalOutside(e){if(e.target.id==='modal-bg')closeModal();}
+
+// ===== EXP・レベルアップ =====
+function addExp(amt){
+  gd.exp+=amt;
+  if(gd.exp>=100&&gd.level<100){
+    gd.exp-=100;gd.level++;
+    let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
+    localStorage.setItem('yuwa_points',pts+10);
+    save();updateUI();
+    // レベルアップ演出
+    const av=document.getElementById('avatar');
+    av.className='avatar anim-levelup';
+    setPose('happy');
+    setTimeout(()=>{av.className='avatar anim-float';setPose('normal');},600);
+    document.getElementById('lv-ttl').textContent='レベルアップ！🎉';
+    document.getElementById('lv-msg').textContent=`${CHARS[gd.charKey].name}が\nLv.${gd.level} になったよ！\n\n+10pt プレゼント✨`;
+    document.getElementById('lv-bg').classList.add('show');
+    return;
+  }
+  updateUI();
+}
+
+function closeLv(){
+  document.getElementById('lv-bg').classList.remove('show');
+  if(gd.level>=100&&!gd.clearedChars.includes(gd.charKey)){
+    gd.clearedChars.push(gd.charKey);save();
+    showToast('🎊 Lv.100達成！次の子が解放されたよ！');
+  }
+}
+
+function save(){localStorage.setItem('yuwa_game4',JSON.stringify(gd));}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.display='none',2500);
+}
+
+// ===== 起動 =====
+renderSelect();
+if(gd?.charKey){selChar=gd.charKey;startGame();}
+</script>
+</body>
+</html>

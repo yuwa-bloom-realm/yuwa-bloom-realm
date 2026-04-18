@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>プラン選択 — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 3rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#EEEDFE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#26215C;}
+
+.hero{text-align:center;padding:1.25rem 1.25rem 0.75rem;}
+.hero-badge{display:inline-block;font-size:10px;padding:3px 12px;background:#EEEDFE;color:#3C3489;border-radius:20px;border:0.5px solid #AFA9EC;margin-bottom:10px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#1a1a2e;margin-bottom:6px;}
+.hero-sub{font-size:12px;color:#444441;line-height:1.6;}
+
+.current-plan{
+  margin:0 1.25rem 1.25rem;
+  background:#EEEDFE;border:0.5px solid #AFA9EC;
+  border-radius:14px;padding:12px 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.current-label{font-size:11px;color:#7F77DD;}
+.current-name{font-size:13px;font-weight:500;color:#3C3489;}
+
+.plans-wrap{padding:0 1.25rem;display:flex;flex-direction:column;gap:12px;margin-bottom:1.5rem;}
+
+.plan-card{
+  background:#fff;
+  border:0.5px solid #D3D1C7;
+  border-radius:18px;padding:1.25rem;
+  position:relative;overflow:hidden;
+}
+.plan-card.popular{border:2px solid #534AB7;}
+.plan-card.current-active{border:2px solid #1D9E75;background:#F4FAF7;}
+
+.popular-badge{
+  position:absolute;top:12px;right:12px;
+  font-size:10px;padding:3px 10px;
+  background:#534AB7;color:#fff;border-radius:20px;
+}
+.current-badge{
+  position:absolute;top:12px;right:12px;
+  font-size:10px;padding:3px 10px;
+  background:#1D9E75;color:#fff;border-radius:20px;
+}
+
+.plan-name{font-size:16px;font-weight:500;color:#26215C;margin-bottom:4px;}
+.plan-price{font-size:26px;font-weight:500;color:#534AB7;margin:8px 0 4px;}
+.plan-price span{font-size:13px;color:#5F5E5A;font-weight:400;}
+.plan-tagline{font-size:12px;color:#5F5E5A;margin-bottom:12px;line-height:1.5;}
+
+.features{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;}
+.feature-row{display:flex;align-items:flex-start;gap:8px;font-size:13px;}
+.feature-check{color:#534AB7;flex-shrink:0;font-size:14px;}
+.feature-cross{color:#B4B2A9;flex-shrink:0;font-size:14px;}
+.feature-text{color:#2C2C2A;line-height:1.4;}
+.feature-text.muted{color:#888780;}
+
+.plan-btn{
+  width:100%;padding:11px;font-size:13px;font-weight:500;
+  font-family:inherit;border-radius:12px;cursor:pointer;
+  transition:all 0.15s;
+}
+.plan-btn.upgrade{background:#534AB7;color:#fff;border:none;}
+.plan-btn.upgrade:hover{background:#3C3489;}
+.plan-btn.current{background:#F4FAF7;color:#1D9E75;border:1px solid #1D9E75;cursor:default;}
+.plan-btn.free{background:#F4F3FE;color:#534AB7;border:1px solid #AFA9EC;}
+.minor-note{
+  margin:0 1.25rem 1.25rem;
+  background:#FAEEDA;border:0.5px solid #FAC775;
+  border-radius:12px;padding:10px 14px;
+  font-size:11px;color:#633806;line-height:1.7;
+}
+
+.faq-section{padding:0 1.25rem;margin-bottom:1.5rem;}
+.section-label{font-size:11px;letter-spacing:0.08em;color:#888780;margin-bottom:10px;}
+.faq-item{background:#fff;border:0.5px solid #D3D1C7;border-radius:12px;padding:12px;margin-bottom:8px;}
+.faq-q{font-size:12px;font-weight:500;color:#26215C;margin-bottom:4px;}
+.faq-a{font-size:11px;color:#888780;line-height:1.6;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="location.href='mypage.html'">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">プランを選ぶ</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-badge">yuwa Bloom Realm</div>
+    <div class="hero-title">あなたに合った<br>プランを選ぼう</div>
+    <div class="hero-sub">いつでも変更・解約できます。<br>まずは無料から始めてみてね。</div>
+  </div>
+
+  <div class="current-plan">
+    <div class="current-label">現在のプラン</div>
+    <div class="current-name" id="current-plan-name">Seed（無料）</div>
+  </div>
+
+  <div class="minor-note">
+    ⚠️ 有料プランのご利用について<br>
+    18歳未満の方は、保護者の方の同意を得た上でご利用ください。クレジットカードでの決済が必要です。
+  </div>
+
+  <div class="plans-wrap">
+
+    <div class="plan-card" id="card-seed">
+      <div class="plan-name">🌱 Seed</div>
+      <div class="plan-price">¥0 <span>/月</span></div>
+      <div class="plan-tagline">まずは気軽に試してみよう</div>
+      <div class="features">
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">ことばの処方箋（1日1回）</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">カードを引く（1日1回）</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">アファメーション（1日1回）</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">星座占い（メッセージのみ）</div></div>
+        <div class="feature-row"><div class="feature-cross">✗</div><div class="feature-text muted">深い分析・特別メッセージ</div></div>
+        <div class="feature-row"><div class="feature-cross">✗</div><div class="feature-text muted">ラッキーカラー・アクション</div></div>
+      </div>
+      <button class="plan-btn free" id="btn-seed" onclick="selectPlan('seed', 0)">無料で続ける</button>
+    </div>
+
+    <div class="plan-card" id="card-bloom">
+      <div class="plan-name">🌸 Bloom</div>
+      <div class="plan-price">¥550 <span>/月</span></div>
+      <div class="plan-tagline">もう少し深く自分と向き合いたい方へ</div>
+      <div class="features">
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">Seedの全機能</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">処方箋・カードの深い分析</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">星座占いのラッキー情報</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">7日間の履歴保存</div></div>
+        <div class="feature-row"><div class="feature-cross">✗</div><div class="feature-text muted">無制限アクセス</div></div>
+        <div class="feature-row"><div class="feature-cross">✗</div><div class="feature-text muted">ゆわからの特別メッセージ</div></div>
+      </div>
+      <button class="plan-btn upgrade" id="btn-bloom" onclick="selectPlan('bloom', 550)">Bloomにアップグレード</button>
+    </div>
+
+    <div class="plan-card popular" id="card-bloom_plus">
+      <div class="popular-badge">人気No.1</div>
+      <div class="plan-name">💜 Bloom+</div>
+      <div class="plan-price">¥980 <span>/月</span></div>
+      <div class="plan-tagline">毎日本気で自分と向き合いたい方へ</div>
+      <div class="features">
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">Bloomの全機能</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">全機能無制限アクセス</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">深い分析＋全履歴保存</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">ゆわからの特別メッセージ</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">星座占い全機能</div></div>
+        <div class="feature-row"><div class="feature-cross">✗</div><div class="feature-text muted">毎朝メッセージ・セッション</div></div>
+      </div>
+      <button class="plan-btn upgrade" id="btn-bloom_plus" onclick="selectPlan('bloom_plus', 980)">Bloom+にアップグレード</button>
+    </div>
+
+    <div class="plan-card" id="card-mastery">
+      <div class="plan-name">👑 Mastery</div>
+      <div class="plan-price">¥2,980 <span>/月</span></div>
+      <div class="plan-tagline">ゆわと一緒に、もっと自分らしく咲きたい方へ</div>
+      <div class="features">
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">Bloom+の全機能</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">ゆわからの毎朝メッセージが届く</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">月1回ゆわとのミニセッション</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">4コマ漫画読み放題</div></div>
+        <div class="feature-row"><div class="feature-check">✓</div><div class="feature-text">講座への特別割引</div></div>
+      </div>
+      <button class="plan-btn upgrade" id="btn-mastery" onclick="selectPlan('mastery', 2980)">Masteryにアップグレード</button>
+    </div>
+
+  </div>
+
+  <div class="faq-section">
+    <div class="section-label">よくある質問</div>
+    <div class="faq-item">
+      <div class="faq-q">いつでも解約できますか？</div>
+      <div class="faq-a">はい、いつでも解約できます。解約後は次回更新日まで引き続きご利用いただけます。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">支払い方法は？</div>
+      <div class="faq-a">クレジットカード（Squareによる安全な決済）でご利用いただけます。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">プランの変更はできますか？</div>
+      <div class="faq-a">はい、いつでもアップグレード・ダウングレードが可能です。</div>
+    </div>
+  </div>
+
+  <div style="height:4rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#534AB7" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">プラン</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+
+</div>
+<script>
+const PLAN = localStorage.getItem('yuwa_plan') || 'seed';
+const planNames = {seed:'Seed（無料）', bloom:'Bloom ¥550/月', bloom_plus:'Bloom+ ¥980/月', mastery:'Mastery ¥2,980/月'};
+const squareLinks = {
+  bloom: 'https://square.link/u/kYrvNXAH',
+  bloom_plus: 'https://square.link/u/6YqcB4Q8',
+  mastery: 'https://square.link/u/tqL0Qm0N'
+};
+
+document.getElementById('current-plan-name').textContent = planNames[PLAN] || 'Seed（無料）';
+
+// 現在のプランカードを強調
+const currentCard = document.getElementById('card-'+PLAN);
+const currentBtn = document.getElementById('btn-'+PLAN);
+if (currentCard) {
+  currentCard.classList.add('current-active');
+  const badge = document.createElement('div');
+  badge.className = 'current-badge';
+  badge.textContent = '現在のプラン';
+  currentCard.appendChild(badge);
+}
+if (currentBtn) {
+  currentBtn.className = 'plan-btn current';
+  currentBtn.textContent = '現在のプラン';
+}
+
+function selectPlan(planId, price) {
+  if (planId === PLAN) return;
+  if (planId === 'seed') {
+    if (confirm('Seedプラン（無料）に変更しますか？')) {
+      localStorage.setItem('yuwa_plan', 'seed');
+      location.reload();
+    }
+    return;
+  }
+  // Square決済ページへ
+  const link = squareLinks[planId];
+  if (link) {
+    if (confirm(`${planNames[planId]}に変更します。\nSquareの決済ページに移動します。`)) {
+      window.location.href = link;
+    }
+  } else {
+    alert('決済ページの準備中です。しばらくお待ちください。');
+  }
+}
+</script>
+</body>
+</html>

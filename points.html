@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>ポイントを購入 — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#EEEDFE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#26215C;}
+
+.hero{margin:0 1.25rem 1.25rem;background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:20px;padding:1.25rem;text-align:center;}
+.hero-icon{font-size:36px;margin-bottom:8px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#26215C;margin-bottom:6px;}
+.hero-sub{font-size:12px;color:#534AB7;line-height:1.6;}
+.current-pt{display:inline-block;margin-top:10px;font-size:14px;font-weight:500;color:#3C3489;background:#fff;padding:6px 16px;border-radius:20px;border:0.5px solid #AFA9EC;}
+
+.section-label{font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;}
+
+.packages{padding:0 1.25rem;display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem;}
+.pkg-card{
+  background:#fff;border:0.5px solid #D3D1C7;
+  border-radius:16px;padding:1.25rem;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all 0.15s;
+  position:relative;overflow:hidden;
+}
+.pkg-card:hover{border-color:#AFA9EC;transform:scale(0.99);}
+.pkg-card.popular{border:2px solid #534AB7;}
+.pkg-popular-badge{
+  position:absolute;top:0;right:0;
+  background:#534AB7;color:#fff;
+  font-size:9px;padding:3px 10px;
+  border-radius:0 16px 0 10px;
+}
+.pkg-icon{font-size:28px;flex-shrink:0;}
+.pkg-info{flex:1;}
+.pkg-pt{font-size:18px;font-weight:500;color:#26215C;}
+.pkg-pt span{font-size:12px;color:#534AB7;font-weight:400;margin-left:4px;}
+.pkg-bonus{font-size:11px;color:#1D9E75;margin-top:2px;}
+.pkg-price{font-size:14px;font-weight:500;color:#534AB7;flex-shrink:0;}
+
+.what-section{margin:0 1.25rem 1.5rem;background:#fff;border:0.5px solid #D3D1C7;border-radius:16px;padding:1.25rem;}
+.what-title{font-size:13px;font-weight:500;color:#26215C;margin-bottom:12px;}
+.what-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #F1EFE8;}
+.what-item:last-child{border-bottom:none;}
+.what-icon{font-size:18px;flex-shrink:0;}
+.what-info{flex:1;}
+.what-name{font-size:13px;color:#2C2C2A;}
+.what-pt{font-size:11px;color:#534AB7;margin-top:2px;}
+
+.note{margin:0 1.25rem 1.5rem;font-size:11px;color:#888780;line-height:1.7;background:#F1EFE8;border-radius:12px;padding:10px 14px;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="location.href='bonus.html'">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">ポイントを購入</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">🌟</div>
+    <div class="hero-title">ゆわ王国ポイント</div>
+    <div class="hero-sub">ポイントを貯めて、キャラアイテムや<br>特別コンテンツと交換しよう！</div>
+    <div class="current-pt">現在 <span id="current-pt">0</span>pt 保有中</div>
+  </div>
+
+  <div class="section-label">ポイントを選んで購入</div>
+  <div class="packages">
+
+    <div class="pkg-card" onclick="buyPoints(500, 500, 'https://square.link/u/5776UPRy')">
+      <div class="pkg-icon">✨</div>
+      <div class="pkg-info">
+        <div class="pkg-pt">500pt <span>（500円分）</span></div>
+        <div class="pkg-bonus">はじめての購入に</div>
+      </div>
+      <div class="pkg-price">¥500</div>
+    </div>
+
+    <div class="pkg-card popular" onclick="buyPoints(1100, 1000, 'https://square.link/u/IgdMa1Rr')">
+      <div class="pkg-popular-badge">おすすめ</div>
+      <div class="pkg-icon">💜</div>
+      <div class="pkg-info">
+        <div class="pkg-pt">1,100pt <span>（+100ptお得）</span></div>
+        <div class="pkg-bonus" style="color:#534AB7;">100ptボーナス付き！</div>
+      </div>
+      <div class="pkg-price">¥1,000</div>
+    </div>
+
+    <div class="pkg-card" onclick="buyPoints(2300, 2000, 'https://square.link/u/kPFe4Isy')">
+      <div class="pkg-icon">🌸</div>
+      <div class="pkg-info">
+        <div class="pkg-pt">2,300pt <span>（+300ptお得）</span></div>
+        <div class="pkg-bonus">300ptボーナス付き！</div>
+      </div>
+      <div class="pkg-price">¥2,000</div>
+    </div>
+
+    <div class="pkg-card" onclick="buyPoints(6000, 5000, 'https://square.link/u/zqvAPN22')">
+      <div class="pkg-icon">👑</div>
+      <div class="pkg-info">
+        <div class="pkg-pt">6,000pt <span>（+1,000ptお得）</span></div>
+        <div class="pkg-bonus">1,000ptボーナス付き！超お得！</div>
+      </div>
+      <div class="pkg-price">¥5,000</div>
+    </div>
+
+  </div>
+
+  <div class="section-label">ポイントで交換できるもの</div>
+  <div class="what-section">
+    <div class="what-item">
+      <div class="what-icon">🌟</div>
+      <div class="what-info">
+        <div class="what-name">癒し画像1枚</div>
+        <div class="what-pt">7pt</div>
+      </div>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">💌</div>
+      <div class="what-info">
+        <div class="what-name">キャラの特別メッセージ</div>
+        <div class="what-pt">20pt</div>
+      </div>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">💜</div>
+      <div class="what-info">
+        <div class="what-name">ゆわからの限定アファメーション</div>
+        <div class="what-pt">50pt</div>
+      </div>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">✨</div>
+      <div class="what-info">
+        <div class="what-name">Mastery3日間お試し</div>
+        <div class="what-pt">100pt</div>
+      </div>
+    </div>
+    <div class="what-item">
+      <div class="what-icon">🎮</div>
+      <div class="what-info">
+        <div class="what-name">ゲームアイテム（準備中）</div>
+        <div class="what-pt">近日公開</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    ⚠️ ご注意<br>
+    ・ポイントの有効期限はありません<br>
+    ・購入後のキャンセル・返金はできません<br>
+    ・18歳未満の方は保護者の同意を得た上でご利用ください<br>
+    ・決済はSquareによる安全な決済です
+  </div>
+
+  <div style="text-align:center;padding:0 1.25rem 1rem;">
+    <a href="tokusho.html" style="font-size:11px;color:#888780;text-decoration:underline;">特定商取引法に基づく表記</a>
+  </div>
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="#534AB7" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">ポイント</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+
+</div>
+<script>
+document.getElementById('current-pt').textContent = localStorage.getItem('yuwa_points') || '0';
+
+function buyPoints(pts, price, url) {
+  if (confirm(`¥${price.toLocaleString()}で${pts.toLocaleString()}ptを購入します。\nSquareの決済ページに移動します。`)) {
+    // Square決済ページへ
+    // 決済完了後にポイントを付与する仕組みは後で実装
+    window.location.href = url;
+  }
+}
+</script>
+</body>
+</html>

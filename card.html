@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>ルミのカード — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FFFBF5;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#FAEEDA;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#412402;}
+.date-badge{text-align:center;margin:0 1.25rem 1rem;font-size:11px;color:#854F0B;letter-spacing:0.06em;}
+
+.rumi-stage{text-align:center;padding:1rem 1.25rem 0.75rem;}
+.rumi-img{width:140px;height:140px;margin:0 auto 0.75rem;border-radius:50%;overflow:hidden;background:#FAEEDA;border:3px solid #FAC775;}
+.rumi-img img{width:100%;height:100%;object-fit:cover;}
+.rumi-name{font-size:12px;color:#854F0B;margin-bottom:3px;}
+.rumi-msg{font-size:12px;color:#BA7517;font-style:italic;}
+
+.card-stage{
+  margin:0 1.25rem 1.25rem;
+  min-height:220px;
+  display:flex;align-items:center;justify-content:center;
+  perspective:1000px;
+}
+.card-wrap{
+  width:160px;height:220px;
+  position:relative;
+  cursor:pointer;
+  transform-style:preserve-3d;
+  transition:transform 0.7s ease;
+}
+.card-wrap.flipped{transform:rotateY(180deg);}
+.card-face{
+  position:absolute;inset:0;
+  border-radius:16px;
+  backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.card-back{
+  background:#FAEEDA;
+  border:1.5px solid #FAC775;
+  padding:1rem;
+}
+.card-back-pattern{
+  width:100%;height:100%;
+  border-radius:12px;
+  border:1px solid #FAC775;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;
+}
+.card-back-icon{font-size:32px;}
+.card-back-text{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:#854F0B;text-align:center;line-height:1.5;}
+.card-front{
+  background:#fff;
+  border:1.5px solid #FAC775;
+  transform:rotateY(180deg);
+  padding:1.25rem 1rem;
+  gap:10px;
+}
+.card-front-label{font-size:9px;letter-spacing:0.1em;color:#BA7517;background:#FAEEDA;padding:2px 10px;border-radius:20px;}
+.card-front-keyword{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:#412402;text-align:center;line-height:1.3;}
+.card-front-emoji{font-size:28px;}
+
+.tap-hint{text-align:center;font-size:11px;color:#BA7517;margin-bottom:1.25rem;animation:fadeInOut 2s ease-in-out infinite;}
+@keyframes fadeInOut{0%,100%{opacity:0.5;}50%{opacity:1;}}
+.tapped-hint{display:none;text-align:center;font-size:11px;color:#BA7517;margin-bottom:1.25rem;}
+
+.loading-area{text-align:center;padding:0.5rem 0 1rem;display:none;}
+.loading-area.visible{display:block;}
+.loading-dots{display:flex;justify-content:center;gap:5px;margin-bottom:6px;}
+.dot{width:6px;height:6px;border-radius:50%;background:#FAC775;animation:pulse 1.2s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,80%,100%{transform:scale(0.8);opacity:0.5;}40%{transform:scale(1.2);opacity:1;}}
+.loading-text{font-size:12px;color:#BA7517;}
+
+.message-card{
+  margin:0 1.25rem 1rem;
+  background:#fff;border:0.5px solid #FAC775;
+  border-radius:16px;padding:1.25rem;
+  display:none;
+}
+.message-card.visible{display:block;}
+.msg-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.msg-plan-badge{font-size:10px;padding:3px 10px;background:#FAEEDA;color:#854F0B;border-radius:20px;}
+.msg-free{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-style:italic;color:#412402;line-height:1.7;
+  margin-bottom:0.75rem;
+}
+.msg-detail{font-size:13px;color:#888780;line-height:1.7;margin-bottom:1rem;}
+.msg-lock{
+  background:#FAEEDA;border-radius:10px;padding:10px 12px;
+  font-size:11px;color:#854F0B;line-height:1.6;
+  display:none;
+}
+.msg-lock.visible{display:block;}
+.msg-lock a{color:#633806;font-weight:500;text-decoration:underline;cursor:pointer;}
+
+.already-badge{
+  text-align:center;margin:0 1.25rem 1rem;
+  background:#FAEEDA;border-radius:12px;padding:10px;
+  font-size:12px;color:#854F0B;display:none;
+}
+.already-badge.visible{display:block;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">ルミのカード</div>
+  </div>
+
+  <div class="date-badge" id="date-badge"></div>
+
+  <div class="rumi-stage">
+    <div class="rumi-img">
+      <img src="rumi.png" alt="ルミ"/>
+    </div>
+    <div class="rumi-name">朝つゆルミ</div>
+    <div class="rumi-msg" id="rumi-msg">今日のカード、引いてみて ✦</div>
+  </div>
+
+  <div id="tap-hint" class="tap-hint">カードをタップして引いてみよう</div>
+  <div id="tapped-hint" class="tapped-hint">カードが開いたよ ✦</div>
+
+  <div class="card-stage">
+    <div class="card-wrap" id="card-wrap" onclick="flipCard()">
+      <div class="card-face card-back">
+        <div class="card-back-pattern">
+          <div class="card-back-icon">✦</div>
+          <div class="card-back-text">yuwa<br>Bloom Realm</div>
+        </div>
+      </div>
+      <div class="card-face card-front">
+        <div class="card-front-label">今日のカード</div>
+        <div class="card-front-emoji" id="card-emoji">✨</div>
+        <div class="card-front-keyword" id="card-keyword"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-area" id="loading">
+    <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="loading-text">ルミがメッセージを運んでいるよ…</div>
+  </div>
+
+  <div class="already-badge" id="already-badge">✦ 今日はもうカードを引いたよ。また明日ね。</div>
+
+  <div class="message-card" id="message-card">
+    <div class="msg-plan-row">
+      <div class="msg-plan-badge" id="plan-badge">Seed プラン</div>
+    </div>
+    <div class="msg-free" id="msg-free"></div>
+    <div class="msg-detail" id="msg-detail"></div>
+    <div class="msg-lock" id="msg-lock">
+      深い解説とルミからの特別メッセージは <a onclick="upgradePlan()">Bloom+ へアップグレード</a> で読めるよ✨
+    </div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#FAEEDA;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="2" stroke="#854F0B" stroke-width="1.2"/><path d="M6 6h4M6 9h4" stroke="#854F0B" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#854F0B;">カード</div>
+    </div>
+    <div class="nav-item" onclick="location.href=\'mypage.html\'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+
+</div>
+<script>
+const TODAY = (() => { const d = new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); })();
+const DISPLAY_DATE = (() => { const d = new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; })();
+document.getElementById('date-badge').textContent = DISPLAY_DATE;
+
+// プラン判定（実際はログイン情報から取得）
+const PLAN = localStorage.getItem('yuwa_plan') || 'seed';
+const isPaid = ['bloom','bloom_plus','mastery'].includes(PLAN);
+
+const saved = JSON.parse(localStorage.getItem('yuwa_card_'+TODAY) || 'null');
+let flipped = false;
+let cardData = null;
+
+const cardKeywords = [
+  {keyword:'解放',emoji:'🌸'},
+  {keyword:'信頼',emoji:'✨'},
+  {keyword:'前進',emoji:'🌟'},
+  {keyword:'癒し',emoji:'💜'},
+  {keyword:'覚醒',emoji:'🔥'},
+  {keyword:'感謝',emoji:'🌿'},
+  {keyword:'愛',emoji:'💖'},
+  {keyword:'勇気',emoji:'⭐'},
+  {keyword:'静寂',emoji:'🌙'},
+  {keyword:'豊かさ',emoji:'🌈'},
+];
+
+function flipCard() {
+  if (flipped) return;
+  if (saved) {
+    // 今日すでに引いてる
+    document.getElementById('card-wrap').classList.add('flipped');
+    document.getElementById('card-keyword').textContent = saved.keyword;
+    document.getElementById('card-emoji').textContent = saved.emoji;
+    flipped = true;
+    document.getElementById('tap-hint').style.display = 'none';
+    document.getElementById('tapped-hint').style.display = 'block';
+    showMessage(saved);
+    document.getElementById('already-badge').classList.add('visible');
+    document.getElementById('rumi-msg').textContent = 'また明日も来てね ✦';
+    return;
+  }
+
+  flipped = true;
+  document.getElementById('tap-hint').style.display = 'none';
+  document.getElementById('tapped-hint').style.display = 'block';
+
+  // ランダムでキーワード決定（シード値：今日の日付）
+  const seed = TODAY.split('-').reduce((a,b) => a + parseInt(b), 0);
+  const picked = cardKeywords[seed % cardKeywords.length];
+  document.getElementById('card-keyword').textContent = picked.keyword;
+  document.getElementById('card-emoji').textContent = picked.emoji;
+  document.getElementById('card-wrap').classList.add('flipped');
+
+  // APIでメッセージ生成
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('rumi-msg').textContent = 'メッセージを届けてるよ… ✦';
+
+  const prompt = `あなたは「ゆわメソッド」のヒーラーカウンセラーです。
+今日のカードキーワード「${picked.keyword}」に基づいて、読んだ人の心に響くメッセージを作ります。
+
+以下のJSON形式だけで返してください（前置きもマークダウンも不要）:
+{"free":"キーワードへの詩的な一言メッセージ（25〜35字）","detail":"このカードが伝えるメッセージの深い意味と今日の行動ヒント（80〜100字）","special":"朝つゆルミからの特別なことば（ポエティックで温かい、40〜50字）"}`;
+
+  fetch('/.netlify/functions/claude-proxy', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+  })
+  .then(r => r.json())
+  .then(data => {
+    const raw = data.content.map(b => b.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    cardData = {...picked, ...parsed};
+    localStorage.setItem('yuwa_card_'+TODAY, JSON.stringify(cardData));
+    document.getElementById('loading').classList.remove('visible');
+    showMessage(cardData);
+    document.getElementById('rumi-msg').textContent = 'このことば、受け取ってね ✦';
+  })
+  .catch(() => {
+    const fallback = {
+      ...picked,
+      free: `「${picked.keyword}」はあなたへの今日のギフト。`,
+      detail: 'このカードはあなたの中にすでにある力を思い出させてくれている。今日一歩、信じて動いてみよう。',
+      special: '朝露が大地を潤すように、あなたの言葉も誰かの心を潤している。'
+    };
+    cardData = fallback;
+    localStorage.setItem('yuwa_card_'+TODAY, JSON.stringify(cardData));
+    document.getElementById('loading').classList.remove('visible');
+    showMessage(cardData);
+  });
+}
+
+function showMessage(data) {
+  const card = document.getElementById('message-card');
+  card.classList.add('visible');
+  document.getElementById('plan-badge').textContent = isPaid ? 'Bloom+ プラン' : 'Seed プラン';
+  document.getElementById('msg-free').textContent = data.free;
+
+  if (isPaid) {
+    document.getElementById('msg-detail').textContent = data.detail + '\n\n✦ ルミより：' + data.special;
+  } else {
+    document.getElementById('msg-detail').textContent = '';
+    document.getElementById('msg-lock').classList.add('visible');
+  }
+}
+
+function upgradePlan() {
+  alert('プランアップグレード画面へ（実装予定）');
+}
+
+// 今日すでに引いてる場合はカードを最初から開いた状態に
+if (saved) {
+  document.getElementById('card-keyword').textContent = saved.keyword;
+  document.getElementById('card-emoji').textContent = saved.emoji;
+}
+</script>
+</body>
+</html>

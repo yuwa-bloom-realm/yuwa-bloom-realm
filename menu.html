@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>メニュー — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;justify-content:space-between;}
+.top-title{font-size:16px;font-weight:500;color:#26215C;}
+
+.section-label{font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;margin-top:1.25rem;}
+
+.menu-list{padding:0 1.25rem;}
+.menu-row{
+  background:#fff;border:0.5px solid #D3D1C7;
+  border-radius:14px;padding:14px 1.25rem;
+  margin-bottom:8px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:border-color 0.15s;
+}
+.menu-row:hover{border-color:#AFA9EC;}
+.menu-row:active{transform:scale(0.99);}
+.menu-icon{width:40px;height:40px;border-radius:10px;overflow:hidden;flex-shrink:0;}
+.menu-icon img{width:100%;height:100%;object-fit:cover;}
+.menu-icon.emoji{display:flex;align-items:center;justify-content:center;font-size:20px;}
+.menu-info{flex:1;}
+.menu-name{font-size:14px;font-weight:500;color:#26215C;}
+.menu-desc{font-size:11px;color:#888780;margin-top:2px;}
+.menu-arrow{font-size:14px;color:#AFA9EC;}
+.menu-badge{font-size:9px;padding:2px 8px;background:#534AB7;color:#fff;border-radius:20px;margin-left:6px;}
+.menu-soon{font-size:9px;padding:2px 8px;background:#F1EFE8;color:#888780;border-radius:20px;margin-left:6px;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon-bar{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="top-title">メニュー</div>
+  </div>
+
+  <div class="section-label">毎日の機能</div>
+  <div class="menu-list">
+    <div class="menu-row" onclick="location.href='affirmation.html'">
+      <div class="menu-icon"><img src="hana.png" alt=""/></div>
+      <div class="menu-info">
+        <div class="menu-name">アファメーション</div>
+        <div class="menu-desc">花フェルが今日の言葉を届けてくれる</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-row" onclick="location.href='prescription.html'">
+      <div class="menu-icon"><img src="syueru.png" alt=""/></div>
+      <div class="menu-info">
+        <div class="menu-name">ことばの処方箋</div>
+        <div class="menu-desc">シュエルが今日の気持ちに寄り添う</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-row" onclick="location.href='card.html'">
+      <div class="menu-icon"><img src="rumi.png" alt=""/></div>
+      <div class="menu-info">
+        <div class="menu-name">カードを引く</div>
+        <div class="menu-desc">ルミが今日のメッセージを引いてくれる</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-row" onclick="location.href='nina.html'">
+      <div class="menu-icon"><img src="nina.png" alt=""/></div>
+      <div class="menu-info">
+        <div class="menu-name">今日の星座占い</div>
+        <div class="menu-desc">ニーナが星の声を届けてくれる</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-row" onclick="location.href='point_center.html'">
+      <div class="menu-icon emoji" style="background:#EEEDFE;">🌟</div>
+      <div class="menu-info">
+        <div class="menu-name">ログインボーナス</div>
+        <div class="menu-desc">毎日ポイントを受け取ろう</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="section-label">ゆわに会う</div>
+  <div class="menu-list">
+    <div class="menu-row" onclick="location.href='session.html'">
+      <div class="menu-icon"><img src="soru.png" alt=""/></div>
+      <div class="menu-info">
+        <div class="menu-name">セッション予約</div>
+        <div class="menu-desc">ソルと一緒にゆわに会いに行こう</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="section-label">もうすぐ登場</div>
+  <div class="menu-list">
+    <div class="menu-row" style="opacity:0.6;cursor:default;">
+      <div class="menu-icon emoji" style="background:#F1EFE8;">🎮</div>
+      <div class="menu-info">
+        <div class="menu-name">ゆわ王国ゲーム<span class="menu-soon">coming soon</span></div>
+        <div class="menu-desc">キャラを育てて遊ぼう</div>
+      </div>
+    </div>
+    <div class="menu-row" style="opacity:0.6;cursor:default;">
+      <div class="menu-icon emoji" style="background:#FBEAF0;">📖</div>
+      <div class="menu-info">
+        <div class="menu-name">短編漫画<span class="menu-soon">coming soon</span></div>
+        <div class="menu-desc">ゆわ王国の物語を読もう</div>
+      </div>
+    </div>
+    <div class="menu-row" style="opacity:0.6;cursor:default;">
+      <div class="menu-icon emoji" style="background:#E1F5EE;">🌱</div>
+      <div class="menu-info">
+        <div class="menu-name">講座案内<span class="menu-soon">coming soon</span></div>
+        <div class="menu-desc">ゆわメソッドを学ぼう</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;margin-top:1.25rem;">プラン</div>
+  <div class="menu-list">
+    <div class="menu-row" onclick="location.href='plan.html'">
+      <div class="menu-icon emoji" style="background:#EEEDFE;">👑</div>
+      <div class="menu-info">
+        <div class="menu-name">プランを選ぶ</div>
+        <div class="menu-desc" id="plan-desc">現在のプランを確認・変更</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon-bar">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon-bar" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#534AB7" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#534AB7" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#534AB7" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#534AB7" stroke-width="1.2"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">メニュー</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon-bar">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+</div>
+<script>
+const plan = localStorage.getItem('yuwa_plan') || 'seed';
+const planNames = {seed:'Seed（無料）', bloom:'Bloom ¥550/月', bloom_plus:'Bloom+ ¥980/月', mastery:'Mastery ¥2,980/月'};
+document.getElementById('plan-desc').textContent = '現在：' + (planNames[plan] || 'Seed（無料）');
+</script>
+</body>
+</html>

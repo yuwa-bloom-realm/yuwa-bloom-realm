@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>ニーナの星座占い — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#F4F3FE;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#EEEDFE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#26215C;}
+.date-badge{text-align:center;margin:0 1.25rem 1rem;font-size:11px;color:#534AB7;letter-spacing:0.06em;}
+
+.nina-stage{text-align:center;padding:1rem 1.25rem 0.75rem;}
+.nina-img{width:140px;height:140px;margin:0 auto 0.75rem;border-radius:50%;overflow:hidden;background:#EEEDFE;border:3px solid #7F77DD;}
+.nina-img img{width:100%;height:100%;object-fit:cover;}
+.nina-name{font-size:12px;color:#534AB7;margin-bottom:3px;}
+.nina-msg{font-size:12px;color:#7F77DD;font-style:italic;}
+
+.birthday-section{margin:0 1.25rem 1.25rem;background:#fff;border:0.5px solid #AFA9EC;border-radius:16px;padding:1.25rem;}
+.birthday-label{font-size:12px;color:#534AB7;margin-bottom:8px;font-weight:500;}
+.birthday-input{width:100%;padding:10px 12px;font-size:14px;font-family:inherit;background:#F4F3FE;border:0.5px solid #AFA9EC;border-radius:10px;color:#26215C;outline:none;}
+.birthday-input:focus{border-color:#534AB7;box-shadow:0 0 0 3px #EEEDFE;}
+.birthday-save{width:100%;padding:10px;font-size:13px;font-family:inherit;background:#534AB7;color:#fff;border:none;border-radius:10px;cursor:pointer;margin-top:10px;}
+.zodiac-badge{display:inline-block;font-size:13px;padding:4px 16px;background:#EEEDFE;color:#3C3489;border-radius:20px;margin-top:8px;}
+
+.fortune-card{margin:0 1.25rem 1rem;background:#fff;border:0.5px solid #7F77DD;border-radius:18px;padding:1.25rem;display:none;}
+.fortune-card.visible{display:block;}
+.fortune-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.fortune-badge{font-size:10px;padding:3px 10px;background:#EEEDFE;color:#3C3489;border-radius:20px;}
+.fortune-date{font-size:10px;color:#888780;}
+.fortune-zodiac{font-size:13px;color:#534AB7;margin-bottom:10px;font-weight:500;}
+.fortune-main{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:#26215C;line-height:1.7;margin-bottom:1rem;}
+.fortune-detail{font-size:13px;color:#888780;line-height:1.7;margin-bottom:1rem;}
+.fortune-lucky{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+.lucky-item{background:#EEEDFE;border-radius:10px;padding:8px 12px;flex:1;min-width:80px;text-align:center;}
+.lucky-label{font-size:9px;color:#7F77DD;margin-bottom:3px;}
+.lucky-val{font-size:13px;font-weight:500;color:#3C3489;}
+.fortune-lock{background:#F1EFE8;border-radius:10px;padding:10px 12px;font-size:11px;color:#5F5E5A;line-height:1.6;display:none;}
+.fortune-lock.visible{display:block;}
+.fortune-lock a{color:#534AB7;font-weight:500;text-decoration:underline;cursor:pointer;}
+.fortune-yuwa{background:#EEEDFE;border-radius:10px;padding:12px;font-size:12px;color:#3C3489;line-height:1.7;display:none;}
+.fortune-yuwa.visible{display:block;}
+
+.loading-area{text-align:center;padding:1.5rem 0;display:none;}
+.loading-area.visible{display:block;}
+.loading-dots{display:flex;justify-content:center;gap:5px;margin-bottom:8px;}
+.dot{width:6px;height:6px;border-radius:50%;background:#AFA9EC;animation:pulse 1.2s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,80%,100%{transform:scale(0.8);opacity:0.5;}40%{transform:scale(1.2);opacity:1;}}
+.loading-text{font-size:12px;color:#7F77DD;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">ニーナの星座占い</div>
+  </div>
+
+  <div class="date-badge" id="date-badge"></div>
+
+  <div class="nina-stage">
+    <div class="nina-img"><img src="nina.png" alt="ニーナ"/></div>
+    <div class="nina-name">月しずくニーナ</div>
+    <div class="nina-msg" id="nina-msg">星の声を届けるよ ✦</div>
+  </div>
+
+  <div class="birthday-section">
+    <div class="birthday-label">あなたの誕生日を教えて</div>
+    <input type="date" class="birthday-input" id="birthday-input"/>
+    <div id="zodiac-display" style="margin-top:8px;display:none;">
+      <span class="zodiac-badge" id="zodiac-badge"></span>
+    </div>
+    <button class="birthday-save" onclick="saveBirthday()">星座を確認して占いを見る ✦</button>
+  </div>
+
+  <div class="loading-area" id="loading">
+    <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="loading-text" id="loading-text">ニーナが星の声を聞いているよ…</div>
+  </div>
+
+  <div class="fortune-card" id="fortune-card">
+    <div class="fortune-header">
+      <div class="fortune-badge">今日の星座占い</div>
+      <div class="fortune-date" id="fortune-date"></div>
+    </div>
+    <div class="fortune-zodiac" id="fortune-zodiac"></div>
+    <div class="fortune-main" id="fortune-main"></div>
+    <div class="fortune-detail" id="fortune-detail"></div>
+    <div class="fortune-lucky" id="fortune-lucky" style="display:none">
+      <div class="lucky-item"><div class="lucky-label">ラッキーカラー</div><div class="lucky-val" id="lucky-color"></div></div>
+      <div class="lucky-item"><div class="lucky-label">ラッキーアクション</div><div class="lucky-val" id="lucky-action"></div></div>
+    </div>
+    <div class="fortune-yuwa" id="fortune-yuwa"></div>
+    <div class="fortune-lock" id="fortune-lock">
+      ラッキーカラー・アクション・ゆわからの一言は <a onclick="alert('プランアップグレード画面へ')">Bloom以上</a> で見れるよ ✦
+    </div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="#534AB7" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.5 1.5M11 11l1.5 1.5M3.5 12.5L5 11M11 5l1.5-1.5" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">占い</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TODAY = (() => { const d = new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); })();
+const DISPLAY_DATE = (() => { const d = new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; })();
+document.getElementById('date-badge').textContent = DISPLAY_DATE;
+document.getElementById('fortune-date').textContent = DISPLAY_DATE;
+
+const PLAN = localStorage.getItem('yuwa_plan') || 'seed';
+const isPaid = ['bloom','bloom_plus','mastery'].includes(PLAN);
+
+const zodiacList = [
+  {name:'山羊座', start:[12,22], end:[1,19]},
+  {name:'水瓶座', start:[1,20], end:[2,18]},
+  {name:'魚座', start:[2,19], end:[3,20]},
+  {name:'牡羊座', start:[3,21], end:[4,19]},
+  {name:'牡牛座', start:[4,20], end:[5,20]},
+  {name:'双子座', start:[5,21], end:[6,21]},
+  {name:'蟹座', start:[6,22], end:[7,22]},
+  {name:'獅子座', start:[7,23], end:[8,22]},
+  {name:'乙女座', start:[8,23], end:[9,22]},
+  {name:'天秤座', start:[9,23], end:[10,23]},
+  {name:'蠍座', start:[10,24], end:[11,22]},
+  {name:'射手座', start:[11,23], end:[12,21]},
+];
+
+function getZodiac(birthday) {
+  const d = new Date(birthday);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  for (const z of zodiacList) {
+    const [sm, sd] = z.start;
+    const [em, ed] = z.end;
+    if ((m === sm && day >= sd) || (m === em && day <= ed)) return z.name;
+  }
+  return '山羊座';
+}
+
+// 保存済み誕生日を読み込む
+const savedBirthday = localStorage.getItem('yuwa_birthday');
+if (savedBirthday) {
+  document.getElementById('birthday-input').value = savedBirthday;
+  const zodiac = getZodiac(savedBirthday);
+  document.getElementById('zodiac-badge').textContent = zodiac;
+  document.getElementById('zodiac-display').style.display = 'block';
+  const savedFortune = JSON.parse(localStorage.getItem('yuwa_fortune_'+TODAY) || 'null');
+  if (savedFortune) showFortune(savedFortune, zodiac);
+  else generateFortune(zodiac);
+}
+
+function saveBirthday() {
+  const birthday = document.getElementById('birthday-input').value;
+  if (!birthday) { alert('誕生日を入力してね！'); return; }
+  localStorage.setItem('yuwa_birthday', birthday);
+  const zodiac = getZodiac(birthday);
+  document.getElementById('zodiac-badge').textContent = zodiac;
+  document.getElementById('zodiac-display').style.display = 'block';
+  document.getElementById('nina-msg').textContent = zodiac + 'のあなたへ、星の声を届けるよ ✦';
+  // 今日のキャッシュがあればそれを使う
+  const savedFortune = JSON.parse(localStorage.getItem('yuwa_fortune_'+TODAY) || 'null');
+  if (savedFortune && savedFortune.zodiac === zodiac) {
+    showFortune(savedFortune, zodiac);
+  } else {
+    generateFortune(zodiac);
+  }
+}
+
+async function generateFortune(zodiac) {
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('fortune-card').classList.remove('visible');
+
+  const prompt = `あなたは「ゆわメソッド」のヒーラーカウンセラーです。${zodiac}の今日の星座占いを、脳科学・心理学・言葉の力を組み合わせて書いてください。
+
+以下のJSON形式だけで返してください（前置きもマークダウンも不要）:
+{"main":"今日の${zodiac}への詩的なメッセージ（25〜35字）","detail":"今日の運勢の詳しい説明と今日意識すべきこと（80〜100字）","color":"ラッキーカラー（一言）","action":"ラッキーアクション（10字以内）","yuwa":"ゆわからの一言メッセージ（ゆわメソッドらしい温かい言葉、40〜50字）"}`;
+
+  try {
+    const res = await fetch('/.netlify/functions/claude-proxy', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const raw = data.content.map(b=>b.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    localStorage.setItem('yuwa_fortune_'+TODAY, JSON.stringify({...parsed, zodiac}));
+    document.getElementById('loading').classList.remove('visible');
+    showFortune(parsed, zodiac);
+  } catch(e) {
+    document.getElementById('loading').classList.remove('visible');
+    showFortune({
+      main:'星はあなたの歩みを静かに照らしている。',
+      detail:'今日は自分の直感を信じて行動してみよう。小さな一歩が大きな流れを生み出す日。',
+      color:'紫',
+      action:'深呼吸する',
+      yuwa:'あなたの中に宿る光は、どんな夜も照らせる。今日もその光を信じてね。',
+      zodiac
+    }, zodiac);
+  }
+}
+
+function showFortune(data, zodiac) {
+  document.getElementById('fortune-zodiac').textContent = (zodiac||data.zodiac) + 'のあなたへ';
+  document.getElementById('fortune-main').textContent = data.main;
+  document.getElementById('fortune-detail').textContent = data.detail;
+
+  if (isPaid) {
+    document.getElementById('lucky-color').textContent = data.color;
+    document.getElementById('lucky-action').textContent = data.action;
+    document.getElementById('fortune-lucky').style.display = 'flex';
+    document.getElementById('fortune-yuwa').textContent = '✦ ゆわより：' + data.yuwa;
+    document.getElementById('fortune-yuwa').classList.add('visible');
+  } else {
+    document.getElementById('fortune-lock').classList.add('visible');
+  }
+
+  document.getElementById('nina-msg').textContent = 'このことば、受け取ってね ✦';
+  document.getElementById('fortune-card').classList.add('visible');
+}
+</script>
+</body>
+</html>

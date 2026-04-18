@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>yuwa Bloom Realm — ログイン</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.card{width:100%;max-width:380px;background:#fff;border-radius:20px;border:0.5px solid #AFA9EC;padding:2rem 1.75rem;}
+.logo{text-align:center;margin-bottom:1.75rem;}
+.logo-icon{width:72px;height:72px;margin:0 auto 12px;border-radius:18px;overflow:hidden;}
+.logo-icon img{width:100%;height:100%;object-fit:cover;}
+.logo-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:#26215C;margin-bottom:4px;}
+.logo-sub{font-size:11px;color:#888780;letter-spacing:0.06em;}
+.tabs{display:flex;border-radius:10px;overflow:hidden;border:0.5px solid #AFA9EC;margin-bottom:1.5rem;}
+.tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:#F4F3FE;color:#888780;font-family:inherit;border:none;}
+.tab.active{background:#534AB7;color:#fff;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:12px;color:#888780;margin-bottom:6px;}
+.field input{width:100%;padding:10px 12px;font-size:14px;font-family:inherit;background:#fff;border:0.5px solid #AFA9EC;border-radius:10px;color:#26215C;outline:none;}
+.field input:focus{border-color:#534AB7;box-shadow:0 0 0 3px #EEEDFE;}
+.submit-btn{width:100%;padding:12px;font-size:14px;font-weight:500;font-family:inherit;background:#534AB7;color:#fff;border:none;border-radius:12px;cursor:pointer;margin-bottom:1rem;}
+.submit-btn:hover{background:#3C3489;}
+.divider{display:flex;align-items:center;gap:10px;margin:1rem 0;}
+.divider-line{flex:1;height:0.5px;background:#AFA9EC;}
+.divider-text{font-size:11px;color:#888780;}
+.google-btn{width:100%;padding:11px;font-size:14px;font-family:inherit;background:#fff;color:#444441;border:0.5px solid #AFA9EC;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.google-btn:hover{background:#F4F3FE;}
+.google-icon{width:18px;height:18px;}
+.error-msg{font-size:11px;color:#A32D2D;background:#FCEBEB;border:0.5px solid #F09595;border-radius:8px;padding:8px 12px;margin-bottom:1rem;display:none;}
+.error-msg.visible{display:block;}
+.success{text-align:center;padding:1.5rem 0;display:none;}
+.success.visible{display:block;}
+.success-emoji{font-size:40px;margin-bottom:12px;}
+.success-title{font-size:16px;font-weight:500;color:#26215C;margin-bottom:6px;}
+.success-sub{font-size:12px;color:#888780;line-height:1.6;}
+.terms{font-size:10px;color:#888780;text-align:center;margin-top:1rem;line-height:1.6;}
+.terms a{color:#534AB7;}
+.loading{display:none;text-align:center;padding:0.5rem 0;}
+.loading.visible{display:block;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon"><img src="icon.png" alt="yuwa Bloom Realm"/></div>
+    <div class="logo-title">yuwa Bloom Realm</div>
+    <div class="logo-sub">自分に還る場所へ</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tab-login" onclick="switchTab('login')">ログイン</button>
+    <button class="tab" id="tab-signup" onclick="switchTab('signup')">新規登録</button>
+  </div>
+
+  <div id="error-box" class="error-msg"></div>
+  <div id="loading" class="loading">少し待ってね…</div>
+
+  <div id="form-login">
+    <div class="field"><label>メールアドレス</label><input type="email" id="login-email" placeholder="your@email.com"/></div>
+    <div class="field"><label>パスワード</label><input type="password" id="login-pass" placeholder="••••••••"/></div>
+    <button class="submit-btn" onclick="doLogin()">自分に還る場所へ</button>
+    <div class="divider"><div class="divider-line"></div><div class="divider-text">または</div><div class="divider-line"></div></div>
+    <button class="google-btn" onclick="doGoogle()">
+      <svg class="google-icon" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.826.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
+      Googleでログイン
+    </button>
+    <div class="terms"><a href="#">利用規約</a>と<a href="#">プライバシーポリシー</a>に同意してログイン</div>
+  </div>
+
+  <div id="form-signup" style="display:none">
+    <div class="field"><label>ニックネーム</label><input type="text" id="signup-name" placeholder="あなたのお名前"/></div>
+    <div class="field"><label>メールアドレス</label><input type="email" id="signup-email" placeholder="your@email.com"/></div>
+    <div class="field"><label>パスワード（8文字以上）</label><input type="password" id="signup-pass" placeholder="••••••••"/></div>
+    <button class="submit-btn" onclick="doSignup()">王国への扉を開く</button>
+    <div class="divider"><div class="divider-line"></div><div class="divider-text">または</div><div class="divider-line"></div></div>
+    <button class="google-btn" onclick="doGoogle()">
+      <svg class="google-icon" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.706c-.18-.54-.282-1.117-.282-1.706s.102-1.166.282-1.706V4.962H.957C.347 6.175 0 7.55 0 9s.348 2.826.957 4.038l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 7.294C4.672 5.167 6.656 3.58 9 3.58z"/></svg>
+      Googleで登録
+    </button>
+    <div class="terms"><a href="#">利用規約</a>と<a href="#">プライバシーポリシー</a>に同意して登録</div>
+  </div>
+
+  <div id="success" class="success">
+    <div class="success-emoji">💜</div>
+    <div class="success-title" id="success-title">おかえり</div>
+    <div class="success-sub" id="success-sub">ゆわ王国へようこそ。<br>今日も灯しにきてくれたね。</div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDG3JQgy57WfibQ_4Rdh_K9DymEC7TZx0E",
+  authDomain: "yuwa-bloom-realm.firebaseapp.com",
+  projectId: "yuwa-bloom-realm",
+  storageBucket: "yuwa-bloom-realm.firebasestorage.app",
+  messagingSenderId: "772765861265",
+  appId: "1:772765861265:web:4d5e7a6441e218bfdd4630",
+  measurementId: "G-91LZR1XXDD"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// 管理者メール
+const ADMIN_EMAIL = "hinyarin1210@gmail.com";
+
+function showError(msg) {
+  const e = document.getElementById('error-box');
+  e.textContent = msg;
+  e.classList.add('visible');
+}
+function hideError() {
+  document.getElementById('error-box').classList.remove('visible');
+}
+function showLoading() {
+  document.getElementById('loading').classList.add('visible');
+}
+function hideLoading() {
+  document.getElementById('loading').classList.remove('visible');
+}
+
+function onLoginSuccess(user) {
+  const isAdmin = user.email === ADMIN_EMAIL;
+  localStorage.setItem('yuwa_user_email', user.email);
+  localStorage.setItem('yuwa_user_name', user.displayName || 'ゆわの仲間');
+  localStorage.setItem('yuwa_is_admin', isAdmin ? 'true' : 'false');
+  if (isAdmin) localStorage.setItem('yuwa_plan', 'mastery');
+
+  document.getElementById('form-login').style.display = 'none';
+  document.getElementById('form-signup').style.display = 'none';
+  const s = document.getElementById('success');
+  document.getElementById('success-title').textContent = isAdmin ? 'おかえり、女王様👑' : 'おかえり';
+  document.getElementById('success-sub').textContent = isAdmin
+    ? 'ゆわ王国へようこそ。\n全機能が使えるよ！'
+    : 'ゆわ王国へようこそ。\n今日も灯しにきてくれたね。';
+  s.classList.add('visible');
+
+  setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+}
+
+window.switchTab = function(t) {
+  document.getElementById('tab-login').classList.toggle('active', t==='login');
+  document.getElementById('tab-signup').classList.toggle('active', t==='signup');
+  document.getElementById('form-login').style.display = t==='login' ? 'block' : 'none';
+  document.getElementById('form-signup').style.display = t==='signup' ? 'block' : 'none';
+  hideError();
+}
+
+window.doLogin = async function() {
+  hideError(); showLoading();
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { hideLoading(); showError('メールアドレスとパスワードを入力してください'); return; }
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, pass);
+    hideLoading();
+    onLoginSuccess(result.user);
+  } catch(e) {
+    hideLoading();
+    showError('メールアドレスかパスワードが違うよ');
+  }
+}
+
+window.doSignup = async function() {
+  hideError(); showLoading();
+  const name = document.getElementById('signup-name').value;
+  const email = document.getElementById('signup-email').value;
+  const pass = document.getElementById('signup-pass').value;
+  if (!name || !email || !pass) { hideLoading(); showError('すべての項目を入力してください'); return; }
+  if (pass.length < 8) { hideLoading(); showError('パスワードは8文字以上で設定してください'); return; }
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(result.user, { displayName: name });
+    hideLoading();
+    onLoginSuccess(result.user);
+  } catch(e) {
+    hideLoading();
+    if (e.code === 'auth/email-already-in-use') showError('このメールアドレスはすでに登録されてるよ');
+    else showError('登録できなかったよ。もう一度試してみて');
+  }
+}
+
+window.doGoogle = async function() {
+  hideError(); showLoading();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    hideLoading();
+    onLoginSuccess(result.user);
+  } catch(e) {
+    hideLoading();
+    showError('Googleログインできなかったよ。もう一度試してみて');
+  }
+}
+</script>
+</body>
+</html>

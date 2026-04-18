@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>ソルのセッション予約 — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#F5F8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#E6F1FB;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#042C53;}
+
+.sol-stage{text-align:center;padding:1rem 1.25rem 0.75rem;}
+.sol-img{width:140px;height:140px;margin:0 auto 0.75rem;border-radius:50%;overflow:hidden;background:#E6F1FB;border:3px solid #85B7EB;}
+.sol-img img{width:100%;height:100%;object-fit:cover;}
+.sol-name{font-size:12px;color:#185FA5;margin-bottom:3px;}
+.sol-msg{font-size:12px;color:#378ADD;font-style:italic;}
+
+.menu-section{margin:0 1.25rem 1.25rem;}
+.section-label{font-size:11px;letter-spacing:0.08em;color:#888780;margin-bottom:10px;}
+.menu-card{
+  background:#fff;border:0.5px solid #B5D4F4;
+  border-radius:16px;padding:1.25rem;
+  margin-bottom:10px;cursor:pointer;
+  transition:border-color 0.15s;
+}
+.menu-card:hover{border-color:#378ADD;}
+.menu-card:active{transform:scale(0.99);}
+.menu-card.selected{border:2px solid #185FA5;background:#E6F1FB;}
+.menu-title{font-size:14px;font-weight:500;color:#042C53;margin-bottom:4px;}
+.menu-desc{font-size:11px;color:#888780;line-height:1.5;}
+.menu-price{font-size:13px;color:#185FA5;font-weight:500;margin-top:6px;}
+.menu-free{font-size:11px;padding:2px 10px;background:#E6F1FB;color:#185FA5;border-radius:20px;display:inline-block;margin-top:4px;}
+
+.form-section{margin:0 1.25rem 1.25rem;background:#fff;border:0.5px solid #B5D4F4;border-radius:16px;padding:1.25rem;display:none;}
+.form-section.visible{display:block;}
+.form-title{font-size:13px;font-weight:500;color:#042C53;margin-bottom:1rem;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:12px;color:#888780;margin-bottom:6px;}
+.field input, .field select, .field textarea{
+  width:100%;padding:10px 12px;font-size:13px;font-family:inherit;
+  background:#fff;border:0.5px solid #B5D4F4;
+  border-radius:10px;color:#042C53;outline:none;
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:#378ADD;box-shadow:0 0 0 3px #E6F1FB;}
+.field textarea{min-height:72px;resize:none;}
+
+.submit-btn{
+  width:100%;padding:12px;font-size:14px;font-weight:500;
+  font-family:inherit;background:#185FA5;color:#fff;
+  border:none;border-radius:12px;cursor:pointer;
+}
+.submit-btn:hover{background:#0C447C;}
+.submit-btn:disabled{background:#B5D4F4;cursor:not-allowed;}
+
+.success-msg{
+  margin:0 1.25rem 1.25rem;
+  background:#E6F1FB;border:0.5px solid #85B7EB;
+  border-radius:16px;padding:1.5rem;text-align:center;
+  display:none;
+}
+.success-msg.visible{display:block;}
+.success-emoji{font-size:32px;margin-bottom:12px;}
+.success-title{font-size:15px;font-weight:500;color:#042C53;margin-bottom:6px;}
+.success-sub{font-size:12px;color:#888780;line-height:1.6;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <button class="back-btn" onclick="location.href='index.html'">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">ソルのセッション予約</div>
+  </div>
+
+  <div class="sol-stage">
+    <div class="sol-img"><img src="soru.png" alt="ソル"/></div>
+    <div class="sol-name">ほしはねソル</div>
+    <div class="sol-msg" id="sol-msg">ゆわのもとへ、案内するよ ✦</div>
+  </div>
+
+  <div class="menu-section">
+    <div class="section-label">メニューを選んで</div>
+
+    <div class="menu-card" onclick="selectMenu(this, '無料個別相談（30分）')">
+      <div class="menu-title">無料個別相談</div>
+      <div class="menu-desc">はじめての方向け。ゆわと30分、あなたの今とこれからをお話しします。</div>
+      <div class="menu-free">無料・30分</div>
+    </div>
+
+    <div class="menu-card" onclick="selectMenu(this, 'Bloom21体験セッション')">
+      <div class="menu-title">Bloom21 体験セッション</div>
+      <div class="menu-desc">ゆわメソッドを体験できる60分セッション。あなたの言葉のブレーキを一緒に外しましょう。</div>
+      <div class="menu-price">詳細はご相談</div>
+    </div>
+
+    <div class="menu-card" onclick="selectMenu(this, 'カウンセラー養成講座 説明会')">
+      <div class="menu-title">カウンセラー養成講座 説明会</div>
+      <div class="menu-desc">「ゆわ式 言葉の処方箋メソッド」カウンセラー養成講座の詳細をお伝えします。</div>
+      <div class="menu-free">無料・説明会</div>
+    </div>
+  </div>
+
+  <div class="form-section" id="form-section">
+    <div class="form-title" id="form-title">申し込みフォーム</div>
+    <div class="field">
+      <label>お名前</label>
+      <input type="text" id="f-name" placeholder="山田 花子"/>
+    </div>
+    <div class="field">
+      <label>メールアドレス</label>
+      <input type="email" id="f-email" placeholder="your@email.com"/>
+    </div>
+    <div class="field">
+      <label>希望日時（第1〜3希望）</label>
+      <textarea id="f-date" placeholder="例：4月20日午前、4月21日午後など"></textarea>
+    </div>
+    <div class="field">
+      <label>ひとことメッセージ（任意）</label>
+      <textarea id="f-msg" placeholder="今のあなたの状況や、聞いてみたいことなど…"></textarea>
+    </div>
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()">ソルに申し込みをお願いする ✦</button>
+  </div>
+
+  <div class="success-msg" id="success-msg">
+    <div class="success-emoji">✦</div>
+    <div class="success-title">申し込みが届いたよ！</div>
+    <div class="success-sub">ソルがゆわに届けてくれたよ。<br>2〜3日以内にゆわからご連絡します。<br>楽しみに待っていてね💜</div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#E6F1FB;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#185FA5" stroke-width="1.2"/><path d="M5 2v3M11 2v3M2 7h12" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#185FA5;">予約</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedMenu = '';
+
+function selectMenu(el, menuName) {
+  document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedMenu = menuName;
+  document.getElementById('form-title').textContent = menuName + ' 申し込みフォーム';
+  document.getElementById('form-section').classList.add('visible');
+  document.getElementById('sol-msg').textContent = menuName + 'を選んでくれたんだね ✦';
+  document.getElementById('form-section').scrollIntoView({behavior:'smooth'});
+
+  const email = localStorage.getItem('yuwa_user_email') || '';
+  const name = localStorage.getItem('yuwa_user_name') || '';
+  if (email) document.getElementById('f-email').value = email;
+  if (name) document.getElementById('f-name').value = name;
+}
+
+async function submitForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const date = document.getElementById('f-date').value.trim();
+  if (!name || !email || !date) {
+    alert('お名前・メールアドレス・希望日時を入力してね！');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送信中…';
+
+  try {
+    const res = await fetch('https://formspree.io/f/xdayonel', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        メニュー: selectedMenu,
+        お名前: name,
+        メールアドレス: email,
+        希望日時: date,
+        メッセージ: document.getElementById('f-msg').value,
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('form-section').style.display = 'none';
+      document.getElementById('success-msg').classList.add('visible');
+      document.getElementById('sol-msg').textContent = 'ゆわに届けたよ！待っていてね ✦';
+    } else {
+      throw new Error('送信失敗');
+    }
+  } catch(e) {
+    alert('送信できなかったよ。もう一度試してみてね。');
+    btn.disabled = false;
+    btn.textContent = 'ソルに申し込みをお願いする ✦';
+  }
+}
+</script>
+</body>
+</html>

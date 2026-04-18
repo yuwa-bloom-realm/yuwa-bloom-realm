@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta property="og:title" content="yuwa Bloom Realm"/>
+<meta property="og:description" content="ゆわ王国へようこそ。毎日ことばの処方箋、カード、アファメーションで心を灯そう ✦"/>
+<meta property="og:image" content="https://yuwa-bloom-realm.netlify.app/icon.png"/>
+<meta property="og:url" content="https://yuwa-bloom-realm.netlify.app"/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:image" content="https://yuwa-bloom-realm.netlify.app/icon.png"/>
+<link rel="apple-touch-icon" href="icon.png"/>
+<link rel="icon" href="icon.png"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.overlay.visible{display:flex;}
+.popup{background:#fff;border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:390px;position:relative;}
+.popup-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:#F1EFE8;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.popup-img{width:100px;height:100px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid #AFA9EC;}
+.popup-img img{width:100%;height:100%;object-fit:cover;}
+.popup-name{text-align:center;font-size:17px;font-weight:500;color:#26215C;margin-bottom:4px;}
+.popup-role{text-align:center;font-size:11px;padding:3px 14px;background:#EEEDFE;color:#534AB7;border-radius:20px;display:inline-block;margin-bottom:12px;}
+.popup-center{text-align:center;}
+.popup-desc{font-size:13px;color:#444441;line-height:1.8;}
+.popup-btn{width:100%;padding:12px;font-size:14px;font-weight:500;font-family:inherit;background:#534AB7;color:#fff;border:none;border-radius:12px;cursor:pointer;margin-top:1.25rem;}
+</style>
+<title>yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;color:#2C2C2A;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;justify-content:space-between;}
+.top-brand{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.top-plan{font-size:10px;padding:3px 10px;background:#EEEDFE;color:#3C3489;border-radius:20px;border:0.5px solid #AFA9EC;}
+
+.hero{margin:0 1.25rem 1.25rem;background:#EEEDFE;border-radius:20px;border:0.5px solid #AFA9EC;padding:1.25rem;display:flex;align-items:center;gap:14px;}
+.hero-date{font-size:10px;color:#534AB7;margin-bottom:4px;}
+.hero-greeting{font-size:15px;font-weight:500;color:#26215C;line-height:1.5;}
+.hero-sub{font-size:11px;color:#534AB7;margin-top:4px;}
+.hero-img{width:80px;height:80px;flex-shrink:0;border-radius:50%;overflow:hidden;background:#fff;border:2px solid #AFA9EC;}
+.hero-img img{width:100%;height:100%;object-fit:cover;}
+
+.section-title{font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;}
+
+.friends-scroll{display:flex;gap:12px;padding:0 1.25rem;overflow-x:auto;margin-bottom:1.5rem;scrollbar-width:none;}
+.friends-scroll::-webkit-scrollbar{display:none;}
+.friend-item{flex-shrink:0;text-align:center;cursor:pointer;}
+.friend-avatar{width:58px;height:58px;border-radius:50%;border:2px solid #D3D1C7;overflow:hidden;background:#F1EFE8;margin-bottom:4px;transition:border-color 0.15s;}
+.friend-avatar img{width:100%;height:100%;object-fit:cover;}
+.friend-name{font-size:9px;color:#888780;white-space:nowrap;}
+
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 1.25rem;margin-bottom:1.5rem;}
+.menu-card{background:#fff;border:0.5px solid #D3D1C7;border-radius:16px;padding:1rem;cursor:pointer;transition:border-color 0.15s;display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
+.menu-card:hover{border-color:#AFA9EC;}
+.menu-card:active{transform:scale(0.98);}
+.menu-icon{width:46px;height:46px;border-radius:12px;overflow:hidden;}
+.menu-icon img{width:100%;height:100%;object-fit:cover;}
+.menu-label{font-size:13px;font-weight:500;}
+.menu-desc{font-size:10px;color:#888780;line-height:1.4;}
+
+.aff-card{margin:0 1.25rem 1.5rem;background:#FBEAF0;border:0.5px solid #ED93B1;border-radius:16px;padding:1.25rem;}
+.aff-from{font-size:10px;color:#993556;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.aff-dot{width:6px;height:6px;border-radius:50%;background:#D4537E;}
+.aff-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:#4B1528;line-height:1.7;}
+.aff-btn{margin-top:10px;font-size:11px;color:#993556;background:none;border:none;cursor:pointer;font-family:'Zen Maru Gothic',sans-serif;padding:0;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+.nav-item.active .nav-label{color:#534AB7;}
+.nav-item.active .nav-icon{background:#EEEDFE;}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.overlay.visible{display:flex;}
+.popup{background:#fff;border-radius:24px 24px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:390px;position:relative;}
+.popup-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:#F1EFE8;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.popup-img{width:100px;height:100px;border-radius:50%;overflow:hidden;margin:0 auto 12px;border:3px solid #AFA9EC;}
+.popup-img img{width:100%;height:100%;object-fit:cover;}
+.popup-name{text-align:center;font-size:17px;font-weight:500;color:#26215C;margin-bottom:4px;}
+.popup-role{text-align:center;font-size:11px;padding:3px 14px;background:#EEEDFE;color:#534AB7;border-radius:20px;display:inline-block;margin-bottom:12px;}
+.popup-center{text-align:center;}
+.popup-desc{font-size:13px;color:#444441;line-height:1.8;}
+.popup-btn{width:100%;padding:12px;font-size:14px;font-weight:500;font-family:inherit;background:#534AB7;color:#fff;border:none;border-radius:12px;cursor:pointer;margin-top:1.25rem;}
+</style>
+
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="yuwa Bloom">
+</head>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDG3JQgy57WfibQ_4Rdh_K9DymEC7TZx0E",
+  authDomain: "yuwa-bloom-realm.firebaseapp.com",
+  projectId: "yuwa-bloom-realm",
+  storageBucket: "yuwa-bloom-realm.firebasestorage.app",
+  messagingSenderId: "772765861265",
+  appId: "1:772765861265:web:4d5e7a6441e218bfdd4630",
+  measurementId: "G-91LZR1XXDD"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = 'login.html';
+  } else {
+    const isAdmin = user.email === 'hinyarin1210@gmail.com';
+    if (isAdmin) localStorage.setItem('yuwa_plan', 'mastery');
+    document.getElementById('plan-label').textContent = isAdmin ? '👑 女王' : (localStorage.getItem('yuwa_plan') || 'Seed') + ' プラン';
+  }
+});
+</script>
+<body>
+
+<div class="overlay" id="char-overlay" onclick="closePopup(event)">
+  <div class="popup" id="char-popup">
+    <button class="popup-close" onclick="closePopupBtn()">✕</button>
+    <div class="popup-img"><img id="popup-img" src="" alt=""/></div>
+    <div class="popup-center">
+      <div class="popup-name" id="popup-name"></div>
+      <div><span class="popup-role" id="popup-role"></span></div>
+    </div>
+    <div class="popup-desc" id="popup-desc" style="margin-top:12px;"></div>
+    <button class="popup-btn" id="popup-btn" onclick="goToPage()">会いに行く ✦</button>
+  </div>
+</div>
+
+<div class="app">
+  <div class="top-bar">
+    <div class="top-brand">yuwa Bloom Realm</div>
+    <div class="top-plan" id="plan-label">Bloom+</div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="hero-date" id="hero-date"></div>
+      <div class="hero-greeting">おかえり、ゆわの王国へ。<br>今日も灯しにきたね。</div>
+      <div class="hero-sub">仲間たちが待ってるよ ✦</div>
+    </div>
+    <div class="hero-img">
+      <img src="yuwa.png" alt="ゆわ"/>
+    </div>
+  </div>
+
+  <div class="section-title">仲間たち</div>
+  <div class="friends-scroll" style="flex-wrap:wrap;overflow-x:visible;gap:10px;justify-content:center;">
+    <div class="friend-item" onclick="showChar('yuwa')"><div class="friend-avatar" style="border-color:#D4537E"><img src="yuwa.png" alt="ゆわ"/></div><div class="friend-name">ゆわ</div></div>
+    <div class="friend-item" onclick="showChar('hana')"><div class="friend-avatar" style="border-color:#AFA9EC"><img src="hana.png" alt="花フェル"/></div><div class="friend-name">花フェル</div></div>
+    <div class="friend-item" onclick="showChar('syueru')"><div class="friend-avatar" style="border-color:#9FE1CB"><img src="syueru.png" alt="シュエル"/></div><div class="friend-name">シュエル</div></div>
+    <div class="friend-item" onclick="showChar('nina')"><div class="friend-avatar" style="border-color:#7F77DD"><img src="nina.png" alt="ニーナ"/></div><div class="friend-name">ニーナ</div></div>
+    <div class="friend-item" onclick="showChar('rumi')"><div class="friend-avatar" style="border-color:#FAC775"><img src="rumi.png" alt="ルミ"/></div><div class="friend-name">ルミ</div></div>
+    <div class="friend-item" onclick="showChar('noa')"><div class="friend-avatar" style="border-color:#EF9F27"><img src="noa.png" alt="ノア"/></div><div class="friend-name">ノア</div></div>
+    <div class="friend-item" onclick="showChar('soru')"><div class="friend-avatar" style="border-color:#B5D4F4"><img src="soru.png" alt="ソル"/></div><div class="friend-name">ソル</div></div>
+    <div class="friend-item" onclick="showChar('rea')"><div class="friend-avatar" style="border-color:#85B7EB"><img src="rea.png" alt="レア"/></div><div class="friend-name">レア</div></div>
+  </div>
+
+  <div class="section-title">今日、何する？</div>
+  <div class="menu-grid">
+    <div class="menu-card" onclick="location.href='prescription.html'">
+      <div class="menu-icon"><img src="syueru.png" alt=""/></div>
+      <div class="menu-label">ことばの処方箋</div>
+      <div class="menu-desc">シュエルが今日の言葉を届けてくれる</div>
+    </div>
+    <div class="menu-card" onclick="location.href='card.html'">
+      <div class="menu-icon"><img src="rumi.png" alt=""/></div>
+      <div class="menu-label">カードを引く</div>
+      <div class="menu-desc">ルミが今日のメッセージを引いてくれる</div>
+    </div>
+    <div class="menu-card" onclick="location.href='affirmation.html'">
+      <div class="menu-icon"><img src="hana.png" alt=""/></div>
+      <div class="menu-label">アファメーション</div>
+      <div class="menu-desc">花フェルがゆわからの言葉を運んでくる</div>
+    </div>
+    <div class="menu-card" onclick="location.href='nina.html'">
+      <div class="menu-icon"><img src="nina.png" alt=""/></div>
+      <div class="menu-label">今日の星座占い</div>
+      <div class="menu-desc">ニーナが星の声を届けてくれる</div>
+    </div>
+    <div class="menu-card" onclick="location.href='session.html'">
+      <div class="menu-icon"><img src="soru.png" alt=""/></div>
+      <div class="menu-label">セッション予約</div>
+      <div class="menu-desc">ソルと一緒にゆわに会いに行こう</div>
+    </div>
+    <div class="menu-card" onclick="location.href='game.html'">
+      <div class="menu-icon" style="background:#F1EFE8;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🎮</div>
+      <div class="menu-label">ゆわ王国ゲーム</div>
+      <div class="menu-desc">キャラを育てて遊ぼう！</div>
+    </div>
+    <!-- 短編漫画（coming soon）→ 特別鑑定 -->
+    <div class="menu-card" style="opacity:0.6;cursor:default;">
+      <div class="menu-icon" style="background:#FBEAF0;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">📖</div>
+      <div class="menu-label">短編漫画</div>
+      <div class="menu-desc">もうすぐ登場！お楽しみに ✦</div>
+    </div>
+    <div class="menu-card" onclick="location.href='numerology.html'">
+      <div class="menu-icon" style="width:46px;height:46px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#1a0a2e,#3d1a6e,#1a0a2e);display:flex;align-items:center;justify-content:center;position:relative;">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="10" stroke="#C8A8F0" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="18" cy="18" r="6" stroke="#E0C8FF" stroke-width="0.8" opacity="0.6"/>
+          <path d="M18 4 L19.2 14.8 L30 14 L21 19.5 L24.5 30 L18 23 L11.5 30 L15 19.5 L6 14 L16.8 14.8 Z" fill="#E8D0FF" opacity="0.9"/>
+          <circle cx="18" cy="18" r="2.5" fill="#fff" opacity="0.95"/>
+          <circle cx="10" cy="8" r="1" fill="#C8A8F0" opacity="0.7"/>
+          <circle cx="26" cy="6" r="0.8" fill="#E0C8FF" opacity="0.6"/>
+          <circle cx="28" cy="26" r="1" fill="#C8A8F0" opacity="0.7"/>
+          <circle cx="8" cy="24" r="0.7" fill="#E0C8FF" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="menu-label">特別鑑定</div>
+      <div class="menu-desc">アプリ登録者さま限定・本当のあなたを知る鑑定</div>
+    </div>
+    <!-- 講座案内（coming soon）→ お問い合わせ -->
+    <div class="menu-card" style="opacity:0.6;cursor:default;">
+      <div class="menu-icon" style="background:#E1F5EE;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🌱</div>
+      <div class="menu-label">講座案内</div>
+      <div class="menu-desc">もうすぐ登場！お楽しみに ✦</div>
+    </div>
+    <div class="menu-card" onclick="location.href='contact.html'">
+      <div class="menu-icon" style="background:#EEEDFE;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">✉️</div>
+      <div class="menu-label">お問い合わせ</div>
+      <div class="menu-desc">ご質問・ご相談はこちら</div>
+    </div>
+    <!-- ポイント追加を最下段・1列に -->
+    <div class="menu-card" onclick="location.href='point_center.html'" style="grid-column: 1 / -1;">
+      <div class="menu-icon" style="background:#EEEDFE;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;">🌟</div>
+      <div class="menu-label">ポイント追加</div>
+      <div class="menu-desc">ポイントを貯めてアイテムと交換！</div>
+    </div>
+  </div>
+
+  <div style="margin:0 1.25rem 1.5rem;background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:16px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="location.href='point_center.html'">
+    <div>
+      <div style="font-size:10px;color:#7F77DD;margin-bottom:3px;">毎日受け取ってね</div>
+      <div style="font-size:14px;font-weight:500;color:#26215C;">ログインボーナス ✦</div>
+      <div style="font-size:11px;color:#534AB7;margin-top:2px;" id="bonus-pt-display">保有ポイントを確認</div>
+    </div>
+    <div style="font-size:28px;">🌟</div>
+  </div>
+
+  <div class="aff-card">
+    <div class="aff-from"><div class="aff-dot"></div>ゆわからあなたへ、今日のことば</div>
+    <div class="aff-text" id="aff-text">あなたが今ここにいること、それだけで十分な光がある。</div>
+    <button class="aff-btn" onclick="nextAff()">次のことばを受け取る →</button>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item active">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#534AB7" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7">ホーム</div>
+    </div>
+    <div class="nav-item" onclick="location.href='menu.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/></svg>
+      </div>
+      <div class="nav-label">メニュー</div>
+    </div>
+    <div class="nav-item" onclick="location.href='mypage.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHARS = {
+yuwa: {
+name: 'ゆわ',
+fullname: '桜庭ゆわ',
+img: 'yuwa.png',
+role: 'yuwa Bloom Realm 主宰',
+desc: '元看護師20年以上の経験から、脳科学×心理学×言葉の力を組み合わせた「ゆわメソッド」を開発。\n\n「黙ってても人が集まってくる存在」を目指し、オンラインで活動中。\n\nあなたの言葉のブレーキを外して、本来の輝きを取り戻すお手伝いをしています💜',
+page: 'session.html'
+},
+hana: {
+name: '花フェル',
+fullname: '花フェル',
+img: 'hana.png',
+role: 'アファメーション担当',
+desc: '虹色の花を纏った、愛と調和の精霊。\n\nいつもゆわのそばにいて、あなたへの言葉を運んでくれる存在。\n\n毎日ひとつ、あなたの潜在意識に届くアファメーションを持ってきてくれるよ。\n\n花フェルのことばは、あなたの心の種に水をあげてくれる🌸',
+page: 'affirmation.html'
+},
+syueru: {
+name: 'シュエル',
+fullname: 'ことのはシュエル',
+img: 'syueru.png',
+role: 'ことばの処方箋担当',
+desc: '言葉の力を知り尽くした、知恵の精霊。\n\n深い緑の翼を持ち、あなたの心の声をそっと聞いてくれる。\n\n今日の気持ちを話すと、あなただけのことばの処方箋を書いてくれるよ。\n\nシュエルの言葉は、心の深いところまで届く🦉',
+page: 'prescription.html'
+},
+nina: {
+name: 'ニーナ',
+fullname: '月しずくニーナ',
+img: 'nina.png',
+role: '星座占い担当',
+desc: '月と星の声を聞くことができる、神秘の精霊。\n\n额に月の紋章を持ち、宇宙のリズムとつながっている。\n\n毎日星の声を読み取り、あなたへのメッセージを届けてくれる。\n\n迷った時はニーナに聞いてみて🌙',
+page: 'nina.html'
+},
+rumi: {
+name: 'ルミ',
+fullname: '朝つゆルミ',
+img: 'rumi.png',
+role: 'カード担当',
+desc: '夜明けの光を纏った、希望の精霊。\n\n桜色の毛並みと朝露のような透明感が特徴。\n\n今日のあなたへのメッセージカードを引いてくれるよ。\n\nルミが選んでくれたカードは、今日必要な言葉を教えてくれる✨',
+page: 'card.html'
+},
+noa: {
+name: 'ノア',
+fullname: 'ひかりこもれびノア',
+img: 'noa.png',
+role: 'お知らせ担当',
+desc: '黄金色に輝く、光と生命の精霊。\n\n葉っぱと花を纏い、いつも元気いっぱい！\n\nゆわ王国の新しいお知らせやイベント情報をいち早く教えてくれる。\n\nノアが知らせてくれる情報は見逃せないよ🌟',
+page: 'index.html'
+},
+soru: {
+name: 'ソル',
+fullname: 'ほしはねソル',
+img: 'soru.png',
+role: 'セッション予約担当',
+desc: '星の翼を持つ、自由な空の精霊。\n\n月の冠をつけた、まるで妖精のような存在。\n\nゆわへのセッション予約をサポートしてくれる心強い案内役。\n\nソルと一緒にゆわに会いに行こう⭐',
+page: 'session.html'
+},
+rea: {
+name: 'レア',
+fullname: 'オーロラレア',
+img: 'rea.png',
+role: 'Mastery限定キャラ',
+desc: 'オーロラを纏った、王国で最も神秘的な存在。\n\n虹色に輝く毛並みと星のアクセサリーが特徴。\n\nMasteryプランの方だけが出会える、特別な精霊。\n\nレアに会えた人は、きっと人生が大きく動き出すよ👑',
+page: 'plan.html'
+}
+};
+
+let currentPage = '';
+
+function showChar(charKey) {
+const c = CHARS[charKey];
+if (!c) return;
+document.getElementById('popup-img').src = c.img;
+document.getElementById('popup-name').textContent = c.fullname;
+document.getElementById('popup-role').textContent = c.role;
+document.getElementById('popup-desc').textContent = c.desc;
+currentPage = c.page;
+document.getElementById('char-overlay').classList.add('visible');
+}
+
+function closePopup(e) {
+if (e.target === document.getElementById('char-overlay')) closePopupBtn();
+}
+function closePopupBtn() {
+document.getElementById('char-overlay').classList.remove('visible');
+}
+function goToPage() {
+location.href = currentPage;
+}
+
+const d = new Date();
+document.getElementById('hero-date').textContent = d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
+const pts = localStorage.getItem('yuwa_points') || '0';
+const bonusEl = document.getElementById('bonus-pt-display');
+if (bonusEl) bonusEl.textContent = '現在 ' + pts + 'pt 保有中';
+
+const affs = [
+'あなたが今ここにいること、それだけで十分な光がある。',
+'迷いながら進むあなたが、一番美しい。',
+'今日のあなたは、昨日のあなたより少しだけ自由だ。',
+'心が揺れるのは、それだけ本気で生きている証拠。',
+'あなたの優しさは、この世界に必要な魔法。',
+'休むことも、咲くための準備。',
+'光を求めているあなたが、すでに光だよ。',
+];
+let idx = 0;
+function nextAff(){ idx=(idx+1)%affs.length; document.getElementById('aff-text').textContent=affs[idx]; }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ｜yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #2d1b4e;
+    --purple-mid: #4a2d7a;
+    --purple-light: #7c5cbf;
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --gold-pale: #f5ead0;
+    --white: #fdf8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--purple-deep);
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: var(--gold-light);
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.7; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  header {
+    padding: 40px 0 10px;
+    text-align: center;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gold-light);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    margin-bottom: 30px;
+  }
+  .back-btn:hover { opacity: 1; }
+
+  .hero {
+    text-align: center;
+    padding: 20px 0 44px;
+    animation: fadeUp 0.9s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+  .divider {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 16px auto;
+  }
+  .hero-desc {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: rgba(253,248,240,0.75);
+  }
+
+  /* フォーム */
+  .form-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 24px;
+    padding: 40px 32px;
+    animation: fadeUp 0.9s ease 0.2s both;
+  }
+
+  .form-group {
+    margin-bottom: 26px;
+  }
+  .form-label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+  .form-label span {
+    font-size: 0.7rem;
+    color: rgba(201,168,76,0.6);
+    margin-left: 6px;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    -webkit-appearance: none;
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: rgba(253,248,240,0.3);
+  }
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: rgba(201,168,76,0.6);
+    background: rgba(255,255,255,0.08);
+  }
+  .form-textarea {
+    height: 140px;
+    resize: vertical;
+    line-height: 1.8;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--purple-deep);
+    border: none;
+    border-radius: 50px;
+    padding: 17px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(201,168,76,0.4);
+  }
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .form-note {
+    font-size: 0.75rem;
+    color: rgba(253,248,240,0.4);
+    text-align: center;
+    margin-top: 16px;
+    line-height: 1.8;
+  }
+
+  /* 送信完了メッセージ */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 50px 20px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 300;
+  }
+  .success-text {
+    font-size: 0.9rem;
+    color: rgba(253,248,240,0.7);
+    line-height: 2;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px 0 10px;
+    font-size: 0.75rem;
+    color: rgba(253,248,240,0.3);
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <header>
+    <a href="index.html" class="back-btn">← ホームへ戻る</a>
+  </header>
+
+  <section class="hero">
+    <p class="hero-label">✦ CONTACT ✦</p>
+    <h1 class="hero-title">お問い合わせ</h1>
+    <div class="divider"></div>
+    <p class="hero-desc">
+      ご質問やご不明な点があれば<br>
+      お気軽にどうぞ♩<br>
+      通常2〜3営業日以内にご返信いたします。
+    </p>
+  </section>
+
+  <div class="form-card" id="formCard">
+    <form id="contactForm" action="https://formspree.io/f/xjgjrbge" method="POST">
+      <input type="hidden" name="_replyto" value="yuwa.240817@gmail.com">
+      <input type="hidden" name="_subject" value="【yuwa Bloom Realm】お問い合わせ">
+
+      <div class="form-group">
+        <label class="form-label" for="name">お名前 <span>※必須</span></label>
+        <input class="form-input" type="text" id="name" name="name" placeholder="例）山田 花子" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">メールアドレス <span>※必須</span></label>
+        <input class="form-input" type="email" id="email" name="email" placeholder="例）example@gmail.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="message">お問い合わせ内容 <span>※必須</span></label>
+        <textarea class="form-textarea" id="message" name="message" placeholder="ご質問・ご相談内容をお書きください" required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">送信する ✦</button>
+      <p class="form-note">
+        送信後、ご入力いただいたメールアドレスへ<br>
+        返信いたします。
+      </p>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">✦</div>
+      <p class="success-title">送信が完了しました</p>
+      <p class="success-text">
+        お問い合わせありがとうございます。<br>
+        2〜3営業日以内にご返信いたします。<br>
+        しばらくお待ちください♩
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© yuwa Bloom Realm</p>
+</footer>
+
+<script>
+  // 星を生成
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 50; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      --dur: ${2 + Math.random() * 4}s;
+      animation-delay: ${Math.random() * 5}s;
+      width: ${Math.random() > 0.7 ? 3 : 2}px;
+      height: ${Math.random() > 0.7 ? 3 : 2}px;
+    `;
+    starsEl.appendChild(star);
+  }
+
+  // フォーム送信処理
+  const form = document.getElementById('contactForm');
+  const successMsg = document.getElementById('successMsg');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('.submit-btn');
+    btn.textContent = '送信中...';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+      } else {
+        btn.textContent = '送信する ✦';
+        btn.disabled = false;
+        alert('送信に失敗しました。もう一度お試しください。');
+      }
+    } catch {
+      btn.textContent = '送信する ✦';
+      btn.disabled = false;
+      alert('送信に失敗しました。もう一度お試しください。');
+    }
+  });
+</script>
+</body>
+</html>

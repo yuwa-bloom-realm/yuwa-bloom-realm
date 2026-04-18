@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>花フェルのアファメーション — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#EEEDFE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#26215C;}
+
+.date-badge{
+  text-align:center;margin:0 1.25rem 1.5rem;
+  font-size:11px;color:#534AB7;letter-spacing:0.06em;
+}
+
+.feru-stage{
+  text-align:center;padding:1.5rem 1.25rem 1rem;
+  position:relative;
+}
+.feru-img{
+  width:160px;height:160px;margin:0 auto 1rem;
+  border-radius:50%;overflow:hidden;
+  background:#EEEDFE;border:3px solid #AFA9EC;
+  position:relative;
+}
+.feru-img img{width:100%;height:100%;object-fit:cover;}
+.feru-name{font-size:12px;color:#534AB7;margin-bottom:4px;}
+.feru-msg{font-size:12px;color:#888780;font-style:italic;}
+
+.aff-card{
+  margin:0 1.25rem 1.25rem;
+  background:#fff;
+  border:0.5px solid #AFA9EC;
+  border-radius:20px;
+  padding:1.75rem 1.5rem;
+  text-align:center;
+  min-height:160px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.aff-label{
+  font-size:10px;letter-spacing:0.1em;color:#534AB7;
+  margin-bottom:1rem;
+  background:#EEEDFE;padding:3px 12px;border-radius:20px;
+}
+.aff-main{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-style:italic;font-weight:400;
+  color:#26215C;line-height:1.6;
+  margin-bottom:0.5rem;
+}
+.aff-sub{
+  font-size:12px;color:#888780;line-height:1.7;
+  margin-top:0.75rem;
+}
+.aff-loading{
+  font-size:13px;color:#AFA9EC;
+}
+.loading-dots{display:flex;justify-content:center;gap:5px;margin-top:0.5rem;}
+.dot{width:6px;height:6px;border-radius:50%;background:#AFA9EC;animation:pulse 1.2s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,80%,100%{transform:scale(0.8);opacity:0.5;}40%{transform:scale(1.2);opacity:1;}}
+
+.declare-btn{
+  display:block;width:calc(100% - 2.5rem);margin:0 1.25rem 1rem;
+  padding:14px;font-size:15px;font-weight:500;
+  font-family:'Zen Maru Gothic',sans-serif;
+  background:#534AB7;color:#fff;border:none;
+  border-radius:14px;cursor:pointer;
+  transition:background 0.15s;letter-spacing:0.04em;
+}
+.declare-btn:hover{background:#3C3489;}
+.declare-btn:disabled{background:#AFA9EC;cursor:not-allowed;}
+
+.declared-msg{
+  text-align:center;margin:0 1.25rem 1.25rem;
+  font-size:12px;color:#534AB7;
+  background:#EEEDFE;border-radius:12px;padding:10px;
+  display:none;
+}
+.declared-msg.visible{display:block;}
+
+.streak-section{
+  margin:0 1.25rem 1.5rem;
+  background:#FAF8FF;border:0.5px solid #D3D1C7;
+  border-radius:16px;padding:1rem 1.25rem;
+}
+.streak-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.streak-label{font-size:12px;color:#888780;}
+.streak-count{font-size:18px;font-weight:500;color:#534AB7;}
+.streak-days{display:flex;gap:4px;}
+.streak-day{
+  width:28px;height:28px;border-radius:50%;
+  background:#F1EFE8;border:0.5px solid #D3D1C7;
+  font-size:9px;color:#888780;
+  display:flex;align-items:center;justify-content:center;
+}
+.streak-day.done{background:#EEEDFE;border-color:#AFA9EC;color:#534AB7;}
+.streak-day.today{background:#534AB7;border-color:#534AB7;color:#fff;}
+
+.past-section{margin:0 1.25rem;}
+.past-title{font-size:11px;letter-spacing:0.08em;color:#888780;margin-bottom:10px;}
+.past-item{
+  padding:10px 0;border-bottom:0.5px solid #F1EFE8;
+}
+.past-item:last-child{border-bottom:none;}
+.past-date{font-size:10px;color:#AFA9EC;margin-bottom:3px;}
+.past-text{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:#444441;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">花フェルのアファメーション</div>
+  </div>
+
+  <div class="date-badge" id="date-badge"></div>
+
+  <div class="feru-stage">
+    <div class="feru-img">
+      <img src="hana.png" alt="花フェル"/>
+    </div>
+    <div class="feru-name">花フェル</div>
+    <div class="feru-msg" id="feru-msg">今日のことば、持ってきたよ ✦</div>
+  </div>
+
+  <div class="aff-card" id="aff-card">
+    <div class="aff-label">今日のアファメーション</div>
+    <div class="aff-loading" id="aff-loading">
+      花フェルが言葉を運んでいるよ…
+      <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    </div>
+    <div id="aff-content" style="display:none;text-align:center;">
+      <div class="aff-main" id="aff-main"></div>
+      <div class="aff-sub" id="aff-sub"></div>
+    </div>
+  </div>
+
+  <button class="declare-btn" id="declare-btn" onclick="declare()" disabled>声に出して宣言する 💜</button>
+  <div class="declared-msg" id="declared-msg">✦ 宣言できたね。今日の言葉はあなたの中に灯ったよ。</div>
+
+  <div class="streak-section">
+    <div class="streak-row">
+      <div class="streak-label">連続受け取り日数</div>
+      <div class="streak-count" id="streak-count">0日</div>
+    </div>
+    <div class="streak-days" id="streak-days"></div>
+  </div>
+
+  <div class="past-section" id="past-section" style="display:none">
+    <div class="past-title">これまでの言葉</div>
+    <div id="past-list"></div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2c-.5 1.5-3 2-3 4.5a3 3 0 006 0C11 4 8.5 3.5 8 2z" stroke="#534AB7" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 12.5c0 1 .9 1.5 2 1.5s2-.5 2-1.5" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">アファメーション</div>
+    </div>
+    <div class="nav-item" onclick="location.href=\'mypage.html\'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+
+</div>
+<script>
+const TODAY = (() => { const d = new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); })();
+const DISPLAY_DATE = (() => { const d = new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; })();
+
+document.getElementById('date-badge').textContent = DISPLAY_DATE;
+
+// ローカルストレージから今日のデータを確認
+const saved = JSON.parse(localStorage.getItem('yuwa_aff_'+TODAY) || 'null');
+const history_data = JSON.parse(localStorage.getItem('yuwa_aff_history') || '[]');
+
+function showAff(main, sub) {
+  document.getElementById('aff-loading').style.display = 'none';
+  document.getElementById('aff-content').style.display = 'block';
+  document.getElementById('aff-main').textContent = main;
+  document.getElementById('aff-sub').textContent = sub;
+  document.getElementById('declare-btn').disabled = false;
+  document.getElementById('feru-msg').textContent = 'あなたへのことば、受け取ってね ✦';
+}
+
+// 連続日数表示
+function renderStreak() {
+  const days = ['月','火','水','木','金','土','日'];
+  const today = new Date().getDay();
+  const adjustedToday = today === 0 ? 6 : today - 1;
+  const container = document.getElementById('streak-days');
+  container.innerHTML = days.map((d, i) => {
+    const cls = i < adjustedToday ? 'streak-day done' : i === adjustedToday ? 'streak-day today' : 'streak-day';
+    return `<div class="${cls}">${d}</div>`;
+  }).join('');
+  document.getElementById('streak-count').textContent = (adjustedToday + 1) + '日';
+}
+
+// 過去履歴表示
+function renderHistory() {
+  if (history_data.length === 0) return;
+  document.getElementById('past-section').style.display = 'block';
+  document.getElementById('past-list').innerHTML = history_data.slice(0,5).map(h =>
+    `<div class="past-item"><div class="past-date">${h.date}</div><div class="past-text">${h.main}</div></div>`
+  ).join('');
+}
+
+// 宣言ボタン
+function declare() {
+  const btn = document.getElementById('declare-btn');
+  btn.textContent = '✦ 宣言した！';
+  btn.disabled = true;
+  btn.style.background = '#1D9E75';
+  document.getElementById('declared-msg').classList.add('visible');
+  document.getElementById('feru-msg').textContent = 'すごい！今日もあなたは輝いてるよ ✦';
+}
+
+// 今日すでに取得済みなら保存データを表示
+if (saved) {
+  showAff(saved.main, saved.sub);
+  renderStreak();
+  renderHistory();
+} else {
+  // APIでアファメーション生成
+  renderStreak();
+  renderHistory();
+
+  const prompt = `あなたは「ゆわメソッド」を使うヒーラーカウンセラーです。
+脳科学・心理学・言葉の力を組み合わせ、読んだ人の潜在意識に働きかける「アファメーション」を作ります。
+
+今日の日付: ${DISPLAY_DATE}
+
+以下のJSON形式だけで返してください（前置きもマークダウンも不要）:
+{"main":"私は〇〇という形の、魂に刺さるアファメーション（20〜30字）","sub":"このアファメーションの意味と、今日どう使うかの短い説明（60〜80字）"}`;
+
+  fetch('/.netlify/functions/claude-proxy', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})
+  })
+  .then(r => r.json())
+  .then(data => {
+    const raw = data.content.map(b => b.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    // 今日分として保存
+    localStorage.setItem('yuwa_aff_'+TODAY, JSON.stringify(parsed));
+    // 履歴に追加
+    history_data.unshift({date: DISPLAY_DATE, main: parsed.main});
+    localStorage.setItem('yuwa_aff_history', JSON.stringify(history_data.slice(0,30)));
+    showAff(parsed.main, parsed.sub);
+    renderHistory();
+  })
+  .catch(() => {
+    const fallback = {
+      main: '私はすでに、十分な光を持っている。',
+      sub: '今日もあなたの中には光がある。それを信じて一歩踏み出してみよう。'
+    };
+    localStorage.setItem('yuwa_aff_'+TODAY, JSON.stringify(fallback));
+    showAff(fallback.main, fallback.sub);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>シュエルのことばの処方箋 — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#F4FAF7;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;gap:10px;}
+.back-btn{width:32px;height:32px;border-radius:50%;background:#E1F5EE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.top-title{font-size:15px;font-weight:500;color:#085041;}
+.date-badge{text-align:center;margin:0 1.25rem 1rem;font-size:11px;color:#0F6E56;letter-spacing:0.06em;}
+
+.shuel-stage{text-align:center;padding:1rem 1.25rem 0.75rem;}
+.shuel-img{width:140px;height:140px;margin:0 auto 0.75rem;border-radius:50%;overflow:hidden;background:#E1F5EE;border:3px solid #5DCAA5;}
+.shuel-img img{width:100%;height:100%;object-fit:cover;}
+.shuel-name{font-size:12px;color:#0F6E56;margin-bottom:3px;}
+.shuel-msg{font-size:12px;color:#1D9E75;font-style:italic;}
+
+.usage-wrap{margin:0 1.25rem 1.25rem;}
+.usage-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.usage-label{font-size:11px;color:#888780;}
+.usage-count{font-size:11px;color:#0F6E56;font-weight:500;}
+.bar-bg{height:4px;background:#E1F5EE;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;background:#1D9E75;border-radius:4px;transition:width 0.4s;}
+
+.section-label{font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;}
+
+.mood-group{padding:0 1.25rem;margin-bottom:8px;}
+.mood-group-label{font-size:10px;color:#888780;margin-bottom:6px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  font-size:12px;padding:7px 14px;
+  background:#fff;border:1px solid #B4B2A9;
+  border-radius:20px;cursor:pointer;
+  color:#888780;font-family:'Zen Maru Gothic',sans-serif;
+  -webkit-appearance:none;
+}
+.chip:hover{border-color:#5DCAA5;color:#085041;background:#E1F5EE;}
+.chip.active{background:#1D9E75 !important;color:#fff !important;border-color:#1D9E75 !important;}
+.chip.positive{border-color:#9FE1CB;}
+.chip.positive:hover{background:#E1F5EE;color:#085041;}
+.chip.positive.active{background:#0F6E56 !important;color:#fff !important;border-color:#0F6E56 !important;}
+
+.input-area{padding:0 1.25rem;margin-bottom:1.25rem;}
+textarea{
+  width:100%;min-height:72px;padding:11px 12px;
+  font-size:13px;font-family:'Zen Maru Gothic',sans-serif;
+  background:#fff;border:1px solid #B4B2A9;
+  border-radius:12px;color:#2C2C2A;
+  resize:none;outline:none;line-height:1.6;
+}
+textarea:focus{border-color:#1D9E75;box-shadow:0 0 0 3px #E1F5EE;}
+textarea::placeholder{color:#B4B2A9;}
+
+.submit-btn{
+  display:block;width:calc(100% - 2.5rem);margin:0 1.25rem 1rem;
+  padding:13px;font-size:14px;font-weight:500;
+  font-family:'Zen Maru Gothic',sans-serif;
+  background:#0F6E56;color:#fff;border:none;
+  border-radius:14px;cursor:pointer;letter-spacing:0.02em;
+}
+.submit-btn:hover{background:#085041;}
+.submit-btn:disabled{background:#9FE1CB;cursor:not-allowed;}
+
+.loading-area{text-align:center;padding:1rem 0;display:none;}
+.loading-area.visible{display:block;}
+.loading-dots{display:flex;justify-content:center;gap:5px;margin-bottom:8px;}
+.dot{width:6px;height:6px;border-radius:50%;background:#5DCAA5;animation:pulse 1.2s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes pulse{0%,80%,100%{transform:scale(0.8);opacity:0.5;}40%{transform:scale(1.2);opacity:1;}}
+.loading-text{font-size:12px;color:#1D9E75;}
+
+.rx-card{
+  margin:0 1.25rem 1rem;
+  background:#fff;border:0.5px solid #5DCAA5;
+  border-radius:18px;padding:1.25rem;
+  display:none;
+}
+.rx-card.visible{display:block;}
+.rx-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.rx-badge{font-size:10px;padding:3px 10px;background:#E1F5EE;color:#085041;border-radius:20px;}
+.rx-date{font-size:10px;color:#888780;}
+.rx-mood{font-size:11px;color:#0F6E56;margin-bottom:10px;}
+.rx-main{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-style:italic;
+  color:#04342C;line-height:1.7;margin-bottom:1rem;
+}
+.rx-detail{font-size:13px;color:#888780;line-height:1.7;margin-bottom:1rem;}
+.rx-deep{
+  background:#E1F5EE;border-radius:10px;padding:12px;
+  font-size:12px;color:#085041;line-height:1.7;
+  margin-bottom:1rem;display:none;
+}
+.rx-deep.visible{display:block;}
+.rx-lock{
+  background:#F1EFE8;border-radius:10px;padding:10px 12px;
+  font-size:11px;color:#5F5E5A;line-height:1.6;
+  display:none;
+}
+.rx-lock.visible{display:block;}
+.rx-lock a{color:#0F6E56;font-weight:500;text-decoration:underline;cursor:pointer;}
+
+.rx-actions{display:flex;gap:8px;margin-top:1rem;}
+.rx-btn{
+  flex:1;padding:8px;font-size:12px;
+  font-family:'Zen Maru Gothic',sans-serif;
+  background:#F4FAF7;border:0.5px solid #B4B2A9;
+  border-radius:10px;cursor:pointer;color:#888780;
+}
+.rx-btn:hover{border-color:#5DCAA5;color:#085041;}
+.rx-btn.saved{background:#E1F5EE;color:#085041;border-color:#5DCAA5;}
+
+.history-section{margin:0 1.25rem;display:none;}
+.history-section.visible{display:block;}
+.history-item{padding:10px 0;border-bottom:0.5px solid #E1F5EE;}
+.history-item:last-child{border-bottom:none;}
+.history-row{display:flex;align-items:center;justify-content:space-between;}
+.history-mood{font-size:12px;color:#2C2C2A;}
+.history-date{font-size:10px;color:#888780;}
+.history-preview{font-size:11px;color:#888780;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="top-bar">
+    <button class="back-btn" onclick="history.back()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="top-title">シュエルのことばの処方箋</div>
+  </div>
+
+  <div class="date-badge" id="date-badge"></div>
+
+  <div class="shuel-stage">
+    <div class="shuel-img">
+      <img src="syueru.png" alt="シュエル"/>
+    </div>
+    <div class="shuel-name">ことのはシュエル</div>
+    <div class="shuel-msg" id="shuel-msg">今日の気持ち、聞かせてね ✦</div>
+  </div>
+
+  <div class="usage-wrap" id="usage-wrap">
+    <div class="usage-row">
+      <div class="usage-label">今日の処方箋</div>
+      <div class="usage-count" id="usage-count">0 / 1</div>
+    </div>
+    <div class="bar-bg"><div class="bar-fill" id="usage-bar" style="width:0%"></div></div>
+  </div>
+
+  <div id="input-section">
+    <div class="section-label">今の気持ちを選んで（複数OK）</div>
+
+    <div class="mood-group">
+      <div class="mood-group-label">つらい・しんどい系</div>
+      <div class="chips" id="chips-neg">
+        <button class="chip" type="button">疲れた</button>
+        <button class="chip" type="button">もやもやする</button>
+        <button class="chip" type="button">不安</button>
+        <button class="chip" type="button">自信がない</button>
+        <button class="chip" type="button">悲しい</button>
+        <button class="chip" type="button">孤独</button>
+        <button class="chip" type="button">怒っている</button>
+        <button class="chip" type="button">ぼんやりする</button>
+      </div>
+    </div>
+
+    <div class="mood-group" style="margin-top:10px;">
+      <div class="mood-group-label">うれしい・前向き系</div>
+      <div class="chips" id="chips-pos">
+        <button class="chip positive" type="button">いいことあった</button>
+        <button class="chip positive" type="button">やる気がある</button>
+        <button class="chip positive" type="button">感謝したい</button>
+        <button class="chip positive" type="button">ワクワクしてる</button>
+        <button class="chip positive" type="button">成長を感じた</button>
+      </div>
+    </div>
+
+    <div class="input-area" style="margin-top:12px;">
+      <div class="section-label" style="padding:0;margin-bottom:8px;">もう少し詳しく（任意）</div>
+      <textarea id="user-input" placeholder="今日あったこと、感じていること、何でも…"></textarea>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" type="button" onclick="generate()">処方箋を受け取る</button>
+  </div>
+
+  <div class="loading-area" id="loading">
+    <div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="loading-text" id="loading-text">シュエルがことばを選んでいるよ…</div>
+  </div>
+
+  <div class="rx-card" id="rx-card">
+    <div class="rx-header">
+      <div class="rx-badge" id="rx-badge">ことばの処方箋</div>
+      <div class="rx-date" id="rx-date"></div>
+    </div>
+    <div class="rx-mood" id="rx-mood"></div>
+    <div class="rx-main" id="rx-main"></div>
+    <div class="rx-detail" id="rx-detail"></div>
+    <div class="rx-deep" id="rx-deep"></div>
+    <div class="rx-lock" id="rx-lock">
+      より深い分析とシュエルからの特別なことばは <a onclick="upgradePlan()">Bloom+ へアップグレード</a> で読めるよ ✦
+    </div>
+    <div class="rx-actions">
+      <button class="rx-btn" id="save-btn" type="button" onclick="saveRx()">保存する</button>
+      <button class="rx-btn" type="button" onclick="resetForm()">もう一度入力</button>
+    </div>
+  </div>
+
+  <div class="history-section" id="history-section">
+    <div class="section-label" style="padding:0;margin-bottom:10px;">これまでの処方箋</div>
+    <div id="history-list"></div>
+  </div>
+
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#E1F5EE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4h8M4 8h6M4 11h4" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#0F6E56;">処方箋</div>
+    </div>
+    <div class="nav-item" onclick="location.href=\'mypage.html\'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#888780" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label">マイページ</div>
+    </div>
+  </div>
+
+</div>
+<script>
+const TODAY = (() => { const d = new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); })();
+const DISPLAY_DATE = (() => { const d = new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; })();
+document.getElementById('date-badge').textContent = DISPLAY_DATE;
+document.getElementById('rx-date').textContent = DISPLAY_DATE;
+
+const PLAN = localStorage.getItem('yuwa_plan') || 'seed';
+const isPaid = ['bloom_plus','mastery'].includes(PLAN);
+const usedToday = localStorage.getItem('yuwa_rx_used_'+TODAY) === 'true';
+const historyData = JSON.parse(localStorage.getItem('yuwa_rx_history') || '[]');
+
+const loadingMsgs = ['シュエルがことばを選んでいるよ…','心の声を聞いているよ…','あなただけの処方箋を書いているよ…','もうすぐできるよ…'];
+let lTimer;
+
+if (usedToday) {
+  document.getElementById('usage-count').textContent = '1 / 1';
+  document.getElementById('usage-bar').style.width = '100%';
+  document.getElementById('shuel-msg').textContent = '今日はもう届けたよ。また明日ね ✦';
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function(){ this.classList.toggle('active'); });
+});
+
+function getSelectedMoods() {
+  return Array.from(document.querySelectorAll('.chip.active')).map(c => c.textContent.trim());
+}
+
+function isPositive(moods) {
+  const pos = ['いいことあった','やる気','感謝','ワクワク','成長'];
+  return moods.some(m => pos.some(k => m.includes(k)));
+}
+
+async function generate() {
+  if (usedToday) {
+    document.getElementById('shuel-msg').textContent = '今日はもう届けたよ。また明日ね ✦';
+    return;
+  }
+  const moods = getSelectedMoods();
+  const text = document.getElementById('user-input').value.trim();
+  if (moods.length === 0 && !text) {
+    document.getElementById('user-input').style.borderColor = '#1D9E75';
+    document.getElementById('user-input').focus();
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  document.getElementById('rx-card').classList.remove('visible');
+  document.getElementById('loading').classList.add('visible');
+  document.getElementById('shuel-msg').textContent = 'ことばを紡いでいるよ… ✦';
+
+  let mi = 0;
+  document.getElementById('loading-text').textContent = loadingMsgs[0];
+  lTimer = setInterval(() => { mi=(mi+1)%loadingMsgs.length; document.getElementById('loading-text').textContent=loadingMsgs[mi]; }, 1800);
+
+  const moodStr = moods.length > 0 ? moods.join('・') : '言葉にできない気持ち';
+  const positive = isPositive(moods);
+
+  const prompt = `あなたは「ゆわメソッド」を使うヒーラーカウンセラーです。脳科学・心理学・言葉の力を組み合わせて、相手の心に深く響く「ことばの処方箋」を書きます。
+
+ユーザーの今の気持ち: ${moodStr}
+${text ? 'メッセージ: '+text : ''}
+気持ちの種類: ${positive ? 'ポジティブ系' : 'ネガティブ・しんどい系'}
+
+以下のJSON形式だけで返してください（前置きもマークダウンも不要）:
+{"main":"心に刺さる詩的な一文（20〜35字）","detail":"感情の背景への洞察と今日の小さな行動提案（80〜100字）","deep":"深層心理からの分析とシュエルからの特別なことば（100〜120字）"}`;
+
+  try {
+    const res = await fetch('/.netlify/functions/claude-proxy', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const raw = data.content.map(b=>b.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    clearInterval(lTimer);
+    document.getElementById('loading').classList.remove('visible');
+    showRx(moodStr, parsed, positive);
+  } catch(e) {
+    clearInterval(lTimer);
+    document.getElementById('loading').classList.remove('visible');
+    showRx(moodStr, {
+      main: positive ? 'その喜びは、あなたが蒔いた種が咲いた証拠。' : '今日のあなたに処方するのは、「そのままでいい」という許可。',
+      detail: positive ? '嬉しいことが起きた時こそ、それをちゃんと受け取ろう。あなたはその幸せを受け取る資格がある。' : '疲れや迷いは、真剣に生きている証拠。今日は少しだけ自分を労わってみよう。',
+      deep: 'あなたの心は正直で美しい。シュエルはいつもあなたの言葉の旅を見守っているよ。'
+    }, positive);
+  }
+  btn.disabled = false;
+}
+
+function showRx(mood, data, positive) {
+  localStorage.setItem('yuwa_rx_used_'+TODAY, 'true');
+  document.getElementById('usage-count').textContent = '1 / 1';
+  document.getElementById('usage-bar').style.width = '100%';
+
+  const card = document.getElementById('rx-card');
+  const badge = document.getElementById('rx-badge');
+
+  if (positive) {
+    card.style.borderColor = '#1D9E75';
+    badge.textContent = 'しあわせの処方箋';
+    badge.style.background = '#E1F5EE';
+    badge.style.color = '#085041';
+  } else {
+    badge.textContent = 'ことばの処方箋';
+  }
+
+  document.getElementById('rx-mood').textContent = mood + ' のあなたへ';
+  document.getElementById('rx-main').textContent = data.main;
+  document.getElementById('rx-detail').textContent = data.detail;
+
+  if (isPaid) {
+    document.getElementById('rx-deep').textContent = '✦ シュエルより：' + data.deep;
+    document.getElementById('rx-deep').classList.add('visible');
+  } else {
+    document.getElementById('rx-lock').classList.add('visible');
+  }
+
+  card.classList.add('visible');
+  document.getElementById('shuel-msg').textContent = 'このことば、あなたへ届けたよ ✦';
+
+  historyData.unshift({mood, main: data.main, date: DISPLAY_DATE});
+  localStorage.setItem('yuwa_rx_history', JSON.stringify(historyData.slice(0,20)));
+  renderHistory();
+}
+
+function saveRx() {
+  const btn = document.getElementById('save-btn');
+  btn.classList.add('saved');
+  btn.textContent = '保存済み ✦';
+}
+
+function resetForm() {
+  document.getElementById('rx-card').classList.remove('visible');
+  document.getElementById('rx-deep').classList.remove('visible');
+  document.getElementById('rx-lock').classList.remove('visible');
+  document.getElementById('user-input').value = '';
+  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+  document.getElementById('save-btn').classList.remove('saved');
+  document.getElementById('save-btn').textContent = '保存する';
+}
+
+function upgradePlan() { alert('プランアップグレード画面へ（実装予定）'); }
+
+function renderHistory() {
+  if (historyData.length === 0) return;
+  document.getElementById('history-section').classList.add('visible');
+  document.getElementById('history-list').innerHTML = historyData.slice(0,5).map(h =>
+    `<div class="history-item"><div class="history-row"><div class="history-mood">${h.mood}</div><div class="history-date">${h.date}</div></div><div class="history-preview">${h.main}</div></div>`
+  ).join('');
+}
+
+renderHistory();
+</script>
+</body>
+</html>

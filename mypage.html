@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<style>:root{color-scheme:light only;}</style>
+<title>マイページ — yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100vh;}
+.app{max-width:390px;margin:0 auto;padding:0 0 5rem;min-height:100vh;}
+.top-bar{padding:1rem 1.25rem 0.75rem;display:flex;align-items:center;justify-content:space-between;}
+.top-title{font-size:16px;font-weight:500;color:#26215C;}
+
+.profile-section{margin:0 1.25rem 1.25rem;background:#EEEDFE;border-radius:20px;padding:1.5rem;text-align:center;}
+.avatar{width:72px;height:72px;border-radius:50%;background:#fff;border:2px solid #AFA9EC;margin:0 auto 12px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+.user-name{font-size:16px;font-weight:500;color:#26215C;margin-bottom:4px;}
+.user-email{font-size:11px;color:#7F77DD;margin-bottom:10px;}
+.plan-badge{display:inline-block;font-size:11px;padding:4px 14px;background:#534AB7;color:#fff;border-radius:20px;}
+
+.section-title{font-size:11px;letter-spacing:0.08em;color:#888780;padding:0 1.25rem;margin-bottom:10px;}
+
+.info-card{margin:0 1.25rem 1.25rem;background:#fff;border:0.5px solid #D3D1C7;border-radius:16px;overflow:hidden;}
+.info-row{display:flex;align-items:center;justify-content:space-between;padding:14px 1.25rem;border-bottom:0.5px solid #F1EFE8;cursor:pointer;}
+.info-row:last-child{border-bottom:none;}
+.info-row:hover{background:#FAF8FF;}
+.info-label{font-size:13px;color:#2C2C2A;}
+.info-value{font-size:12px;color:#888780;}
+.info-arrow{font-size:12px;color:#AFA9EC;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 1.25rem;margin-bottom:1.5rem;}
+.stat-card{background:#fff;border:0.5px solid #D3D1C7;border-radius:12px;padding:12px;text-align:center;}
+.stat-num{font-size:20px;font-weight:500;color:#534AB7;}
+.stat-label{font-size:10px;color:#888780;margin-top:3px;}
+
+.logout-btn{display:block;width:calc(100% - 2.5rem);margin:0 1.25rem;padding:12px;font-size:14px;font-family:inherit;background:#fff;color:#A32D2D;border:0.5px solid #F09595;border-radius:12px;cursor:pointer;text-align:center;}
+.logout-btn:hover{background:#FCEBEB;}
+
+.nav-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:390px;background:#fff;border-top:0.5px solid #D3D1C7;display:flex;padding:8px 0 20px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0;}
+.nav-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.nav-label{font-size:9px;color:#888780;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <div class="top-title">マイページ</div>
+  </div>
+
+  <div class="profile-section">
+    <div class="avatar">
+      <img src="yuwa.png" alt="プロフィール" id="avatar-img"/>
+    </div>
+    <div class="user-name" id="user-name">ゆわの仲間</div>
+    <div class="user-email" id="user-email"></div>
+    <div class="plan-badge" id="plan-badge">Seed プラン</div>
+  </div>
+
+  <div class="section-title">あなたの情報</div>
+  <div class="info-card">
+    <div class="info-row" onclick="editBirthday()">
+      <div class="info-label">誕生日</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="info-value" id="birthday-display">未設定</div>
+        <div class="info-arrow">›</div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">星座</div>
+      <div class="info-value" id="zodiac-display">—</div>
+    </div>
+    <div class="info-row" onclick="location.href='nina.html'">
+      <div class="info-label">今日の占い</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="info-value">ニーナに聞く</div>
+        <div class="info-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">アクティビティ</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="streak-num">0</div>
+      <div class="stat-label">連続日数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="point-num">0</div>
+      <div class="stat-label">ポイント</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="rx-num">0</div>
+      <div class="stat-label">処方箋数</div>
+    </div>
+  </div>
+
+  <div class="section-title">プラン</div>
+  <div class="info-card">
+    <div class="info-row" onclick="location.href='plan.html'">
+      <div class="info-label">現在のプラン</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="info-value" id="plan-display">Seed（無料）</div>
+        <div class="info-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:1rem;"></div>
+    <div style="text-align:center;padding:0 1.25rem 1rem;">
+    <a href="tokusho.html" style="font-size:11px;color:#888780;text-decoration:underline;">特定商取引法に基づく表記</a>
+  </div>
+  <button class="logout-btn" onclick="doLogout()">ログアウト</button>
+  <div style="height:2rem;"></div>
+
+  <div class="nav-bar">
+    <div class="nav-item" onclick="location.href='index.html'">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L2 7v7h4v-4h4v4h4V7L8 2z" stroke="#888780" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="nav-label">ホーム</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="#888780" stroke-width="1.2"/></svg>
+      </div>
+      <div class="nav-label">メニュー</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon" style="background:#EEEDFE;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 100 8A4 4 0 008 2zM2 14c0-2 2.7-3 6-3s6 1 6 3" stroke="#534AB7" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="nav-label" style="color:#534AB7;">マイページ</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDG3JQgy57WfibQ_4Rdh_K9DymEC7TZx0E",
+  authDomain: "yuwa-bloom-realm.firebaseapp.com",
+  projectId: "yuwa-bloom-realm",
+  storageBucket: "yuwa-bloom-realm.firebasestorage.app",
+  messagingSenderId: "772765861265",
+  appId: "1:772765861265:web:4d5e7a6441e218bfdd4630",
+  measurementId: "G-91LZR1XXDD"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const zodiacList = [
+  {name:'山羊座', start:[12,22], end:[1,19]},
+  {name:'水瓶座', start:[1,20], end:[2,18]},
+  {name:'魚座', start:[2,19], end:[3,20]},
+  {name:'牡羊座', start:[3,21], end:[4,19]},
+  {name:'牡牛座', start:[4,20], end:[5,20]},
+  {name:'双子座', start:[5,21], end:[6,21]},
+  {name:'蟹座', start:[6,22], end:[7,22]},
+  {name:'獅子座', start:[7,23], end:[8,22]},
+  {name:'乙女座', start:[8,23], end:[9,22]},
+  {name:'天秤座', start:[9,23], end:[10,23]},
+  {name:'蠍座', start:[10,24], end:[11,22]},
+  {name:'射手座', start:[11,23], end:[12,21]},
+];
+
+function getZodiac(birthday) {
+  const d = new Date(birthday);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  for (const z of zodiacList) {
+    const [sm, sd] = z.start;
+    const [em, ed] = z.end;
+    if ((m === sm && day >= sd) || (m === em && day <= ed)) return z.name;
+  }
+  return '山羊座';
+}
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) { window.location.href = 'login.html'; return; }
+  
+  const isAdmin = user.email === 'hinyarin1210@gmail.com';
+  const plan = isAdmin ? 'mastery' : (localStorage.getItem('yuwa_plan') || 'seed');
+  const planNames = {seed:'Seed（無料）', bloom:'Bloom ¥550/月', bloom_plus:'Bloom+ ¥980/月', mastery: isAdmin ? '👑 女王（全機能）' : 'Mastery ¥2,980/月'};
+
+  document.getElementById('user-name').textContent = user.displayName || 'ゆわの仲間';
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('plan-badge').textContent = planNames[plan] || 'Seed プラン';
+  document.getElementById('plan-display').textContent = planNames[plan] || 'Seed（無料）';
+
+  const birthday = localStorage.getItem('yuwa_birthday');
+  if (birthday) {
+    const d = new Date(birthday);
+    document.getElementById('birthday-display').textContent = `${d.getMonth()+1}月${d.getDate()}日`;
+    document.getElementById('zodiac-display').textContent = getZodiac(birthday);
+  }
+
+  const history = JSON.parse(localStorage.getItem('yuwa_rx_history') || '[]');
+  document.getElementById('rx-num').textContent = history.length;
+  document.getElementById('point-num').textContent = localStorage.getItem('yuwa_points') || '0';
+
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const streak = dayOfWeek === 0 ? 7 : dayOfWeek;
+  document.getElementById('streak-num').textContent = streak;
+});
+
+window.doLogout = async function() {
+  if (confirm('ログアウトしますか？')) {
+    await signOut(auth);
+    localStorage.removeItem('yuwa_plan');
+    localStorage.removeItem('yuwa_user_email');
+    localStorage.removeItem('yuwa_user_name');
+    localStorage.removeItem('yuwa_is_admin');
+    window.location.href = 'login.html';
+  }
+}
+
+window.editBirthday = function() {
+  const current = localStorage.getItem('yuwa_birthday') || '';
+  const input = prompt('誕生日を入力してね（例：1990-03-15）', current);
+  if (input) {
+    localStorage.setItem('yuwa_birthday', input);
+    const d = new Date(input);
+    document.getElementById('birthday-display').textContent = `${d.getMonth()+1}月${d.getDate()}日`;
+    document.getElementById('zodiac-display').textContent = getZodiac(input);
+  }
+}
+</script>
+</body>
+</html>
