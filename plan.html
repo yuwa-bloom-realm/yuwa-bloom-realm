@@ -219,6 +219,12 @@ const squareLinks = {
   mastery: 'https://square.link/u/tqL0Qm0N'
 };
 
+const storesLinks = {
+  bloom: 'https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c81b9d9d4fe419c4223e',
+  bloom_plus: 'https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c848d3fe3269a89c2824',
+  mastery: 'https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c873af98d9e33d397fed'
+};
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -278,15 +284,28 @@ window.selectPlan = (planId, price) => {
   if (planId === currentPlan) return;
   if (planId === 'seed') {
     if (confirm('Seedプラン（無料）に変更しますか？')) {
-      // Seedに戻す処理（管理者が対応）
-      alert('ダウングレードのご希望はLINEまたはお問い合わせフォームよりご連絡ください。');
+      alert('ダウングレードのご希望はアプリ内お問い合わせフォームよりご連絡ください。');
     }
     return;
   }
-  const link = squareLinks[planId];
-  if (link) {
-    if (confirm(`${planNames[planId]}に変更します。\n決済ページに移動します。\n\n※ご購入後1〜24時間以内にプランが反映されます。`)) {
-      window.location.href = link;
+
+  // 決済方法選択
+  const planName = planNames[planId];
+  const choice = confirm(`${planName}へのアップグレード\n\nOK → クレジットカード（Square）\nキャンセル → PayPay・コンビニ（STORES）`);
+
+  if (choice) {
+    const link = squareLinks[planId];
+    if (link) {
+      if (confirm(`Square決済ページに移動します。\n\n※ご購入後1〜24時間以内にプランが反映されます。`)) {
+        window.location.href = link;
+      }
+    }
+  } else {
+    const link = storesLinks[planId];
+    if (link) {
+      if (confirm(`STORES決済ページに移動します。\nPayPay・コンビニ払いが利用できます。\n\n※ご購入後1〜24時間以内にプランが反映されます。`)) {
+        window.location.href = link;
+      }
     }
   }
 };

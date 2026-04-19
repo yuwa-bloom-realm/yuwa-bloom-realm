@@ -232,7 +232,14 @@ body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100v
     ポイントは購入確認後、順次手動で付与いたします。通常1〜24時間以内に反映されます。反映後はこの画面のポイントが更新されます。
   </div>
 
-  <div class="buy-list">
+  <!-- 決済方法タブ -->
+  <div style="display:flex;gap:8px;padding:0 1.25rem;margin-bottom:10px;">
+    <button id="tab-square" onclick="switchTab('square')" style="flex:1;padding:8px;font-size:12px;font-family:inherit;border-radius:10px;border:1.5px solid #534AB7;background:#534AB7;color:#fff;cursor:pointer;font-weight:500;">💳 クレカ（Square）</button>
+    <button id="tab-stores" onclick="switchTab('stores')" style="flex:1;padding:8px;font-size:12px;font-family:inherit;border-radius:10px;border:1.5px solid #D3D1C7;background:#fff;color:#534AB7;cursor:pointer;font-weight:500;">📱 PayPay・コンビニ（STORES）</button>
+  </div>
+
+  <!-- Square決済 -->
+  <div id="buy-square" class="buy-list">
     <div class="buy-card" onclick="buyPoints('https://square.link/u/5776UPRy')">
       <div class="buy-icon">✨</div>
       <div class="buy-info"><div class="buy-pt">500pt</div><div class="buy-bonus">はじめての購入に</div></div>
@@ -250,6 +257,31 @@ body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100v
       <div class="buy-price">¥2,000</div>
     </div>
     <div class="buy-card" onclick="buyPoints('https://square.link/u/zqvAPN22')">
+      <div class="buy-icon">👑</div>
+      <div class="buy-info"><div class="buy-pt">6,000pt</div><div class="buy-bonus">+1,000ptボーナス！超お得！</div></div>
+      <div class="buy-price">¥5,000</div>
+    </div>
+  </div>
+
+  <!-- STORES決済 -->
+  <div id="buy-stores" class="buy-list" style="display:none;">
+    <div class="buy-card" onclick="buyPoints('https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c665af98d9cda9398048')">
+      <div class="buy-icon">✨</div>
+      <div class="buy-info"><div class="buy-pt">500pt</div><div class="buy-bonus">はじめての購入に</div></div>
+      <div class="buy-price">¥500</div>
+    </div>
+    <div class="buy-card popular" onclick="buyPoints('https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c72cd3fe3253c49c2893')">
+      <div class="popular-badge">おすすめ</div>
+      <div class="buy-icon">💜</div>
+      <div class="buy-info"><div class="buy-pt">1,100pt</div><div class="buy-bonus">+100ptボーナス！</div></div>
+      <div class="buy-price">¥1,000</div>
+    </div>
+    <div class="buy-card" onclick="buyPoints('https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c780d3fe325a689c2849')">
+      <div class="buy-icon">🌸</div>
+      <div class="buy-info"><div class="buy-pt">2,300pt</div><div class="buy-bonus">+300ptボーナス！</div></div>
+      <div class="buy-price">¥2,000</div>
+    </div>
+    <div class="buy-card" onclick="buyPoints('https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c7a7d3fe325ff89c2865')">
       <div class="buy-icon">👑</div>
       <div class="buy-info"><div class="buy-pt">6,000pt</div><div class="buy-bonus">+1,000ptボーナス！超お得！</div></div>
       <div class="buy-price">¥5,000</div>
@@ -485,6 +517,33 @@ window.buyGameItem = async (name, emoji, cost) => {
     localStorage.setItem('yuwa_game4', JSON.stringify(gameData));
   }
   showToast(`${emoji} ${name}購入したよ！ゲームであげてね🎮`);
+};
+
+// タブ切り替え
+window.switchTab = (tab) => {
+  const squareDiv = document.getElementById('buy-square');
+  const storesDiv = document.getElementById('buy-stores');
+  const squareBtn = document.getElementById('tab-square');
+  const storesBtn = document.getElementById('tab-stores');
+  if (tab === 'square') {
+    squareDiv.style.display = 'flex';
+    storesDiv.style.display = 'none';
+    squareBtn.style.background = '#534AB7';
+    squareBtn.style.color = '#fff';
+    squareBtn.style.borderColor = '#534AB7';
+    storesBtn.style.background = '#fff';
+    storesBtn.style.color = '#534AB7';
+    storesBtn.style.borderColor = '#D3D1C7';
+  } else {
+    squareDiv.style.display = 'none';
+    storesDiv.style.display = 'flex';
+    storesBtn.style.background = '#534AB7';
+    storesBtn.style.color = '#fff';
+    storesBtn.style.borderColor = '#534AB7';
+    squareBtn.style.background = '#fff';
+    squareBtn.style.color = '#534AB7';
+    squareBtn.style.borderColor = '#D3D1C7';
+  }
 };
 
 // ポイント購入
