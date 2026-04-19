@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理者ページ｜yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Zen Maru Gothic',sans-serif;background:#1a0f35;color:#fdf8f0;min-height:100vh;}
+
+.app{max-width:480px;margin:0 auto;padding:0 1.25rem 5rem;}
+
+/* ヘッダー */
+.header{padding:1.5rem 0 1rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(201,168,76,0.2);margin-bottom:1.5rem;}
+.header-icon{width:40px;height:40px;background:linear-gradient(135deg,#534AB7,#7B6FD4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.header-title{font-size:16px;font-weight:700;color:#e8d08a;}
+.header-sub{font-size:11px;color:rgba(232,208,138,0.6);margin-top:2px;}
+
+/* ログイン画面 */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;gap:20px;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;color:#e8d08a;}
+.login-desc{font-size:0.85rem;color:rgba(253,248,240,0.6);line-height:1.8;}
+.google-btn{display:flex;align-items:center;gap:10px;background:#fff;color:#333;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:transform 0.2s;}
+.google-btn:hover{transform:translateY(-2px);}
+.google-btn img{width:20px;height:20px;}
+
+/* メイン画面 */
+#main-screen{display:none;}
+
+/* カード */
+.card{background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:16px;padding:1.25rem;margin-bottom:1rem;}
+.card-title{font-size:12px;letter-spacing:0.1em;color:#c9a84c;margin-bottom:1rem;}
+
+/* ユーザー検索 */
+.search-row{display:flex;gap:8px;}
+.input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:11px 14px;color:#fdf8f0;font-family:inherit;font-size:14px;outline:none;transition:border-color 0.2s;}
+.input:focus{border-color:rgba(201,168,76,0.6);}
+.input::placeholder{color:rgba(253,248,240,0.3);}
+.btn{padding:11px 18px;border:none;border-radius:10px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#534AB7,#7B6FD4);color:#fff;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(83,74,183,0.4);}
+.btn-gold{background:linear-gradient(135deg,#c9a84c,#e8d08a);color:#1a0f35;}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,0.4);}
+.btn-danger{background:rgba(220,53,69,0.15);color:#ff6b7a;border:1px solid rgba(220,53,69,0.3);}
+.btn-danger:hover{background:rgba(220,53,69,0.25);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+
+/* ユーザー情報 */
+.user-found{background:rgba(83,74,183,0.15);border:1px solid rgba(83,74,183,0.3);border-radius:12px;padding:1rem;margin-top:12px;display:none;}
+.user-email{font-size:13px;color:#e8d08a;margin-bottom:4px;}
+.user-pts{font-size:28px;font-weight:700;color:#fff;margin-bottom:2px;}
+.user-pts-label{font-size:11px;color:rgba(253,248,240,0.5);}
+
+/* ポイント付与 */
+.pt-presets{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.pt-preset{padding:7px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:20px;font-size:12px;color:#e8d08a;cursor:pointer;transition:all 0.15s;}
+.pt-preset:hover{background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.5);}
+.pt-preset.active{background:rgba(201,168,76,0.2);border-color:#c9a84c;}
+
+.grant-row{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.grant-input{width:120px;text-align:center;font-size:16px;font-weight:500;}
+
+/* 履歴 */
+.history-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;}
+.history-item{display:flex;align-items:center;gap:12px;padding:10px;background:rgba(255,255,255,0.03);border-radius:10px;}
+.history-email{font-size:12px;color:rgba(253,248,240,0.7);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.history-pt{font-size:13px;font-weight:500;color:#e8d08a;flex-shrink:0;}
+.history-time{font-size:10px;color:rgba(253,248,240,0.4);flex-shrink:0;}
+.history-empty{font-size:13px;color:rgba(253,248,240,0.4);text-align:center;padding:20px;}
+
+/* ユーザー一覧 */
+.user-list{display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;}
+.user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;cursor:pointer;transition:background 0.15s;}
+.user-row:hover{background:rgba(255,255,255,0.07);}
+.user-row-email{font-size:12px;color:rgba(253,248,240,0.8);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-row-pts{font-size:13px;font-weight:500;color:#e8d08a;flex-shrink:0;}
+
+/* トースト */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:200;display:none;white-space:nowrap;}
+.toast.success{background:#1D9E75;color:#fff;}
+.toast.error{background:#dc3545;color:#fff;}
+
+/* ローディング */
+.loading{text-align:center;padding:20px;color:rgba(253,248,240,0.4);font-size:13px;}
+
+/* 管理者バッジ */
+.admin-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:4px 12px;font-size:11px;color:#c9a84c;margin-bottom:1rem;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <div class="header-icon">👑</div>
+    <div>
+      <div class="header-title">管理者ページ</div>
+      <div class="header-sub">yuwa Bloom Realm Admin</div>
+    </div>
+  </div>
+
+  <!-- ログイン画面 -->
+  <div id="login-screen">
+    <div class="login-title">Admin Portal</div>
+    <div class="login-desc">管理者アカウントでログインしてください</div>
+    <button class="google-btn" onclick="loginWithGoogle()">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Googleでログイン
+    </button>
+  </div>
+
+  <!-- メイン画面 -->
+  <div id="main-screen">
+    <div class="admin-badge">👑 管理者モード</div>
+
+    <!-- ユーザー検索・ポイント付与 -->
+    <div class="card">
+      <div class="card-title">✦ ポイント付与</div>
+      <div class="search-row">
+        <input class="input" id="search-email" type="email" placeholder="購入者のメールアドレス" />
+        <button class="btn btn-primary" onclick="searchUser()">検索</button>
+      </div>
+
+      <div class="user-found" id="user-found">
+        <div class="user-email" id="found-email"></div>
+        <div class="user-pts" id="found-pts">0</div>
+        <div class="user-pts-label">現在の保有ポイント</div>
+
+        <div style="margin-top:14px;">
+          <div style="font-size:12px;color:rgba(253,248,240,0.6);margin-bottom:6px;">よく使う金額</div>
+          <div class="pt-presets">
+            <div class="pt-preset" onclick="setPreset(500)">500pt</div>
+            <div class="pt-preset" onclick="setPreset(1100)">1,100pt</div>
+            <div class="pt-preset" onclick="setPreset(2300)">2,300pt</div>
+            <div class="pt-preset" onclick="setPreset(6000)">6,000pt</div>
+          </div>
+          <div class="grant-row">
+            <input class="input grant-input" id="grant-pt" type="number" placeholder="pt数" min="1" />
+            <button class="btn btn-gold" onclick="grantPoints()">付与する</button>
+            <button class="btn btn-danger btn-sm" onclick="deductPoints()">減算</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 全ユーザー一覧 -->
+    <div class="card">
+      <div class="card-title">✦ 登録ユーザー一覧</div>
+      <div class="user-list" id="user-list">
+        <div class="loading">読み込み中...</div>
+      </div>
+    </div>
+
+    <!-- 付与履歴 -->
+    <div class="card">
+      <div class="card-title">✦ 付与履歴（直近20件）</div>
+      <div class="history-list" id="history-list">
+        <div class="history-empty">履歴はまだありません</div>
+      </div>
+    </div>
+
+    <button class="btn btn-danger" style="width:100%;margin-top:8px;" onclick="logout()">ログアウト</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, addDoc, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDG3JQgy57WfibQ_4Rdh_K9DymEC7TZx0E",
+  authDomain: "yuwa-bloom-realm.firebaseapp.com",
+  projectId: "yuwa-bloom-realm",
+  storageBucket: "yuwa-bloom-realm.firebasestorage.app",
+  messagingSenderId: "772765861265",
+  appId: "1:772765861265:web:4d5e7a6441e218bfdd4630"
+};
+
+const ADMIN_EMAIL = "hinyarin1210@gmail.com";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let foundUserEmail = null;
+let foundUserPts = 0;
+
+// 認証状態監視
+onAuthStateChanged(auth, async (user) => {
+  if (user && user.email === ADMIN_EMAIL) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+    loadUsers();
+    loadHistory();
+  } else if (user) {
+    showToast('管理者以外はアクセスできません', 'error');
+    await signOut(auth);
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('main-screen').style.display = 'none';
+  }
+});
+
+// Googleログイン
+window.loginWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    showToast('ログインに失敗しました', 'error');
+  }
+};
+
+// ログアウト
+window.logout = async () => {
+  await signOut(auth);
+  showToast('ログアウトしました', 'success');
+};
+
+// ユーザー検索
+window.searchUser = async () => {
+  const email = document.getElementById('search-email').value.trim();
+  if (!email) { showToast('メールアドレスを入力してください', 'error'); return; }
+
+  try {
+    const userRef = doc(db, 'users', email);
+    const snap = await getDoc(userRef);
+
+    const foundDiv = document.getElementById('user-found');
+    foundDiv.style.display = 'block';
+    document.getElementById('found-email').textContent = email;
+
+    if (snap.exists()) {
+      foundUserPts = snap.data().points || 0;
+    } else {
+      foundUserPts = 0;
+    }
+    foundUserEmail = email;
+    document.getElementById('found-pts').textContent = foundUserPts.toLocaleString() + ' pt';
+    showToast('ユーザーが見つかりました', 'success');
+  } catch(e) {
+    showToast('検索に失敗しました', 'error');
+  }
+};
+
+// プリセット選択
+window.setPreset = (pt) => {
+  document.getElementById('grant-pt').value = pt;
+  document.querySelectorAll('.pt-preset').forEach(el => el.classList.remove('active'));
+  event.target.classList.add('active');
+};
+
+// ポイント付与
+window.grantPoints = async () => {
+  if (!foundUserEmail) { showToast('先にユーザーを検索してください', 'error'); return; }
+  const pt = parseInt(document.getElementById('grant-pt').value);
+  if (!pt || pt <= 0) { showToast('ポイント数を入力してください', 'error'); return; }
+
+  try {
+    const userRef = doc(db, 'users', foundUserEmail);
+    const newPts = foundUserPts + pt;
+    await setDoc(userRef, { points: newPts, email: foundUserEmail }, { merge: true });
+
+    // 履歴記録
+    await addDoc(collection(db, 'point_history'), {
+      email: foundUserEmail,
+      points: pt,
+      type: 'grant',
+      admin: ADMIN_EMAIL,
+      timestamp: serverTimestamp()
+    });
+
+    foundUserPts = newPts;
+    document.getElementById('found-pts').textContent = newPts.toLocaleString() + ' pt';
+    showToast(`${pt}pt を付与しました！`, 'success');
+    loadHistory();
+    loadUsers();
+  } catch(e) {
+    showToast('付与に失敗しました', 'error');
+  }
+};
+
+// ポイント減算
+window.deductPoints = async () => {
+  if (!foundUserEmail) { showToast('先にユーザーを検索してください', 'error'); return; }
+  const pt = parseInt(document.getElementById('grant-pt').value);
+  if (!pt || pt <= 0) { showToast('ポイント数を入力してください', 'error'); return; }
+  if (!confirm(`${foundUserEmail} から ${pt}pt 減算しますか？`)) return;
+
+  try {
+    const userRef = doc(db, 'users', foundUserEmail);
+    const newPts = Math.max(0, foundUserPts - pt);
+    await setDoc(userRef, { points: newPts, email: foundUserEmail }, { merge: true });
+
+    await addDoc(collection(db, 'point_history'), {
+      email: foundUserEmail,
+      points: -pt,
+      type: 'deduct',
+      admin: ADMIN_EMAIL,
+      timestamp: serverTimestamp()
+    });
+
+    foundUserPts = newPts;
+    document.getElementById('found-pts').textContent = newPts.toLocaleString() + ' pt';
+    showToast(`${pt}pt を減算しました`, 'success');
+    loadHistory();
+  } catch(e) {
+    showToast('減算に失敗しました', 'error');
+  }
+};
+
+// 全ユーザー読み込み
+async function loadUsers() {
+  try {
+    const snap = await getDocs(collection(db, 'users'));
+    const list = document.getElementById('user-list');
+    if (snap.empty) {
+      list.innerHTML = '<div class="history-empty">ユーザーはまだいません</div>';
+      return;
+    }
+    const users = [];
+    snap.forEach(d => users.push(d.data()));
+    users.sort((a,b) => (b.points||0) - (a.points||0));
+    list.innerHTML = users.map(u => `
+      <div class="user-row" onclick="quickSelect('${u.email}', ${u.points||0})">
+        <div class="user-row-email">${u.email}</div>
+        <div class="user-row-pts">${(u.points||0).toLocaleString()} pt</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('user-list').innerHTML = '<div class="history-empty">読み込みに失敗しました</div>';
+  }
+}
+
+// ユーザー一覧からクイック選択
+window.quickSelect = (email, pts) => {
+  document.getElementById('search-email').value = email;
+  foundUserEmail = email;
+  foundUserPts = pts;
+  document.getElementById('user-found').style.display = 'block';
+  document.getElementById('found-email').textContent = email;
+  document.getElementById('found-pts').textContent = pts.toLocaleString() + ' pt';
+};
+
+// 履歴読み込み
+async function loadHistory() {
+  try {
+    const q = query(collection(db, 'point_history'), orderBy('timestamp', 'desc'), limit(20));
+    const snap = await getDocs(q);
+    const list = document.getElementById('history-list');
+    if (snap.empty) {
+      list.innerHTML = '<div class="history-empty">履歴はまだありません</div>';
+      return;
+    }
+    list.innerHTML = '';
+    snap.forEach(d => {
+      const data = d.data();
+      const time = data.timestamp?.toDate ? data.timestamp.toDate().toLocaleString('ja-JP', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '--';
+      const ptText = data.points > 0 ? `+${data.points}pt` : `${data.points}pt`;
+      const ptColor = data.points > 0 ? '#e8d08a' : '#ff6b7a';
+      list.innerHTML += `
+        <div class="history-item">
+          <div class="history-email">${data.email}</div>
+          <div class="history-pt" style="color:${ptColor}">${ptText}</div>
+          <div class="history-time">${time}</div>
+        </div>
+      `;
+    });
+  } catch(e) {
+    document.getElementById('history-list').innerHTML = '<div class="history-empty">読み込みに失敗しました</div>';
+  }
+}
+
+// トースト
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  t.style.display = 'block';
+  clearTimeout(window._tt);
+  window._tt = setTimeout(() => t.style.display = 'none', 2500);
+}
+window.showToast = showToast;
+</script>
+</body>
+</html>
