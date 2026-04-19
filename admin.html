@@ -140,6 +140,17 @@ body{font-family:'Zen Maru Gothic',sans-serif;background:#1a0f35;color:#fdf8f0;m
             <button class="btn btn-danger btn-sm" onclick="deductPoints()">減算</button>
           </div>
         </div>
+
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(201,168,76,0.15);">
+          <div style="font-size:12px;color:rgba(253,248,240,0.6);margin-bottom:10px;">プランを付与する</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.08);color:#e8d08a;border:1px solid rgba(201,168,76,0.3);" onclick="grantPlan('seed')">🌱 Seed</button>
+            <button class="btn btn-sm" style="background:rgba(255,255,255,0.08);color:#e8d08a;border:1px solid rgba(201,168,76,0.3);" onclick="grantPlan('bloom')">🌸 Bloom</button>
+            <button class="btn btn-sm" style="background:rgba(124,92,191,0.3);color:#e8d08a;border:1px solid rgba(124,92,191,0.5);" onclick="grantPlan('bloom_plus')">💜 Bloom+</button>
+            <button class="btn btn-sm" style="background:rgba(201,168,76,0.2);color:#e8d08a;border:1px solid rgba(201,168,76,0.5);" onclick="grantPlan('mastery')">👑 Mastery</button>
+          </div>
+          <div style="font-size:11px;color:rgba(253,248,240,0.4);margin-top:8px;" id="current-plan-display"></div>
+        </div>
       </div>
     </div>
 
@@ -235,8 +246,12 @@ window.searchUser = async () => {
 
     if (snap.exists()) {
       foundUserPts = snap.data().points || 0;
+      const plan = snap.data().plan || 'seed';
+      const planNames = { seed: 'Seed（無料）', bloom: 'Bloom', bloom_plus: 'Bloom+', mastery: 'Mastery' };
+      document.getElementById('current-plan-display').textContent = `現在のプラン：${planNames[plan]}`;
     } else {
       foundUserPts = 0;
+      document.getElementById('current-plan-display').textContent = '現在のプラン：Seed（無料）';
     }
     foundUserEmail = email;
     document.getElementById('found-pts').textContent = foundUserPts.toLocaleString() + ' pt';
@@ -280,6 +295,29 @@ window.grantPoints = async () => {
     loadUsers();
   } catch(e) {
     showToast('付与に失敗しました', 'error');
+  }
+};
+
+// プラン付与
+window.grantPlan = async (planId) => {
+  if (!foundUserEmail) { showToast('先にユーザーを検索してください', 'error'); return; }
+  const planNames = { seed: 'Seed（無料）', bloom: 'Bloom', bloom_plus: 'Bloom+', mastery: 'Mastery' };
+  if (!confirm(`${foundUserEmail} に ${planNames[planId]} プランを付与しますか？`)) return;
+
+  try {
+    await setDoc(doc(db, 'users', foundUserEmail), { plan: planId }, { merge: true });
+    await addDoc(collection(db, 'point_history'), {
+      email: foundUserEmail,
+      plan: planId,
+      type: 'plan_grant',
+      admin: ADMIN_EMAIL,
+      timestamp: serverTimestamp()
+    });
+    document.getElementById('current-plan-display').textContent = `現在のプラン：${planNames[planId]}`;
+    showToast(`${planNames[planId]} プランを付与しました！`, 'success');
+    loadHistory();
+  } catch(e) {
+    showToast('プラン付与に失敗しました', 'error');
   }
 };
 
