@@ -234,8 +234,8 @@ body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100v
 
   <!-- 決済方法タブ -->
   <div style="display:flex;gap:8px;padding:0 1.25rem;margin-bottom:10px;">
-    <button id="tab-square" onclick="switchTab('square')" style="flex:1;padding:8px;font-size:12px;font-family:inherit;border-radius:10px;border:1.5px solid #534AB7;background:#534AB7;color:#fff;cursor:pointer;font-weight:500;">💳 クレカ（Square）</button>
-    <button id="tab-stores" onclick="switchTab('stores')" style="flex:1;padding:8px;font-size:12px;font-family:inherit;border-radius:10px;border:1.5px solid #D3D1C7;background:#fff;color:#534AB7;cursor:pointer;font-weight:500;">📱 PayPay・コンビニ（STORES）</button>
+    <button id="tab-square" onclick="switchTab('square')" style="flex:1;padding:8px;font-size:12px;font-family:inherit;border-radius:10px;border:1.5px solid #534AB7;background:#534AB7;color:#fff;cursor:pointer;font-weight:500;">💳 クレジットカード</button>
+    <button id="tab-stores" onclick="switchTab('stores')" style="flex:1;padding:8px;font-size:11px;font-family:inherit;border-radius:10px;border:1.5px solid #D3D1C7;background:#fff;color:#534AB7;cursor:pointer;font-weight:500;">📱 その他の決済方法</button>
   </div>
 
   <!-- Square決済 -->
@@ -265,6 +265,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;background:#FAF8FF;min-height:100v
 
   <!-- STORES決済 -->
   <div id="buy-stores" class="buy-list" style="display:none;">
+    <div style="padding:0 0 8px;font-size:10px;color:#888780;text-align:center;">コンビニ・キャリア決済・各種決済に対応しています</div>
     <div class="buy-card" onclick="buyPoints('https://923kiolfgm6vtuge4raa.stores.jp/items/69e4c665af98d9cda9398048')">
       <div class="buy-icon">✨</div>
       <div class="buy-info"><div class="buy-pt">500pt</div><div class="buy-bonus">はじめての購入に</div></div>
