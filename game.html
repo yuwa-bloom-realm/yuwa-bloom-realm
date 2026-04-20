@@ -51,7 +51,8 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 .exp-fill{height:100%;background:linear-gradient(90deg,#B8B2EE,#534AB7);border-radius:10px;transition:width 0.6s ease;}
 
 /* ===== お部屋 ===== */
-.room{margin:0 1.25rem 1rem;border-radius:22px;overflow:hidden;position:relative;height:380px;box-shadow:0 4px 20px rgba(83,74,183,0.12);}
+.room{margin:0 1.25rem 1rem;border-radius:22px;overflow:visible;position:relative;height:380px;box-shadow:0 4px 20px rgba(83,74,183,0.12);}
+.room-inner{position:absolute;inset:0;border-radius:22px;overflow:hidden;}
 .room-wall{position:absolute;inset:0;transition:background 0.5s ease;}
 /* 窓 */
 .room-window{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:78px;height:58px;background:linear-gradient(180deg,#B8D8F8,#D4EEFF);border-radius:8px 8px 0 0;border:3px solid #8BB8E8;overflow:hidden;}
@@ -226,6 +227,7 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 
   <!-- お部屋 -->
   <div class="room" id="room">
+    <div class="room-inner">
     <div class="room-wall" id="room-wall"></div>
     <div class="room-window"><div class="window-shine"></div></div>
     <div class="curtain-l" id="curtain-l"></div>
@@ -242,7 +244,8 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
     <div class="cushion" id="cushion">✿</div>
     <!-- 追加家具 -->
     <div class="extras" id="extras"></div>
-    <!-- キャラ -->
+    </div>
+    <!-- キャラ（room-innerの外） -->
     <div class="char-stage">
       <div class="bubble" id="bubble">今日も会いにきてくれた！</div>
       <div style="position:relative;display:inline-block;">
