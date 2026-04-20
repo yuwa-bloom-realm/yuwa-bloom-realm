@@ -131,6 +131,7 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 .action-btn.pink:disabled{opacity:0.5;cursor:not-allowed;}
 .action-btn.green{background:#E8F8F0;color:#1D7A50;}
 .action-btn.green:hover{background:#D0F0E0;}
+.action-btn.green:disabled{opacity:0.5;cursor:not-allowed;}
 .action-btn.room-cust{background:#fff;color:#534AB7;border:0.5px solid #D3D1C7;grid-column:span 2;}
 
 /* ハートエフェクト */
@@ -246,7 +247,7 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
       <div class="bubble" id="bubble">今日も会いにきてくれた！</div>
       <div style="position:relative;display:inline-block;">
         <div class="avatar anim-float" id="avatar">
-          <img id="char-img" src="" alt="" style="width:110px;height:110px;object-fit:contain;display:block;"/>
+          <img id="char-img" src="" alt="" style="width:160px;height:160px;object-fit:contain;display:block;"/>
         </div>
         <div class="zzz-el" id="zzz">💤</div>
       </div>
@@ -465,7 +466,6 @@ const WALLPAPERS = [
   {id:'wp5',name:'サクラルーム',  bg:'linear-gradient(180deg,#FFF5F8,#FFE8EE 60%,#FFF0F5)', pt:40},
 ];
 
-// キャラ専用ベッドカバー（各キャラの色）
 const BED_COVERS = Object.entries(CHARS).map(([k,c])=>({
   id:`bed_${k}`, name:`${c.name}カラー`, emoji:c.cushionEmoji, pt:25, color:c.color, color2:c.color2, forChar:k
 }));
@@ -563,7 +563,6 @@ function showGame(){
   charImg.src=c.imgs.normal;
   charImg.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
 
-  // CSSカスタムプロパティでキャラカラーを設定
   document.getElementById('room').style.setProperty('--char-color', c.color);
   document.getElementById('room').style.setProperty('--char-color2', c.color2);
   applyRoom();updateUI();renderFoods();checkStatus();
@@ -572,7 +571,6 @@ function showGame(){
 function applyRoom(){
   const wp=WALLPAPERS.find(w=>w.id===gd.activeWp)||WALLPAPERS[0];
   document.getElementById('room-wall').style.background=wp.bg;
-  // ベッドカバー
   const bc=gd.activeBed?BED_COVERS.find(b=>b.id===gd.activeBed):null;
   const c=CHARS[gd.charKey];
   document.getElementById('bed-mattress').style.background=bc?bc.color:c.color;
@@ -581,7 +579,6 @@ function applyRoom(){
   document.getElementById('cushion').style.background=bc?bc.color:c.color;
   document.getElementById('curtain-l').style.background=c.color;
   document.getElementById('curtain-r').style.background=c.color;
-  // 家具
   document.getElementById('extras').innerHTML=(gd.activeFurn||[]).map(id=>{
     const f=FURNITURE.find(x=>x.id===id);return f?`<span style="font-size:20px;margin:0 2px;">${f.emoji}</span>`:'';
   }).join('');
@@ -599,8 +596,6 @@ function updateUI(){
   document.getElementById('hearts').innerHTML=Array.from({length:gd.maxHearts},(_,i)=>
     `<span class="heart ${i<gd.hearts?'':'empty'}" id="h${i}">❤️</span>`).join('');
 
-  // ボタン状態
-  // お風呂・話すボタンリセット（日付変わり時）
   const bathb=document.getElementById('bath-btn');
   if(bathb&&!gd.bathedToday){bathb.disabled=false;bathb.textContent='🛁 お風呂';}
   const talkb=document.getElementById('talk-btn');
@@ -630,7 +625,6 @@ function checkStatus(){
     zzz.style.display='block';
     bbl.textContent=getVoice('sleep');
     setPose('sleep');
-    // タップで起こす
     av.onclick=wakeUp;
     return;
   }
@@ -648,7 +642,6 @@ function checkStatus(){
     return;
   }
 
-  // 朝イチ判定
   const isFirstVisit = gd.days > 0 && gd.fedToday === false && gd.petToday === 0;
   if(HOUR>=6&&HOUR<9&&isFirstVisit){
     av.className='avatar anim-play';
@@ -673,7 +666,6 @@ function wakeUp(){
 }
 
 // ===== アクション =====
-
 function bathChar(){
   const b=document.getElementById('bath-btn');
   if(b.disabled)return;
@@ -738,19 +730,17 @@ function playChar(){
 function setPose(pose){
   const c=CHARS[gd.charKey];
   const img=document.getElementById('char-img');
-  const av=document.getElementById('avatar');
   img.src=c.imgs[pose]||c.imgs.normal;
   if(pose==='sleep'){
     img.style.cssText='width:200px;height:auto;object-fit:contain;display:block;';
   } else {
     img.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
   }
-  // 3秒後に通常に戻す（sleep以外）
   if(pose!=='sleep'&&pose!=='normal'){
     clearTimeout(window._poseTimer);
     window._poseTimer=setTimeout(()=>{
       img.src=c.imgs.normal;
-      img.style.cssText='max-width:110px;max-height:110px;width:auto;height:auto;object-fit:contain;display:block;';
+      img.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
     },3000);
   }
 }
@@ -773,13 +763,10 @@ function spawnHearts(emojis){
 function doAnim(animClass, bubbleText){
   const av=document.getElementById('avatar');
   const bbl=document.getElementById('bubble');
-  // classNameだけ変えてimgは保持
   av.className='avatar '+animClass;
   bbl.textContent=bubbleText;
-  // ハートポップ
   const hearts=document.querySelectorAll('.heart:not(.empty)');
   hearts.forEach(h=>{h.classList.add('pop');setTimeout(()=>h.classList.remove('pop'),300);});
-
   setTimeout(()=>{av.className='avatar anim-float';checkStatus();},1500);
 }
 
@@ -818,7 +805,6 @@ function openCustomize(){
   const pts=parseInt(localStorage.getItem('yuwa_points')||'0');
   document.getElementById('modal-pts').textContent=pts;
 
-  // 壁紙
   document.getElementById('wp-grid').innerHTML=WALLPAPERS.map(w=>{
     const owned=gd.ownedWp?.includes(w.id), active=gd.activeWp===w.id;
     return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="buyWp('${w.id}',${w.pt})">
@@ -828,7 +814,6 @@ function openCustomize(){
     </div>`;
   }).join('');
 
-  // ベッドカバー
   document.getElementById('bed-grid').innerHTML=BED_COVERS.map(b=>{
     const owned=gd.ownedBed?.includes(b.id), active=gd.activeBed===b.id;
     return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="buyBed('${b.id}',${b.pt})">
@@ -838,7 +823,6 @@ function openCustomize(){
     </div>`;
   }).join('');
 
-  // 家具
   document.getElementById('furn-grid').innerHTML=FURNITURE.map(f=>{
     const owned=gd.ownedFurn?.includes(f.id), active=gd.activeFurn?.includes(f.id);
     return `<div class="cust-item ${owned?'owned':''} ${active?'active-item':''}" onclick="toggleFurn('${f.id}',${f.pt})">
@@ -911,7 +895,6 @@ function addExp(amt){
     localStorage.setItem('yuwa_points',newPts);
     if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
     save();updateUI();
-    // レベルアップ演出
     const av=document.getElementById('avatar');
     av.className='avatar anim-levelup';
     setPose('happy');
