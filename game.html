@@ -51,7 +51,7 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 .exp-fill{height:100%;background:linear-gradient(90deg,#B8B2EE,#534AB7);border-radius:10px;transition:width 0.6s ease;}
 
 /* ===== お部屋 ===== */
-.room{margin:0 1.25rem 1rem;border-radius:22px;overflow:hidden;position:relative;height:340px;box-shadow:0 4px 20px rgba(83,74,183,0.12);}
+.room{margin:0 1.25rem 1rem;border-radius:22px;overflow:hidden;position:relative;height:380px;box-shadow:0 4px 20px rgba(83,74,183,0.12);}
 .room-wall{position:absolute;inset:0;transition:background 0.5s ease;}
 /* 窓 */
 .room-window{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:78px;height:58px;background:linear-gradient(180deg,#B8D8F8,#D4EEFF);border-radius:8px 8px 0 0;border:3px solid #8BB8E8;overflow:hidden;}
@@ -76,8 +76,8 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 /* キャラ */
 .char-stage{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);text-align:center;z-index:10;}
 .bubble{background:#fff;border-radius:14px 14px 14px 4px;padding:6px 11px;font-size:11px;color:#534AB7;margin-bottom:7px;border:1px solid #EEEDFE;display:inline-block;box-shadow:0 2px 8px rgba(83,74,183,0.12);min-width:80px;}
-.avatar{width:160px;height:160px;margin:0 auto;transition:transform 0.1s;display:flex;align-items:flex-end;justify-content:center;overflow:visible;}
-.avatar img{width:160px;height:160px;object-fit:contain;display:block;}
+.avatar{width:200px;height:200px;margin:0 auto;transition:transform 0.1s;display:flex;align-items:flex-end;justify-content:center;overflow:visible;}
+.avatar img{width:200px;height:200px;object-fit:contain;display:block;}
 .avatar-sleep img{width:200px;height:auto;}
 
 /* ===== アニメーション ===== */
@@ -247,7 +247,7 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
       <div class="bubble" id="bubble">今日も会いにきてくれた！</div>
       <div style="position:relative;display:inline-block;">
         <div class="avatar anim-float" id="avatar">
-          <img id="char-img" src="" alt="" style="width:160px;height:160px;object-fit:contain;display:block;"/>
+          <img id="char-img" src="" alt="" style="width:200px;height:200px;object-fit:contain;display:block;"/>
         </div>
         <div class="zzz-el" id="zzz">💤</div>
       </div>
@@ -561,7 +561,7 @@ function showGame(){
   document.getElementById('g-name').textContent=c.name;
   const charImg=document.getElementById('char-img');
   charImg.src=c.imgs.normal;
-  charImg.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
+  charImg.style.cssText='width:200px;height:200px;object-fit:contain;display:block;';
 
   document.getElementById('room').style.setProperty('--char-color', c.color);
   document.getElementById('room').style.setProperty('--char-color2', c.color2);
@@ -732,15 +732,15 @@ function setPose(pose){
   const img=document.getElementById('char-img');
   img.src=c.imgs[pose]||c.imgs.normal;
   if(pose==='sleep'){
-    img.style.cssText='width:200px;height:auto;object-fit:contain;display:block;';
+    img.style.cssText='width:240px;height:auto;object-fit:contain;display:block;';
   } else {
-    img.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
+    img.style.cssText='width:200px;height:200px;object-fit:contain;display:block;';
   }
   if(pose!=='sleep'&&pose!=='normal'){
     clearTimeout(window._poseTimer);
     window._poseTimer=setTimeout(()=>{
       img.src=c.imgs.normal;
-      img.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
+      img.style.cssText='width:200px;height:200px;object-fit:contain;display:block;';
     },3000);
   }
 }
