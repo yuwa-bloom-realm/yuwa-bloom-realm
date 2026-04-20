@@ -76,9 +76,9 @@ body{-webkit-color-scheme:light;color-scheme:light;font-family:'Zen Maru Gothic'
 /* キャラ */
 .char-stage{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);text-align:center;z-index:10;}
 .bubble{background:#fff;border-radius:14px 14px 14px 4px;padding:6px 11px;font-size:11px;color:#534AB7;margin-bottom:7px;border:1px solid #EEEDFE;display:inline-block;box-shadow:0 2px 8px rgba(83,74,183,0.12);min-width:80px;}
-.avatar{width:110px;height:110px;margin:0 auto;transition:transform 0.1s;display:flex;align-items:flex-end;justify-content:center;overflow:visible;}
-.avatar img{width:110px;height:110px;object-fit:contain;display:block;}
-.avatar-sleep img{width:140px;height:auto;}
+.avatar{width:160px;height:160px;margin:0 auto;transition:transform 0.1s;display:flex;align-items:flex-end;justify-content:center;overflow:visible;}
+.avatar img{width:160px;height:160px;object-fit:contain;display:block;}
+.avatar-sleep img{width:200px;height:auto;}
 
 /* ===== アニメーション ===== */
 .anim-float{animation:float 3s ease-in-out infinite;}
@@ -561,7 +561,7 @@ function showGame(){
   document.getElementById('g-name').textContent=c.name;
   const charImg=document.getElementById('char-img');
   charImg.src=c.imgs.normal;
-  charImg.style.cssText='width:110px;height:110px;object-fit:contain;display:block;';
+  charImg.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
 
   // CSSカスタムプロパティでキャラカラーを設定
   document.getElementById('room').style.setProperty('--char-color', c.color);
@@ -741,9 +741,9 @@ function setPose(pose){
   const av=document.getElementById('avatar');
   img.src=c.imgs[pose]||c.imgs.normal;
   if(pose==='sleep'){
-    img.style.cssText='width:140px;height:auto;object-fit:contain;display:block;';
+    img.style.cssText='width:200px;height:auto;object-fit:contain;display:block;';
   } else {
-    img.style.cssText='width:110px;height:110px;object-fit:contain;display:block;';
+    img.style.cssText='width:160px;height:160px;object-fit:contain;display:block;';
   }
   // 3秒後に通常に戻す（sleep以外）
   if(pose!=='sleep'&&pose!=='normal'){
@@ -802,7 +802,9 @@ function buyFood(i){
   let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
   if(pts<f.pt){showToast('ポイントが足りないよ！');return;}
   if(!confirm(`${f.emoji}${f.name}を${f.pt}ptであげる？`))return;
-  localStorage.setItem('yuwa_points',pts-f.pt);
+  const newPts=pts-f.pt;
+  localStorage.setItem('yuwa_points',newPts);
+  if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
   gd.hearts=Math.min(gd.maxHearts,gd.hearts+f.hearts);
   addExp(5);
   showToast(`${f.emoji} ${f.name}あげた！❤️×${f.hearts}`);
@@ -855,7 +857,9 @@ function buyWp(id,pt){
   if(!owned&&pt>0){
     if(pts<pt){showToast('ポイントが足りないよ！');return;}
     if(!confirm(`${pt}ptで購入する？`))return;
-    localStorage.setItem('yuwa_points',pts-pt);
+    const newPts=pts-pt;
+    localStorage.setItem('yuwa_points',newPts);
+    if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
     gd.ownedWp.push(id);
   }
   gd.activeWp=id;save();applyRoom();openCustomize();showToast('🎨 壁紙変えたよ！');
@@ -867,7 +871,9 @@ function buyBed(id,pt){
   if(!owned){
     if(pts<pt){showToast('ポイントが足りないよ！');return;}
     if(!confirm(`${pt}ptで購入する？`))return;
-    localStorage.setItem('yuwa_points',pts-pt);
+    const newPts=pts-pt;
+    localStorage.setItem('yuwa_points',newPts);
+    if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
     gd.ownedBed.push(id);
   }
   gd.activeBed=gd.activeBed===id?null:id;
@@ -880,7 +886,9 @@ function toggleFurn(id,pt){
   if(!owned){
     if(pts<pt){showToast('ポイントが足りないよ！');return;}
     if(!confirm(`${pt}ptで購入する？`))return;
-    localStorage.setItem('yuwa_points',pts-pt);
+    const newPts=pts-pt;
+    localStorage.setItem('yuwa_points',newPts);
+    if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
     gd.ownedFurn.push(id);
   }
   const idx=gd.activeFurn.indexOf(id);
@@ -899,7 +907,9 @@ function addExp(amt){
   if(gd.exp>=100&&gd.level<100){
     gd.exp-=100;gd.level++;
     let pts=parseInt(localStorage.getItem('yuwa_points')||'0');
-    localStorage.setItem('yuwa_points',pts+10);
+    const newPts=pts+10;
+    localStorage.setItem('yuwa_points',newPts);
+    if(window.syncPointsToFirestore)window.syncPointsToFirestore(newPts);
     save();updateUI();
     // レベルアップ演出
     const av=document.getElementById('avatar');
@@ -932,6 +942,51 @@ function showToast(msg){
 // ===== 起動 =====
 renderSelect();
 if(gd?.charKey){selChar=gd.charKey;startGame();}
+</script>
+
+<!-- Firestore連携 -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDG3JQgy57WfibQ_4Rdh_K9DymEC7TZx0E",
+  authDomain: "yuwa-bloom-realm.firebaseapp.com",
+  projectId: "yuwa-bloom-realm",
+  storageBucket: "yuwa-bloom-realm.firebasestorage.app",
+  messagingSenderId: "772765861265",
+  appId: "1:772765861265:web:4d5e7a6441e218bfdd4630"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  window._userEmail = user.email;
+  try {
+    const snap = await getDoc(doc(db, 'users', user.email));
+    if (snap.exists()) {
+      const data = snap.data();
+      localStorage.setItem('yuwa_points', data.points || 0);
+      localStorage.setItem('yuwa_plan', data.plan || 'seed');
+      if (user.email === 'hinyarin1210@gmail.com') {
+        localStorage.setItem('yuwa_plan', 'mastery');
+        localStorage.setItem('yuwa_is_admin', 'true');
+      }
+      if (typeof renderFoods === 'function') renderFoods();
+    }
+  } catch(e) { console.log('Firestore sync failed'); }
+});
+
+window.syncPointsToFirestore = async (newPts) => {
+  if (!window._userEmail) return;
+  try {
+    await setDoc(doc(db, 'users', window._userEmail), { points: newPts }, { merge: true });
+  } catch(e) { console.log('Firestore update failed'); }
+};
 </script>
 </body>
 </html>
