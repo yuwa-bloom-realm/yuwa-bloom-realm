@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ことばのカードセッション | yuwa Bloom Realm</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #0a0a1a;
+    --purple-mid: #1a0a3a;
+    --gold: #c9a96e;
+    --gold-light: #e8d5a3;
+    --cream: #f8f6f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--purple-deep);
+    color: var(--cream);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* オーロラ背景 */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .aurora-layer {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    border-radius: 40%;
+    opacity: 0;
+    filter: blur(60px);
+    animation: auroraMove var(--dur, 12s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+  }
+
+  .aurora-1 {
+    background: radial-gradient(ellipse at 30% 40%, rgba(72, 210, 230, 0.55) 0%, transparent 60%);
+    animation: auroraMove1 14s ease-in-out infinite alternate;
+  }
+  .aurora-2 {
+    background: radial-gradient(ellipse at 70% 30%, rgba(150, 80, 230, 0.5) 0%, transparent 55%);
+    animation: auroraMove2 18s ease-in-out infinite alternate;
+  }
+  .aurora-3 {
+    background: radial-gradient(ellipse at 50% 70%, rgba(60, 220, 170, 0.45) 0%, transparent 50%);
+    animation: auroraMove3 22s ease-in-out infinite alternate;
+  }
+  .aurora-4 {
+    background: radial-gradient(ellipse at 15% 60%, rgba(200, 100, 240, 0.4) 0%, transparent 55%);
+    animation: auroraMove4 16s ease-in-out infinite alternate;
+  }
+  .aurora-5 {
+    background: radial-gradient(ellipse at 85% 50%, rgba(80, 240, 210, 0.35) 0%, transparent 50%);
+    animation: auroraMove5 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes auroraMove1 {
+    0%   { opacity: 0.85; transform: translate(0%, 0%) rotate(0deg) scale(1); }
+    100% { opacity: 1; transform: translate(8%, -5%) rotate(8deg) scale(1.1); }
+  }
+  @keyframes auroraMove2 {
+    0%   { opacity: 0.75; transform: translate(0%, 0%) rotate(0deg) scale(1); }
+    100% { opacity: 0.95; transform: translate(-6%, 8%) rotate(-6deg) scale(1.15); }
+  }
+  @keyframes auroraMove3 {
+    0%   { opacity: 0.7; transform: translate(0%, 0%) rotate(0deg) scale(1); }
+    100% { opacity: 0.9; transform: translate(10%, -8%) rotate(10deg) scale(0.95); }
+  }
+  @keyframes auroraMove4 {
+    0%   { opacity: 0.7; transform: translate(0%, 0%) rotate(0deg) scale(1); }
+    100% { opacity: 0.9; transform: translate(-8%, -6%) rotate(-8deg) scale(1.1); }
+  }
+  @keyframes auroraMove5 {
+    0%   { opacity: 0.6; transform: translate(0%, 0%) rotate(0deg) scale(1); }
+    100% { opacity: 0.85; transform: translate(5%, 10%) rotate(5deg) scale(1.05); }
+  }
+
+  /* 星 */
+  .stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.4); }
+  }
+
+  /* 暗いオーバーレイ */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: rgba(5, 3, 15, 0.3);
+    pointer-events: none;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ヘッダー */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    animation: fadeDown 1.2s ease both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-moon {
+    font-size: 2.4rem;
+    margin-bottom: 16px;
+    display: block;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .header-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .header-title {
+    font-size: 1.35rem;
+    font-weight: 200;
+    letter-spacing: 0.1em;
+    line-height: 1.9;
+    color: var(--cream);
+  }
+
+  .header-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  /* 区切り線 */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0;
+    opacity: 0.4;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .divider-icon { color: var(--gold); font-size: 0.8rem; }
+
+  /* リード文 */
+  .lead {
+    animation: fadeUp 1.4s ease 0.3s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lead p {
+    font-size: 0.95rem;
+    line-height: 2;
+    font-weight: 300;
+    color: rgba(248,246,242,0.95);
+    margin-bottom: 2px;
+    text-align: left;
+  }
+
+  .lead p.center {
+    text-align: center;
+  }
+
+  .lead p.highlight {
+    color: var(--gold-light);
+    font-size: 1.05rem;
+    margin: 16px 0 8px;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  .lead-block {
+    margin: 20px 0;
+    padding: 20px 24px;
+    border-left: 2px solid rgba(201,169,110,0.3);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .lead-intro {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .lead-intro p {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 2.2;
+  }
+
+  /* カードメニュー */
+  .menu-section { margin-top: 48px; }
+
+  .menu-label {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .menu-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,169,110,0.2);
+    border-radius: 2px;
+    padding: 32px 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s ease, background 0.4s ease;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  .menu-card:nth-child(1) { animation-delay: 0.4s; }
+  .menu-card:nth-child(2) { animation-delay: 0.6s; }
+  .menu-card:nth-child(3) { animation-delay: 0.8s; }
+
+  .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,169,110,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .menu-card:hover {
+    border-color: rgba(201,169,110,0.5);
+    background: rgba(255,255,255,0.07);
+  }
+
+  .menu-card.featured {
+    border-color: rgba(201,169,110,0.4);
+    background: rgba(201,169,110,0.06);
+  }
+
+  .menu-card.featured::after {
+    content: '✦ おすすめ';
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  .menu-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .menu-name {
+    font-size: 1.05rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--cream);
+    margin-bottom: 6px;
+    line-height: 1.8;
+  }
+
+  .menu-price-wrap {
+    margin-bottom: 16px;
+  }
+
+  .menu-price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .menu-price-regular {
+    font-size: 0.82rem;
+    color: rgba(248,246,242,0.4);
+    text-decoration: line-through;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-price-arrow {
+    font-size: 0.82rem;
+    color: rgba(248,246,242,0.4);
+  }
+
+  .menu-price-label {
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .menu-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    font-weight: 400;
+  }
+
+  .menu-desc {
+    font-size: 0.82rem;
+    line-height: 2.1;
+    color: rgba(240,238,232,0.75);
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .menu-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    border: 1px solid rgba(201,169,110,0.35);
+    padding: 3px 10px;
+    border-radius: 1px;
+  }
+
+  /* ボタン */
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px 24px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #a07840 100%);
+    color: var(--purple-deep);
+    font-weight: 400;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201,169,110,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid rgba(201,169,110,0.4);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(201,169,110,0.08);
+    border-color: var(--gold);
+  }
+
+  .btn-transfer {
+    background: transparent;
+    color: rgba(240,238,232,0.6);
+    border: 1px solid rgba(240,238,232,0.15);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 10px 24px;
+  }
+
+  .btn-transfer:hover {
+    background: rgba(255,255,255,0.04);
+    color: rgba(240,238,232,0.8);
+  }
+
+  /* 振込説明 */
+  .transfer-info {
+    margin-top: 8px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1px;
+    display: none;
+  }
+
+  .transfer-info.open { display: block; }
+
+  .transfer-info p {
+    font-size: 0.75rem;
+    line-height: 2;
+    color: rgba(240,238,232,0.6);
+    font-weight: 300;
+  }
+
+  .transfer-info p.transfer-title {
+    color: var(--gold);
+    font-size: 0.78rem;
+    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* 注意書き */
+  .note {
+    text-align: center;
+    margin-top: 48px;
+    animation: fadeUp 1.2s ease 1s both;
+  }
+
+  .note p {
+    font-size: 0.75rem;
+    line-height: 2.2;
+    color: rgba(240,238,232,0.45);
+    font-weight: 300;
+  }
+
+  /* フッター */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(201,169,110,0.1);
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-size: 0.7rem;
+    color: rgba(240,238,232,0.3);
+    letter-spacing: 0.2em;
+  }
+</style>
+</head>
+<body>
+
+<!-- オーロラ -->
+<div class="aurora">
+  <div class="aurora-layer aurora-1"></div>
+  <div class="aurora-layer aurora-2"></div>
+  <div class="aurora-layer aurora-3"></div>
+  <div class="aurora-layer aurora-4"></div>
+  <div class="aurora-layer aurora-5"></div>
+</div>
+
+<!-- 星 -->
+<div class="stars" id="stars"></div>
+
+<!-- オーバーレイ -->
+<div class="overlay"></div>
+
+<div class="container">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <span class="header-moon">🌙</span>
+    <div class="header-sub">yuwa Bloom Realm</div>
+    <h1 class="header-title">
+      ことばのカードセッション<br>
+      <em>&amp; 物語の続きへ</em>
+    </h1>
+  </div>
+
+  <!-- リード文 -->
+  <div class="lead">
+    <div class="lead-intro">
+      <p>今年こそ変わりたい。</p>
+      <p>理想の未来に、近づきたい。</p>
+      <p>そう思いながら、ここまで来てくれたあなたへ。</p>
+    </div>
+
+    <div class="divider" style="margin: 28px 0;"><span class="divider-icon">✦</span></div>
+
+    <div class="lead-block">
+      <p>ゆわが届けるのは、「ことばのカードセッション」。</p>
+      <p>タロットでも占いでもありません。</p>
+      <p style="margin-top:12px;">脳科学・心理学・ポジティブ心理学、そして無意識活用法——</p>
+      <p>ゆわメソッドから生まれた、他にはないことばのカード。</p>
+    </div>
+
+    <p class="highlight">今の自分が、見えてくる。</p>
+    <p>何を大切にしているのか、何を軸にすればいいのか。</p>
+    <p>そして、次にどう踏み出せばいいのかのヒントも。</p>
+    <p style="margin-top:12px;">ことばを通して、あなたの中にある答えが見えてきます。</p>
+
+    <div class="divider" style="margin: 28px 0;"><span class="divider-icon">✦</span></div>
+
+    <p>そして、ご希望の方には——</p>
+    <p>カードセッションの後、ゆわ王国への扉が開きます。</p>
+    <p>あなたの今を物語に紡いだ<span style="color:var(--gold-light);">「アフターストーリー」</span>として、お届けします。</p>
+    <p style="margin-top:12px;">さらに、生まれ持った使命・本質・魂の方向性まで読み解きたい方へは、</p>
+    <p><span style="color:var(--gold-light);">ゆわ王国からの贈りもの</span>も。</p>
+    <p>あなたが授かった言葉が、物語にさらなる光を添えます。</p>
+
+    <div class="divider" style="margin: 32px 0;"><span class="divider-icon">✦</span></div>
+
+    <div class="lead-block">
+      <p style="color:var(--gold-light); font-size:0.95rem; margin-bottom:10px;">🎁 お申し込みの方全員への特典</p>
+      <p>お申し込みいただいた方には、特典として<span style="color:var(--gold-light);">「ことばの手鏡」</span>をプレゼントいたします。</p>
+      <p style="margin-top:8px;">※お申し込みが確認でき次第、順番に制作してお届けします。</p>
+      <p style="margin-top:12px;">✉️ 全てLINEのテキストで完結します。Zoomは必要ありません。</p>
+    </div>
+
+  </div>
+
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <!-- メニュー -->
+  <div class="menu-section">
+    <div class="menu-label">— お選びください —</div>
+
+    <!-- ① -->
+    <div class="menu-card">
+      <div class="menu-number">① CARD SESSION</div>
+      <div class="menu-name">カードセッション</div>
+      <div class="menu-price-wrap">
+        <div class="menu-price-row">
+          <span class="menu-price-regular">通常 ¥5,500</span>
+          <span class="menu-price-arrow">→</span>
+          <span class="menu-price-label">今回限り</span>
+        </div>
+        <div class="menu-price">¥1,500</div>
+      </div>
+      <div class="menu-desc">
+        現在カード・未来カード・価値観カードの3枚で、今のあなたに必要なメッセージと自分の軸を見つけます。そして「次の一歩は何か」が見えてくるセッション。LINEのテキストで完結するので、どこからでも気軽に受け取れます。
+      </div>
+      <div class="menu-tags">
+        <span class="tag">LINEテキスト完結</span>
+        <span class="tag">カード3枚</span>
+        <span class="tag">次の一歩が見える</span>
+      </div>
+      <div class="btn-group">
+        <a href="https://square.link/u/Ga0EAI8Y?src=sheet" class="btn btn-secondary">カードで申し込む（Square決済）</a>
+        <button class="btn btn-transfer" onclick="toggleTransfer('t1')">振込で申し込む方はこちら</button>
+        <div class="transfer-info" id="t1">
+          <p class="transfer-title">🌙 お振込先</p>
+          <p>住信SBIネット銀行　バナナ支店（107）</p>
+          <p>普通　8418034　コジマ サユリ</p>
+          <p style="margin-top:10px;">・お振込は事前払いとなります。</p>
+          <p>・振込手数料はお客様のご負担となります。</p>
+          <p>・お振込完了後、スクリーンショットをLINEにてお送りください。</p>
+          <p>・LINEのお名前もあわせてお知らせください。</p>
+          <p>・ご入金確認次第、ご連絡いたします。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② -->
+    <div class="menu-card">
+      <div class="menu-number">② CARD + AFTER STORY</div>
+      <div class="menu-name">カード＋アフターストーリー</div>
+      <div class="menu-price-wrap">
+        <div class="menu-price-row">
+          <span class="menu-price-regular">通常 ¥10,000</span>
+          <span class="menu-price-arrow">→</span>
+          <span class="menu-price-label">今回限り</span>
+        </div>
+        <div class="menu-price">¥3,000</div>
+      </div>
+      <div class="menu-desc">
+        カードセッションのすべて＋あなただけの物語の続き。光の門をくぐったあなたの前に、7つの間が現れます。気づき・本音・価値・分岐・一歩・未来・祝福——カードで見えてきた「あなたの今」を物語に紡いでお届けします。
+      </div>
+      <div class="menu-tags">
+        <span class="tag">LINEテキスト完結</span>
+        <span class="tag">7つの間をめぐる物語</span>
+        <span class="tag">あなただけの続き</span>
+      </div>
+      <div class="btn-group">
+        <a href="https://square.link/u/zta38jbh?src=sheet" class="btn btn-primary">カードで申し込む（Square決済）</a>
+        <button class="btn btn-transfer" onclick="toggleTransfer('t2')">振込で申し込む方はこちら</button>
+        <div class="transfer-info" id="t2">
+          <p class="transfer-title">🌙 お振込先</p>
+          <p>住信SBIネット銀行　バナナ支店（107）</p>
+          <p>普通　8418034　コジマ サユリ</p>
+          <p style="margin-top:10px;">・お振込は事前払いとなります。</p>
+          <p>・振込手数料はお客様のご負担となります。</p>
+          <p>・お振込完了後、スクリーンショットをLINEにてお送りください。</p>
+          <p>・LINEのお名前もあわせてお知らせください。</p>
+          <p>・ご入金確認次第、ご連絡いたします。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ -->
+    <div class="menu-card featured">
+      <div class="menu-number">③ CARD + AFTER STORY + GIFT</div>
+      <div class="menu-name">カード＋アフターストーリー<br>＋ゆわ王国からの贈りもの</div>
+      <div class="menu-price-wrap">
+        <div class="menu-price-row">
+          <span class="menu-price-regular">通常 ¥35,000</span>
+          <span class="menu-price-arrow">→</span>
+          <span class="menu-price-label">今回限り</span>
+        </div>
+        <div class="menu-price">¥10,000</div>
+      </div>
+      <div class="menu-desc">
+        ②のすべて＋あなたが生まれ持った使命・本質・魂の方向性を深く読み解きます。名前と生年月日から授かった言葉を紡ぎ、物語にさらなる光を添えてお届けします。
+      </div>
+      <div class="menu-tags">
+        <span class="tag">LINEテキスト完結</span>
+        <span class="tag">使命・本質を読み解く</span>
+        <span class="tag">最も深い物語</span>
+      </div>
+      <div class="btn-group">
+        <a href="https://square.link/u/UL0QATJU?src=sheet" class="btn btn-primary">カードで申し込む（Square決済）</a>
+        <button class="btn btn-transfer" onclick="toggleTransfer('t3')">振込で申し込む方はこちら</button>
+        <div class="transfer-info" id="t3">
+          <p class="transfer-title">🌙 お振込先</p>
+          <p>住信SBIネット銀行　バナナ支店（107）</p>
+          <p>普通　8418034　コジマ サユリ</p>
+          <p style="margin-top:10px;">・お振込は事前払いとなります。</p>
+          <p>・振込手数料はお客様のご負担となります。</p>
+          <p>・お振込完了後、スクリーンショットをLINEにてお送りください。</p>
+          <p>・LINEのお名前もあわせてお知らせください。</p>
+          <p>・ご入金確認次第、ご連絡いたします。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 注意書き -->
+  <div class="note">
+    <p style="color:rgba(248,246,242,0.65); margin-bottom:16px;">お申し込みの確認が取れた方から順番にご対応いたします。<br>お時間をいただく場合がございますので、あらかじめご了承ください。</p>
+    <p>お支払いはSquare決済または銀行振込よりお選びいただけます。</p>
+    <p>Square決済の備考欄に、LINEのお名前をご記入ください。</p>
+    <p>ご不明な点はLINEよりお気軽にどうぞ🌙</p>
+    <p style="margin-top:16px; color:rgba(248,246,242,0.35);">※ご購入後の返金はいかなる場合もお受けできません。</p>
+    <p style="color:rgba(248,246,242,0.35);">ご不明な点はお申し込み前にLINEにてご確認ください。</p>
+  </div>
+
+  <div class="divider" style="margin-top:48px;"><span class="divider-icon">✦</span></div>
+
+  <!-- フッター -->
+  <div class="footer">
+    <div class="footer-brand">yuwa Bloom Realm</div>
+    <div class="footer-sub">桜庭ゆわ</div>
+  </div>
+
+</div>
+
+<script>
+  // 星を生成
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 4 + 2}s;
+      --delay: ${Math.random() * 5}s;
+      opacity: ${Math.random() * 0.4 + 0.1};
+    `;
+    starsEl.appendChild(star);
+  }
+
+  // 振込トグル
+  function toggleTransfer(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
