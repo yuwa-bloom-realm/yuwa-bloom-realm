@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCBR™ カラーボトルリーディング講座 | yuwa Bloom Realm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Shippori+Mincho:wght@400;500;600&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --white: #ffffff;
+  --cream: #faf8f5;
+  --lavender-pale: #f0ecf8;
+  --lavender: #c8b8e8;
+  --lavender-mid: #a890d4;
+  --lavender-deep: #7a5aaa;
+  --aurora-green: #b8e8d4;
+  --aurora-pink: #f0c8d8;
+  --aurora-blue: #c0d8f0;
+  --gold: #c8a84a;
+  --gold-light: #e8d090;
+  --gold-pale: #f5ecc8;
+  --text-dark: #2a2030;
+  --text-mid: #5a4a6a;
+  --text-soft: #8a7a9a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Shippori Mincho', 'Zen Old Mincho', serif;
+  background: #faf8fc;
+  color: var(--text-dark);
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+
+/* ===== AURORA BACKGROUND ===== */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(160deg, #ffffff 0%, #f5f0fc 40%, #faf5f0 70%, #f0f8f5 100%);
+}
+.aurora-bg::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(200,184,232,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(176,220,208,0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 60% 80%, rgba(240,200,216,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 10% 70%, rgba(192,216,240,0.22) 0%, transparent 55%);
+  animation: auroraShift 18s ease-in-out infinite alternate;
+}
+.aurora-bg::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: 
+    radial-gradient(ellipse 60% 40% at 70% 30%, rgba(200,168,74,0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 30% 70%, rgba(168,144,212,0.20) 0%, transparent 55%);
+  animation: auroraShift 24s ease-in-out infinite alternate-reverse;
+}
+@keyframes auroraShift {
+  0% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(3%, 2%) scale(1.03); }
+  66% { transform: translate(-2%, 4%) scale(0.98); }
+  100% { transform: translate(2%, -3%) scale(1.02); }
+}
+
+/* ===== PARTICLE SPARKLES ===== */
+.sparkles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  animation: sparkleFloat linear infinite;
+  opacity: 0;
+}
+@keyframes sparkleFloat {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  20% { opacity: 0.7; transform: translateY(-15px) scale(1); }
+  80% { opacity: 0.4; transform: translateY(-60px) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-100px) scale(0); }
+}
+
+/* ===== LAYOUT ===== */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== GOLD DIVIDER ===== */
+.gold-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 40px 0;
+}
+.gold-divider::before,
+.gold-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+}
+.gold-divider .diamond {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ===== SECTION LABEL ===== */
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.section-title .accent {
+  background: linear-gradient(135deg, var(--lavender-mid), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== SECTION ===== */
+section {
+  padding: 60px 0;
+  position: relative;
+  z-index: 1;
+}
+section:nth-child(even) .section-inner {
+  background: rgba(245, 240, 252, 0.7);
+  border-radius: 24px;
+  padding: 40px 24px;
+  border: 1px solid rgba(200,184,232,0.25);
+}
+
+/* ==================== */
+/* 1. FIRST VIEW        */
+/* ==================== */
+#firstview {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 0 60px;
+  position: relative;
+}
+
+.fv-flower {
+  font-size: 32px;
+  margin-bottom: 24px;
+  animation: floatFlower 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(200,184,232,0.6));
+}
+@keyframes floatFlower {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.fv-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--text-soft);
+  margin-bottom: 20px;
+}
+
+.fv-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+.fv-title .bcbr {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-style: italic;
+  background: linear-gradient(135deg, var(--lavender-mid) 0%, var(--gold) 50%, var(--aurora-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.fv-subtitle {
+  font-size: 13px;
+  color: var(--text-mid);
+  margin: 16px 0 32px;
+  line-height: 1.9;
+  padding: 0 8px;
+}
+.fv-subtitle strong {
+  color: var(--lavender-deep);
+}
+
+.fv-poem {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(200,184,232,0.4);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin: 0 4px 40px;
+  box-shadow: 0 4px 24px rgba(168,144,212,0.12);
+}
+.fv-poem p {
+  font-size: 15px;
+  line-height: 2.2;
+  color: var(--text-mid);
+}
+.fv-poem p strong {
+  color: var(--lavender-deep);
+  font-size: 16px;
+}
+
+.fv-scroll {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--text-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.fv-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--lavender-mid), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+/* ==================== */
+/* 2. WORRIES           */
+/* ==================== */
+.worry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+}
+.worry-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(200,184,232,0.3);
+  border-radius: 14px;
+  padding: 16px 18px;
+  backdrop-filter: blur(6px);
+  animation: fadeInUp 0.6s ease both;
+}
+.worry-item:nth-child(1) { animation-delay: 0.1s; }
+.worry-item:nth-child(2) { animation-delay: 0.2s; }
+.worry-item:nth-child(3) { animation-delay: 0.3s; }
+.worry-item:nth-child(4) { animation-delay: 0.4s; }
+.worry-item:nth-child(5) { animation-delay: 0.5s; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.worry-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lavender-mid), var(--aurora-pink));
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.worry-item p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
+/* ==================== */
+/* 3. WHAT IS BCBR     */
+/* ==================== */
+.bcbr-what-intro {
+  text-align: center;
+  margin-top: 28px;
+}
+.bcbr-what-intro p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: 24px;
+}
+.bcbr-highlight-box {
+  background: linear-gradient(135deg, rgba(200,184,232,0.15), rgba(200,168,74,0.08));
+  border: 1px solid rgba(200,168,74,0.3);
+  border-radius: 16px;
+  padding: 28px 20px;
+  margin-top: 20px;
+}
+.bcbr-highlight-box p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2.1;
+}
+.bcbr-highlight-box .key-phrase {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--lavender-deep);
+  line-height: 1.8;
+  margin: 12px 0;
+  text-align: center;
+}
+
+/* ==================== */
+/* 4. KNOWLEDGE GAP    */
+/* ==================== */
+.gap-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 28px 0;
+}
+.gap-box {
+  border-radius: 14px;
+  padding: 20px 22px;
+  text-align: center;
+}
+.gap-box.know {
+  background: rgba(240,236,248,0.8);
+  border: 1px solid rgba(168,144,212,0.3);
+}
+.gap-box.know .gap-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--lavender-mid);
+  margin-bottom: 8px;
+  font-family: 'Cormorant Garamond', serif;
+}
+.gap-box.know p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+.gap-arrow {
+  text-align: center;
+  padding: 12px 0;
+  font-size: 24px;
+  color: var(--gold);
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+.gap-box.deliver {
+  background: linear-gradient(135deg, rgba(200,168,74,0.12), rgba(200,184,232,0.15));
+  border: 1px solid rgba(200,168,74,0.4);
+}
+.gap-box.deliver .gap-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 8px;
+  font-family: 'Cormorant Garamond', serif;
+}
+.gap-box.deliver p {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.8;
+}
+.gap-desc {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 14px;
+  border-left: 3px solid var(--lavender);
+}
+
+/* ==================== */
+/* 5. CURRICULUM       */
+/* ==================== */
+.curriculum-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 28px;
+}
+.curriculum-item {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(200,184,232,0.25);
+  border-radius: 16px;
+  padding: 20px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.curriculum-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(168,144,212,0.15);
+}
+.curriculum-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  filter: drop-shadow(0 2px 6px rgba(200,184,232,0.4));
+}
+.curriculum-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.curriculum-content p {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+/* ==================== */
+/* 6. AI ERA           */
+/* ==================== */
+.ai-intro {
+  text-align: center;
+  margin-top: 24px;
+}
+.ai-intro p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2;
+  margin-bottom: 20px;
+}
+.ai-key {
+  background: linear-gradient(135deg, rgba(184,232,212,0.3), rgba(200,184,232,0.3));
+  border: 1px solid rgba(184,232,212,0.5);
+  border-radius: 16px;
+  padding: 28px 20px;
+  text-align: center;
+  margin: 20px 0;
+}
+.ai-key p {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.9;
+}
+.ai-key .highlight {
+  color: var(--lavender-deep);
+}
+.ai-desc {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2;
+  text-align: center;
+}
+
+/* ==================== */
+/* 7. THREE STEPS      */
+/* ==================== */
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 28px;
+  position: relative;
+}
+.steps-container::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 40px;
+  bottom: 40px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--lavender-mid), var(--gold-light), var(--aurora-green));
+}
+.step-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 24px 0;
+  position: relative;
+}
+.step-num-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.step-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  background: rgba(255,255,255,0.9);
+  border: 2px solid var(--lavender-mid);
+  box-shadow: 0 4px 16px rgba(168,144,212,0.2);
+}
+.step-num .en {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--text-soft);
+  line-height: 1;
+}
+.step-num .num {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--lavender-deep);
+  line-height: 1;
+}
+.step-item:nth-child(2) .step-num { border-color: var(--gold); }
+.step-item:nth-child(2) .step-num .num { color: var(--gold); }
+.step-item:nth-child(3) .step-num { border-color: #7ac8a8; }
+.step-item:nth-child(3) .step-num .num { color: #5aaa88; }
+
+.step-content {
+  flex: 1;
+  padding-top: 4px;
+}
+.step-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.step-content .step-sub {
+  font-size: 12px;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--text-soft);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.step-content p {
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.9;
+}
+
+/* ==================== */
+/* 8. TOKUTEN          */
+/* ==================== */
+.tokuten-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 28px;
+}
+.tokuten-item {
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(200,168,74,0.25);
+  border-radius: 14px;
+  padding: 16px 14px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+.tokuten-item .t-icon { font-size: 20px; margin-bottom: 8px; }
+.tokuten-item p {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+.tokuten-note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+/* ==================== */
+/* 9. MESSAGE          */
+/* ==================== */
+.message-section {
+  text-align: center;
+}
+.message-portrait {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--lavender-pale), var(--gold-pale));
+  border: 2px solid rgba(200,168,74,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 20px rgba(200,184,232,0.3);
+}
+.message-body {
+  background: linear-gradient(160deg, rgba(240,236,248,0.6), rgba(245,236,200,0.3));
+  border: 1px solid rgba(200,184,232,0.25);
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: left;
+  backdrop-filter: blur(8px);
+}
+.message-body p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2.1;
+  margin-bottom: 16px;
+}
+.message-body p:last-of-type { margin-bottom: 0; }
+.message-body .emphasis {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--lavender-deep);
+  display: block;
+  text-align: center;
+  margin: 20px 0;
+  line-height: 1.9;
+}
+.message-closing {
+  margin-top: 28px;
+  text-align: center;
+}
+.message-closing p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 2.2;
+}
+.message-closing .gold-text {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 16px;
+  display: block;
+  margin-top: 8px;
+}
+.message-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--text-soft);
+  letter-spacing: 0.2em;
+  margin-top: 20px;
+}
+
+/* ==================== */
+/* 10. NOTES           */
+/* ==================== */
+.notes-box {
+  background: rgba(250,248,245,0.9);
+  border: 1px solid rgba(200,200,200,0.3);
+  border-radius: 14px;
+  padding: 24px 20px;
+  margin-top: 20px;
+}
+.notes-box p {
+  font-size: 12.5px;
+  color: var(--text-soft);
+  line-height: 1.9;
+}
+
+/* ==================== */
+/* 11. CTA             */
+/* ==================== */
+#cta {
+  padding: 60px 0 80px;
+  text-align: center;
+}
+.cta-inner {
+  background: linear-gradient(160deg, rgba(240,236,248,0.7), rgba(245,236,200,0.4));
+  border: 1px solid rgba(200,184,232,0.3);
+  border-radius: 28px;
+  padding: 44px 24px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+.cta-inner::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(200,168,74,0.12), transparent 70%);
+  border-radius: 50%;
+}
+.cta-flower { font-size: 28px; margin-bottom: 16px; animation: floatFlower 4s ease-in-out infinite; }
+.cta-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.cta-sub {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 32px;
+  line-height: 1.8;
+}
+.btn-primary {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 14px;
+  padding: 18px 20px;
+  border-radius: 50px;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.05em;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover::before { left: 100%; }
+.btn-primary.btn-gold {
+  background: linear-gradient(135deg, #c8a84a, #e8d090, #c8a84a);
+  color: #2a1a00;
+  box-shadow: 0 6px 24px rgba(200,168,74,0.35);
+}
+.btn-primary.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(200,168,74,0.45);
+}
+.btn-primary.btn-lavender {
+  background: linear-gradient(135deg, var(--lavender-mid), var(--lavender-deep));
+  color: white;
+  box-shadow: 0 6px 24px rgba(168,144,212,0.4);
+}
+.btn-primary.btn-lavender:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(168,144,212,0.5);
+}
+.cta-note {
+  font-size: 11.5px;
+  color: var(--text-soft);
+  margin-top: 20px;
+  line-height: 1.8;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 32px 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-soft);
+  border-top: 1px solid rgba(200,184,232,0.15);
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== FADE IN OBSERVER ===== */
+.fade-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== ORNAMENT FLOWERS ===== */
+.ornament {
+  text-align: center;
+  font-size: 18px;
+  color: rgba(200,184,232,0.5);
+  letter-spacing: 0.5em;
+  margin: 8px 0;
+}
+
+/* ===== MINI CTA (FV) ===== */
+.fv-mini-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin: 32px auto 0;
+}
+.btn-mini {
+  display: block;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.04em;
+  transition: all 0.3s ease;
+}
+.btn-mini-gold {
+  background: linear-gradient(135deg, #c8a84a, #e8d090, #c8a84a);
+  color: #2a1a00;
+  box-shadow: 0 4px 16px rgba(200,168,74,0.3);
+}
+.btn-mini-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,168,74,0.4); }
+.btn-mini-lavender {
+  background: linear-gradient(135deg, var(--lavender-mid), var(--lavender-deep));
+  color: white;
+  box-shadow: 0 4px 16px rgba(168,144,212,0.35);
+}
+.btn-mini-lavender:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(168,144,212,0.45); }
+
+/* ===== TARGET DESC ===== */
+.target-desc {
+  font-size: 13px;
+  color: var(--lavender-deep);
+  text-align: center;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(200,184,232,0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(200,184,232,0.25);
+}
+
+/* ===== FOR YOU SECTION ===== */
+.foryou-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+.foryou-item {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(200,184,232,0.25);
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* ===== CTA FLOW ===== */
+.cta-flow {
+  font-size: 13px;
+  color: var(--text-mid);
+  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(200,184,232,0.3);
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  line-height: 1.7;
+}
+
+/* ===== VOICES ===== */
+.voices-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 28px;
+}
+.voice-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,236,248,0.5));
+  border: 1px solid rgba(200,168,74,0.2);
+  border-left: 3px solid var(--gold-light);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.voice-mark {
+  color: var(--gold);
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.voice-item p {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.9;
+  font-style: italic;
+}
+
+/* ===== TOKUTEN SMALL ===== */
+.tokuten-small {
+  display: block;
+  font-size: 10px;
+  color: var(--text-soft);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Aurora Background -->
+<div class="aurora-bg"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<!-- ==================== -->
+<!-- 1. FIRST VIEW        -->
+<!-- ==================== -->
+<section id="firstview">
+  <div class="container">
+    <div class="fv-brand">yuwa Bloom Realm presents</div>
+    
+    <div class="fv-flower">🌸</div>
+    
+    <h1 class="fv-title">
+      <span class="bcbr">BCBR™</span>
+      カラーボトルリーディング講座
+    </h1>
+    
+    <p class="fv-subtitle">
+      色を<strong>〝届く言葉〟</strong>に変える、<br>
+      AI時代のセッションメソッド
+    </p>
+    
+    <div class="fv-poem">
+      <p>
+        色が好き。<br>
+        人の役に立ちたい。<br>
+        でも、いざセッションになると、<br>
+        <strong>何をどう言葉にしたらいいか、<br>わからない。</strong>
+      </p>
+    </div>
+    
+    <div class="fv-scroll">
+      <span>scroll</span>
+      <div class="fv-scroll-line"></div>
+    </div>
+    
+    <div class="fv-mini-cta">
+      <a href="https://forms.gle/qbH7wkLvgVuAG8dh8" target="_blank" class="btn-mini btn-mini-gold">🌸 先行案内を受け取る</a>
+      <a href="https://forms.gle/gzEChJQ6K4f7exReA" target="_blank" class="btn-mini btn-mini-lavender">✨ モニター募集に申し込む</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 2. FOR YOU           -->
+<!-- ==================== -->
+<section id="foryou">
+  <div class="container fade-section">
+    <div class="section-label">— こんな方へ —</div>
+    <h2 class="section-title">あなたのための<br>講座です</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    <div class="foryou-list">
+      <div class="foryou-item">🌸 カラーに興味がある方</div>
+      <div class="foryou-item">✨ カウンセラー・セラピスト・カードリーダーとして活動したい方</div>
+      <div class="foryou-item">🪄 学んだ知識を、人の役に立てる形にしたい方</div>
+      <div class="foryou-item">🌿 資格は取ったけれど、セッションにまだ自信がない方</div>
+      <div class="foryou-item">🤖 AIを使って、自分らしいサービスを形にしたい方</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 3. WORRIES           -->
+<!-- ==================== -->
+<section id="worries">
+  <div class="container">
+    <div class="section-inner fade-section">
+      <div class="section-label">— お悩み —</div>
+      <h2 class="section-title">こんなお悩み、<br>ありませんか？</h2>
+      <div class="gold-divider"><div class="diamond"></div></div>
+      
+      <div class="worry-list">
+        <div class="worry-item">
+          <div class="worry-dot"></div>
+          <p>カラーの知識は学んだのに、いざセッションになると言葉が止まってしまう</p>
+        </div>
+        <div class="worry-item">
+          <div class="worry-dot"></div>
+          <p>「この言葉で合ってるかな」「響かなかったらどうしよう」と不安になる</p>
+        </div>
+        <div class="worry-item">
+          <div class="worry-dot"></div>
+          <p>資格は持っているけれど、自信を持って提供できるサービスになっていない</p>
+        </div>
+        <div class="worry-item">
+          <div class="worry-dot"></div>
+          <p>AIの活用に興味はあるけれど、自分のサービスにどう組み込めばいいかわからない</p>
+        </div>
+        <div class="worry-item">
+          <div class="worry-dot"></div>
+          <p>もっとたくさん学ばないと、と感じてはいるけれど、何から始めればいいか迷っている</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 3. WHAT IS BCBR     -->
+<!-- ==================== -->
+<section id="what">
+  <div class="container fade-section">
+    <div class="section-label">— About —</div>
+    <h2 class="section-title"><span class="accent">BCBR™</span> とは</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    
+    <div class="bcbr-what-intro">
+      <p>
+        BCBR™は、24本のカラーボトルを使って、<br>
+        色の意味を暗記するだけで終わらない講座です。
+      </p>
+      
+      <div class="bcbr-highlight-box">
+        <p>選ばれた色から</p>
+        <span class="key-phrase">その人の感情・本音・魅力・<br>未来への一歩</span>
+        <p>を読み解き、</p>
+        <span class="key-phrase">専用GPTsを相棒にしながら、<br>〝私のことだ〟と感じてもらえる<br>言葉に変えていく</span>
+        <p style="margin-top:12px;">yuwa Bloom Realm 独自のメソッドです。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 4. KNOWLEDGE GAP    -->
+<!-- ==================== -->
+<section id="gap">
+  <div class="container">
+    <div class="section-inner fade-section">
+      <div class="section-label">— Key Insight —</div>
+      <h2 class="section-title">色の意味を知ることと<br>届く言葉にできること<br><span class="accent">は、別の力。</span></h2>
+      <div class="gold-divider"><div class="diamond"></div></div>
+      
+      <div class="gap-visual">
+        <div class="gap-box know">
+          <div class="gap-label">KNOWLEDGE</div>
+          <p>
+            色の意味を知っている。<br>
+            心理も学んだ。<br>
+            カードも使える。
+          </p>
+        </div>
+        <div class="gap-arrow">↓</div>
+        <div class="gap-box deliver">
+          <div class="gap-label">WHAT'S NEEDED</div>
+          <p>
+            学んだことを<br>〝相手に届くセッション〟へ<br>変える力
+          </p>
+        </div>
+      </div>
+      
+      <div class="gap-desc">
+        もっと資格を増やすことではなく、<br>
+        知識を〝相手の心に届く言葉〟に変換する力。<br>
+        それが、あなたに今、必要なものかもしれません。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 実際の声            -->
+<!-- ==================== -->
+<section id="voices">
+  <div class="container fade-section">
+    <div class="section-label">— Voice —</div>
+    <h2 class="section-title">実際にリーディングを<br>受けた方の声</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    
+    <div class="voices-list">
+      <div class="voice-item">
+        <div class="voice-mark">✦</div>
+        <p>まさに今の私のことだと思いました。色からここまで言葉になることに、驚きました。</p>
+      </div>
+      <div class="voice-item">
+        <div class="voice-mark">✦</div>
+        <p>読んでいて、心の奥をそっと見つけてもらえたような感覚でした。</p>
+      </div>
+      <div class="voice-item">
+        <div class="voice-mark">✦</div>
+        <p>ただのカラー診断ではなく、自分の本音に気づく時間になりました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="curriculum">
+  <div class="container fade-section">
+    <div class="section-label">— Curriculum —</div>
+    <h2 class="section-title">講座で<br>学べること</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    
+    <div class="curriculum-list">
+      <div class="curriculum-item">
+        <div class="curriculum-icon">🌿</div>
+        <div class="curriculum-content">
+          <h4>1本読み</h4>
+          <p>今の心の入口をやさしく読み解く方法。単色から相手の状態を丁寧に言葉にするコツを学びます。</p>
+        </div>
+      </div>
+      <div class="curriculum-item">
+        <div class="curriculum-icon">✨</div>
+        <div class="curriculum-content">
+          <h4>3本読み</h4>
+          <p>今の状態・内側の願い・未来への一歩をつなげて、ひとつのストーリーとして届ける方法。</p>
+        </div>
+      </div>
+      <div class="curriculum-item">
+        <div class="curriculum-icon">🪄</div>
+        <div class="curriculum-content">
+          <h4>色と言葉の翻訳</h4>
+          <p>色の意味を、その人だけに届く言葉へ変えるプロセス。「私のことだ」と感じてもらう秘訣。</p>
+        </div>
+      </div>
+      <div class="curriculum-item">
+        <div class="curriculum-icon">🗺️</div>
+        <div class="curriculum-content">
+          <h4>セッション設計</h4>
+          <p>無料体験から有料メニューへ自然につなげる導線の作り方。押しつけない案内の流れを整えます。</p>
+        </div>
+      </div>
+      <div class="curriculum-item">
+        <div class="curriculum-icon">🤖</div>
+        <div class="curriculum-content">
+          <h4>専用GPTs活用</h4>
+          <p>ゆわ式の言葉の温度を反映したGPTsを使い、初心者でもリーディング文を形にする方法。</p>
+        </div>
+      </div>
+      <div class="curriculum-item">
+        <div class="curriculum-icon">🏰</div>
+        <div class="curriculum-content">
+          <h4>世界観づくり</h4>
+          <p>あなたらしいサービスとして届けるための見せ方。ただのセッションを〝物語〟に変えていきます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 6. AI ERA           -->
+<!-- ==================== -->
+<section id="ai">
+  <div class="container">
+    <div class="section-inner fade-section">
+      <div class="section-label">— AI Era —</div>
+      <h2 class="section-title">AI時代のセラピストに<br>必要な力</h2>
+      <div class="gold-divider"><div class="diamond"></div></div>
+      
+      <div class="ai-intro">
+        <p>
+          AIで文章を書く。画像を作る。動画を作る。<br>
+          それだけなら、もう珍しくありません。
+        </p>
+        
+        <div class="ai-key">
+          <p>
+            これから必要なのは、<br>
+            AIを<span class="highlight">〝それっぽい文章を作る道具〟</span>で終わらせず、<br><br>
+            目の前の人に必要な言葉を届ける<br>
+            <span class="highlight">〝相棒〟として使う力</span>です。
+          </p>
+        </div>
+        
+        <p class="ai-desc">
+          BCBR™では、専用GPTsを使いながら、<br>
+          色・言葉・心理・物語を組み合わせ、<br>
+          セッションとして届けられる形に整えていきます。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 7. THREE STEPS      -->
+<!-- ==================== -->
+<section id="steps">
+  <div class="container fade-section">
+    <div class="section-label">— Steps —</div>
+    <h2 class="section-title">講座の<br>3ステップ</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    
+    <div class="steps-container">
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num">
+            <span class="en">Step</span>
+            <span class="num">1</span>
+          </div>
+        </div>
+        <div class="step-content">
+          <p class="step-sub">1DAY入門講座</p>
+          <h3>色を言葉に変える<br>楽しさを体験する</h3>
+          <p>色を選ぶ感覚と、1本読みの基本を学びます。自分の色を読み解きながら、体験することからはじめます。</p>
+        </div>
+      </div>
+      
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num">
+            <span class="en">Step</span>
+            <span class="num">2</span>
+          </div>
+        </div>
+        <div class="step-content">
+          <p class="step-sub">実践リーディング講座</p>
+          <h3>相手に届ける<br>リーディングを練習する</h3>
+          <p>3本読みを使って実践練習。質問の仕方、言葉の渡し方、セッションの自然な流れを身につけます。</p>
+        </div>
+      </div>
+      
+      <div class="step-item">
+        <div class="step-num-wrap">
+          <div class="step-num">
+            <span class="en">Step</span>
+            <span class="num">3</span>
+          </div>
+        </div>
+        <div class="step-content">
+          <p class="step-sub">ナビゲーター養成講座</p>
+          <h3>自分のサービスとして<br>形にする</h3>
+          <p>専用GPTs・カード素材・台本テンプレートを活用しながら、あなたのサービスとして提供できる形まで整えます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 8. TOKUTEN          -->
+<!-- ==================== -->
+<section id="tokuten">
+  <div class="container">
+    <div class="section-inner fade-section">
+      <div class="section-label">— Benefits —</div>
+      <h2 class="section-title">受講特典</h2>
+      <div class="gold-divider"><div class="diamond"></div></div>
+      
+      <div class="tokuten-grid">
+        <div class="tokuten-item">
+          <div class="t-icon">🤖</div>
+          <p>BCBR™専用GPTs</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">📝</div>
+          <p>色と言葉の翻訳テンプレート</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">📋</div>
+          <p>3本読みリーディングシート</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">📜</div>
+          <p>セッション台本</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">✉️</div>
+          <p>有料案内への導線テンプレート</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">🌟</div>
+          <p>お客様の声依頼文</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">🎴</div>
+          <p>使用許可つきカード素材<br><span class="tokuten-small">※無断転載防止のため透かし入り</span></p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">🌈</div>
+          <p>使用許可つきボトル画像素材<br><span class="tokuten-small">※無断転載防止のため透かし入り</span></p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">📱</div>
+          <p>投稿文テンプレート</p>
+        </div>
+        <div class="tokuten-item">
+          <div class="t-icon">🔑</div>
+          <p>受講生専用ページ</p>
+        </div>
+      </div>
+      
+      <p class="tokuten-note">※詳細は先行案内にてお知らせします</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 9. MESSAGE          -->
+<!-- ==================== -->
+<section id="message">
+  <div class="container fade-section">
+    <div class="section-label">— Message —</div>
+    <h2 class="section-title">ゆわからの<br>メッセージ</h2>
+    <div class="gold-divider"><div class="diamond"></div></div>
+    
+    <div class="message-portrait">🌸</div>
+    
+    <div class="message-body">
+      <p>
+        色が好き。言葉が好き。人の役に立ちたい。<br><br>
+        その気持ちは、ちゃんと才能の入口です。
+      </p>
+      
+      <p>
+        でも、優しい人ほど、<br>
+        「私なんかが言っていいのかな」<br>
+        「この言葉で合ってるかな」<br>
+        「お客様に響かなかったらどうしよう」<br>
+        と、止まってしまうことがあります。
+      </p>
+      
+      <span class="emphasis">
+        大丈夫。
+      </span>
+      
+      <p>
+        BCBR™では、あなたがひとりで全部を抱えなくてもいいように、色・言葉・心理・AIを組み合わせて、〝届くセッション〟を一緒に形にしていきます。
+      </p>
+    </div>
+    
+    <div class="message-closing">
+      <p>
+        色を、言葉に。<br>
+        言葉を、セッションに。<br>
+        セッションを、誰かの一歩に。
+      </p>
+      <span class="gold-text">それが、yuwa Bloom RealmのBCBR™です。</span>
+    </div>
+    
+    <p class="message-name">— yuwa / 桜庭ゆわ —</p>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 10. NOTES           -->
+<!-- ==================== -->
+<section id="notes">
+  <div class="container">
+    <div class="section-inner fade-section">
+      <div class="section-label">— Notice —</div>
+      <h2 class="section-title" style="font-size:17px;">ご注意事項</h2>
+      <div class="notes-box">
+        <p>
+          BCBR™は医療行為・診断・治療ではありません。<br><br>
+          色と言葉を使って、自己理解・感情整理・魅力の発見をサポートするための講座です。<br><br>
+          医療的な診断・治療・緊急対応を目的とした講座ではありません。現在、医療機関で治療中の方や強い不調がある方は、必要に応じて主治医や専門機関へご相談ください。<br><br>
+          現在、先行案内・モニター受講希望の方を受付中です。内容・料金等の詳細は、先行案内にてご連絡いたします。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== -->
+<!-- 11. CTA             -->
+<!-- ==================== -->
+<section id="cta">
+  <div class="container fade-section">
+    <div class="cta-inner">
+      <div class="cta-flower">✨</div>
+      <h2 class="cta-title">
+        あなたの〝届く言葉〟を、<br>一緒に見つけましょう。
+      </h2>
+      <p class="cta-sub">
+        先行案内・モニター募集の情報を<br>
+        いち早くお届けします。
+      </p>
+      
+      <div class="cta-flow">
+        登録後、先行案内・モニター詳細を順次お送りします。
+      </div>
+      
+      <a href="https://forms.gle/qbH7wkLvgVuAG8dh8" target="_blank" class="btn-primary btn-gold">
+        🌸 先行案内を受け取る
+      </a>
+      <a href="https://forms.gle/gzEChJQ6K4f7exReA" target="_blank" class="btn-primary btn-lavender">
+        ✨ モニター募集に申し込む
+      </a>
+      
+      <p class="cta-note">
+        ※ Googleフォームに移動します<br>
+        ※ フォーム登録だけで費用が発生することはありません<br>
+        ※ 強引なご案内は一切ありません
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>yuwa Bloom Realm &nbsp;|&nbsp; BCBR™ カラーボトルリーディング講座</p>
+  <p style="margin-top:8px; font-size:10px;">© 2025-2026 yuwa Bloom Realm. All Rights Reserved.</p>
+</footer>
+
+<script>
+// ===== SPARKLES =====
+const sparklesEl = document.getElementById('sparkles');
+const colors = ['rgba(200,168,74,0.7)', 'rgba(200,184,232,0.7)', 'rgba(184,232,212,0.6)', 'rgba(240,200,216,0.6)'];
+
+function createSparkle() {
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.top = (60 + Math.random() * 40) + 'vh';
+  s.style.background = colors[Math.floor(Math.random() * colors.length)];
+  const size = 2 + Math.random() * 3;
+  s.style.width = size + 'px';
+  s.style.height = size + 'px';
+  const dur = 3 + Math.random() * 4;
+  s.style.animationDuration = dur + 's';
+  s.style.animationDelay = Math.random() * 2 + 's';
+  sparklesEl.appendChild(s);
+  setTimeout(() => s.remove(), (dur + 2) * 1000);
+}
+setInterval(createSparkle, 600);
+
+// ===== SCROLL REVEAL =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-section').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
