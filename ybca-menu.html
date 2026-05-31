@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YBCA 講座メニュー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;500&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #2d1b4e;
+    --purple-mid: #4a2d7a;
+    --purple-light: #7c5cbf;
+    --purple-pale: #e8e0f5;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-pale: #f5ecd4;
+    --cream: #faf8f3;
+    --white: #ffffff;
+    --text-dark: #1a1028;
+    --text-mid: #3d2d5c;
+    --text-light: #7a6a9a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--purple-deep);
+    color: var(--text-dark);
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 300;
+    line-height: 1.9;
+    min-height: 100vh;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(160deg, #1a0e35 0%, #2d1b4e 40%, #3d2060 100%);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .hero-main {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .hero-main span {
+    color: var(--gold-light);
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 24px;
+  }
+
+  .hero-body {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    max-width: 340px;
+    margin: 0 auto;
+    line-height: 2;
+  }
+
+  /* ===== CHOICE SECTION ===== */
+  .choice-section {
+    background: var(--cream);
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .choice-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .choice-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--purple-deep);
+    margin-bottom: 32px;
+  }
+
+  .choice-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .choice-btn {
+    display: block;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .choice-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .choice-btn-a {
+    background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .choice-btn-a::before {
+    background: linear-gradient(135deg, #3d2060 0%, #5a3a90 100%);
+  }
+
+  .choice-btn-b {
+    background: var(--white);
+    border: 1.5px solid var(--purple-light);
+  }
+
+  .choice-btn-b::before {
+    background: var(--purple-pale);
+  }
+
+  .choice-btn:active::before { opacity: 1; }
+
+  .btn-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .choice-btn-a .btn-tag { color: var(--gold); }
+  .choice-btn-b .btn-tag { color: var(--purple-light); }
+
+  .btn-main {
+    font-size: 15px;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .choice-btn-a .btn-main { color: var(--white); }
+  .choice-btn-b .btn-main { color: var(--purple-deep); }
+
+  .btn-sub {
+    font-size: 11px;
+    line-height: 1.6;
+    display: block;
+  }
+
+  .choice-btn-a .btn-sub { color: rgba(255,255,255,0.65); }
+  .choice-btn-b .btn-sub { color: var(--text-light); }
+
+  .btn-arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.5;
+  }
+
+  .choice-btn-a .btn-arrow { color: var(--gold); }
+  .choice-btn-b .btn-arrow { color: var(--purple-light); }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    padding: 48px 24px 32px;
+    text-align: center;
+  }
+
+  .section-header.active-section {
+    background: linear-gradient(180deg, #1a0e35 0%, #2d1b4e 100%);
+  }
+
+  .section-header.learn-section {
+    background: linear-gradient(180deg, #f0ecf8 0%, var(--cream) 100%);
+  }
+
+  .sec-badge {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    padding: 4px 14px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+
+  .active-section .sec-badge {
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    background: rgba(201,168,76,0.1);
+  }
+
+  .learn-section .sec-badge {
+    color: var(--purple-mid);
+    border: 1px solid rgba(74,45,122,0.3);
+    background: rgba(74,45,122,0.06);
+  }
+
+  .sec-title {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .active-section .sec-title { color: var(--white); }
+  .learn-section .sec-title { color: var(--purple-deep); }
+
+  .sec-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .active-section .sec-subtitle { color: var(--gold-light); }
+  .learn-section .sec-subtitle { color: var(--gold); }
+
+  .sec-intro {
+    font-size: 13px;
+    max-width: 340px;
+    margin: 0 auto 28px;
+    line-height: 2;
+  }
+
+  .active-section .sec-intro { color: rgba(255,255,255,0.75); }
+  .learn-section .sec-intro { color: var(--text-mid); }
+
+  /* concern box */
+  .concern-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .concern-box.light {
+    background: rgba(74,45,122,0.05);
+    border-color: rgba(74,45,122,0.15);
+  }
+
+  .concern-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+
+  .active-section .concern-label { color: var(--gold); }
+  .learn-section .concern-label { color: var(--purple-mid); }
+
+  .concern-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .concern-list li {
+    font-size: 12px;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .concern-list li::before {
+    content: '・';
+    position: absolute;
+    left: 0;
+  }
+
+  .active-section .concern-list li { color: rgba(255,255,255,0.8); }
+  .learn-section .concern-list li { color: var(--text-mid); }
+
+  /* ===== CARDS ===== */
+  .cards-wrapper {
+    padding: 0 16px 48px;
+  }
+
+  .cards-wrapper.dark {
+    background: linear-gradient(180deg, #2d1b4e 0%, #1e1238 100%);
+  }
+
+  .cards-wrapper.light {
+    background: var(--cream);
+  }
+
+  .course-card {
+    max-width: 420px;
+    margin: 0 auto 20px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .card-dark {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .card-light {
+    background: var(--white);
+    border: 1.5px solid rgba(74,45,122,0.12);
+    box-shadow: 0 4px 20px rgba(74,45,122,0.07);
+  }
+
+  .card-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .card-light .card-header {
+    border-bottom-color: rgba(74,45,122,0.1);
+  }
+
+  .card-number {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+  }
+
+  .card-dark .card-number { color: var(--gold); }
+  .card-light .card-number { color: var(--purple-light); }
+
+  .card-tag {
+    font-size: 10px;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .card-dark .card-tag {
+    background: rgba(201,168,76,0.15);
+    color: var(--gold-light);
+  }
+
+  .card-light .card-tag {
+    background: var(--purple-pale);
+    color: var(--purple-mid);
+  }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .card-dark .card-title { color: var(--white); }
+  .card-light .card-title { color: var(--purple-deep); }
+
+  .card-body { padding: 18px 20px; }
+
+  .card-catch {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .card-dark .card-catch { color: var(--gold-light); }
+  .card-light .card-catch { color: var(--gold); }
+
+  .card-desc {
+    font-size: 12px;
+    line-height: 2;
+    margin-bottom: 14px;
+  }
+
+  .card-dark .card-desc { color: rgba(255,255,255,0.7); }
+  .card-light .card-desc { color: var(--text-mid); }
+
+  .mini-list-title {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .card-dark .mini-list-title { color: var(--gold); }
+  .card-light .mini-list-title { color: var(--purple-mid); }
+
+  .mini-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+
+  .mini-list li {
+    font-size: 11.5px;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .mini-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    font-size: 9px;
+    top: 2px;
+  }
+
+  .card-dark .mini-list li { color: rgba(255,255,255,0.8); }
+  .card-dark .mini-list li::before { color: var(--gold); }
+  .card-light .mini-list li { color: var(--text-mid); }
+  .card-light .mini-list li::before { color: var(--purple-light); }
+
+  /* ===== BOTTOM GUIDE ===== */
+  .bottom-guide {
+    background: var(--white);
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(74,45,122,0.1);
+  }
+
+  .guide-title {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--purple-deep);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .guide-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    line-height: 2;
+  }
+
+  .line-list {
+    list-style: none;
+    max-width: 340px;
+    margin: 0 auto 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+
+  .line-list li {
+    font-size: 12.5px;
+    color: var(--text-mid);
+    padding: 10px 16px;
+    background: var(--purple-pale);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .line-list li span.num {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--purple-light);
+    min-width: 18px;
+  }
+
+  .divider-guide {
+    width: 30px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 24px;
+  }
+
+  .confused-box {
+    background: linear-gradient(135deg, var(--purple-pale) 0%, #f0ecf8 100%);
+    border-radius: 16px;
+    padding: 24px 20px;
+    max-width: 360px;
+    margin: 0 auto 28px;
+  }
+
+  .confused-title {
+    font-size: 15px;
+    color: var(--purple-deep);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .confused-desc {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 2;
+    margin-bottom: 16px;
+  }
+
+  .cta-btn {
+    display: block;
+    background: linear-gradient(135deg, var(--purple-mid) 0%, var(--purple-deep) 100%);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    max-width: 280px;
+    margin: 0 auto;
+    border: 1px solid rgba(201,168,76,0.3);
+    position: relative;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn:active { opacity: 0.85; }
+
+  .cta-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: linear-gradient(160deg, #1a0e35 0%, #2d1b4e 100%);
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .footer-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* ===== SMOOTH SCROLL ===== */
+  html { scroll-behavior: smooth; }
+
+  /* scroll offset for anchors */
+  .scroll-anchor {
+    display: block;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* ===== SEPARATOR ===== */
+  .golden-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto;
+    max-width: 200px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">YBCA COURSE MENU</div>
+  <p class="hero-title">あなたに合った形で、</p>
+  <h1 class="hero-main">「<span>この先生にお願いしたい</span>」<br>と選ばれる導線を整える。</h1>
+  <div class="hero-divider"></div>
+  <p class="hero-body">
+    ただ投稿を増やしたり、無理に高額商品を作ったりするのではなく、<br>
+    あなたの経験・優しさ・言葉・メニュー・導線を整理し、<br>
+    必要な人に届く形へ整えていきます。
+  </p>
+</section>
+
+<!-- CHOICE -->
+<section class="choice-section">
+  <p class="choice-label">— for you —</p>
+  <h2 class="choice-title">あなたは今、どちらに近いですか？</h2>
+  <div class="choice-buttons">
+    <a href="#section-active" class="choice-btn choice-btn-a">
+      <span class="btn-tag">A</span>
+      <span class="btn-main">すでに活動している方へ</span>
+      <span class="btn-sub">カウンセラー・占い師・セラピスト・鑑定士として、<br>発信・メニュー・導線を整えたい方</span>
+      <span class="btn-arrow">↓</span>
+    </a>
+    <a href="#section-learn" class="choice-btn choice-btn-b">
+      <span class="btn-tag">B</span>
+      <span class="btn-main">これから学びたい方へ</span>
+      <span class="btn-sub">カウンセラーとしての土台から学び、<br>将来的に仕事にしていきたい方</span>
+      <span class="btn-arrow">↓</span>
+    </a>
+  </div>
+</section>
+
+<!-- ========== SECTION A ========== -->
+<span id="section-active" class="scroll-anchor"></span>
+
+<div class="section-header active-section">
+  <span class="sec-badge">A — FOR ACTIVE PRACTITIONERS</span>
+  <h2 class="sec-title">発信・メニュー・導線を整えて、<br>「お願いしたい」と思われる形へ。</h2>
+  <p class="sec-subtitle">すでに活動している方へ</p>
+  <p class="sec-intro">すでにカウンセラー・占い師・セラピスト・鑑定士として活動している方へ。</p>
+
+  <div class="concern-box">
+    <p class="concern-label">こんなお悩みはありませんか？</p>
+    <ul class="concern-list">
+      <li>投稿しても反応がない</li>
+      <li>無料では喜ばれるけれど、有料につながらない</li>
+      <li>自分に合ったメニューがわからない</li>
+      <li>高額商品を作ることに抵抗がある</li>
+      <li>LINEや相談導線が整っていない</li>
+      <li>自分の世界観や言葉がまとまらない</li>
+      <li>何を直せば申し込みにつながるのかわからない</li>
+    </ul>
+  </div>
+</div>
+
+<div class="cards-wrapper dark">
+
+  <!-- Card 1 -->
+  <div class="course-card card-dark">
+    <div class="card-header">
+      <div class="card-number">COURSE 01</div>
+      <span class="card-tag">単発・まず整理したい方向け</span>
+      <div class="card-title">先生がいい<br>導線整理セッション</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">"何が悪いのかわからない"そこから一緒に整理します。</p>
+      <p class="card-desc">今の発信・メニュー・LINE導線・相談までの流れを見ながら、どこを整えると「お願いしたい」に近づくのかを一緒に見つけるセッションです。</p>
+      <p class="mini-list-title">このセッションで整えること</p>
+      <ul class="mini-list">
+        <li>今の発信や導線の整理</li>
+        <li>無料と有料の境界線</li>
+        <li>メニューの見せ方</li>
+        <li>LINEや相談への流れ</li>
+        <li>まず整えるべき優先順位</li>
+        <li>今のあなたに必要な一歩</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>今の状況を一度整理したい</li>
+        <li>何から直せばいいかわからない</li>
+        <li>YBCAの雰囲気を体験してみたい</li>
+        <li>まずは単発で相談したい</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="course-card card-dark">
+    <div class="card-header">
+      <div class="card-number">COURSE 02</div>
+      <span class="card-tag">短期集中・一気に整えたい方向け</span>
+      <div class="card-title">1ヶ月短期集中コース</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">短期間で、発信・メニュー・導線を一気に形にする。</p>
+      <p class="card-desc">「今の方向性を早く整えたい」「一人だと途中で止まってしまう」そんな方のための、1ヶ月集中コースです。あなたの経験・優しさ・言葉を整理しながら、必要な人から選ばれる入口を整えていきます。</p>
+      <p class="mini-list-title">このコースで整えること</p>
+      <ul class="mini-list">
+        <li>届けたい相手の整理</li>
+        <li>発信テーマの整理</li>
+        <li>入口メニューの設計</li>
+        <li>無料と有料の境界線</li>
+        <li>LINE導線の整備</li>
+        <li>相談につながる流れ</li>
+        <li>まず出せる形への具体化</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>短期間で形にしたい</li>
+        <li>今の導線を一気に整えたい</li>
+        <li>自分に合った入口メニューを作りたい</li>
+        <li>伴走がある方が進められる</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="course-card card-dark">
+    <div class="card-header">
+      <div class="card-number">COURSE 03</div>
+      <span class="card-tag">継続設計・じっくり育てたい方向け</span>
+      <div class="card-title">ミドルコース</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">自分に合ったメニューと届け方を、じっくり育てていく。</p>
+      <p class="card-desc">高額商品を無理に作るのではなく、あなたに合った価格・形・届け方で、安心して続けられるメニューを一緒に整えていきます。</p>
+      <p class="mini-list-title">このコースで整えること</p>
+      <ul class="mini-list">
+        <li>入口メニューから継続メニューへの流れ</li>
+        <li>サービス全体の整理</li>
+        <li>発信と導線のつながり</li>
+        <li>世界観と言葉の整理</li>
+        <li>相談から申し込みまでの流れ</li>
+        <li>安心して受け取れる価格や形</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>単発だけで終わらない形を作りたい</li>
+        <li>発信や世界観も整えたい</li>
+        <li>自分のサービスをもう一段育てたい</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="course-card card-dark">
+    <div class="card-header">
+      <div class="card-number">COURSE 04</div>
+      <span class="card-tag">個別伴走・本格的に形にしたい方向け</span>
+      <div class="card-title">継続サポート</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">あなたの経験・優しさ・世界観を大切にしながら、本格的に形へ。</p>
+      <p class="card-desc">発信・メニュー・LINE・相談導線・講座化・世界観づくりまで、あなたに合った形を一緒に育てていく個別伴走です。ただノウハウを渡すのではなく、必要な人に届く形へ整えていきます。</p>
+      <p class="mini-list-title">このサポートで整えること</p>
+      <ul class="mini-list">
+        <li>サービス全体の設計</li>
+        <li>メニュー構成・講座や継続商品の形</li>
+        <li>LINE公式やリッチメニュー</li>
+        <li>相談から申し込みまでの導線</li>
+        <li>世界観やブランドの整え方</li>
+        <li>必要な人に届く言葉づくり</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>本格的に自分のサービスを整えたい</li>
+        <li>講座や継続メニューを作りたい</li>
+        <li>ゆわと一緒に伴走してほしい</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="course-card card-dark">
+    <div class="card-header">
+      <div class="card-number">COURSE 05</div>
+      <span class="card-tag">色を入口にしたい方向け</span>
+      <div class="card-title">BCBR™ カラーボトル講座</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">色をきっかけに、相手の本音・魅力・言葉を引き出すセッションへ。</p>
+      <p class="card-desc">BCBR™は、ただ色を見る講座ではありません。色をきっかけに相手の中にある本音を引き出し、必要な人に届くセッションへ整えていく講座です。</p>
+      <p class="mini-list-title">この講座で整えること</p>
+      <ul class="mini-list">
+        <li>色を入口にしたセッションの流れ</li>
+        <li>相手の本音を引き出す問いかけ</li>
+        <li>色と言葉をつなげる読み解き</li>
+        <li>カウンセリングや鑑定への活かし方</li>
+        <li>有料セッションとして届ける形</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>カラーを使ったセッションを作りたい</li>
+        <li>占い・鑑定・カウンセリングに差別化要素を入れたい</li>
+        <li>世界観のあるメニューを作りたい</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /cards-wrapper dark -->
+
+<!-- ========== SECTION B ========== -->
+<span id="section-learn" class="scroll-anchor"></span>
+
+<div class="section-header learn-section">
+  <span class="sec-badge">B — FOR THOSE WHO WANT TO LEARN</span>
+  <h2 class="sec-title">カウンセラーとしての土台から学び、<br>自分に合った形で仕事にしていく。</h2>
+  <p class="sec-subtitle">これから学びたい方へ</p>
+  <p class="sec-intro">これからカウンセラーとして活動していきたい方へ。</p>
+
+  <div class="concern-box light">
+    <ul class="concern-list" style="gap:8px;">
+      <li>人の話を聞く仕事がしたい</li>
+      <li>誰かの心に寄り添える人になりたい</li>
+      <li>でも、何から学べばいいかわからない</li>
+      <li>資格を取っただけで本当にできるのか不安</li>
+      <li>将来的には自分のメニューとして届けたい</li>
+    </ul>
+  </div>
+</div>
+
+<div class="cards-wrapper light">
+
+  <!-- Card 6 -->
+  <div class="course-card card-light">
+    <div class="card-header">
+      <div class="card-number">COURSE 06</div>
+      <span class="card-tag">これから学びたい方向け</span>
+      <div class="card-title">カウンセラー基礎育成コース</div>
+    </div>
+    <div class="card-body">
+      <p class="card-catch">「この先生に話したい」と思われる土台を、一緒に育てる。</p>
+      <p class="card-desc">YBCAでは、ただ知識を学ぶだけではなく、相手が安心して本音を話せる関わり方、言葉の受け取り方、問いかけ方、セッションの流れ、メニュー化までを一緒に整えていきます。心理学・ポジティブ心理学・脳科学・言葉の力をベースにした実践的なコースです。</p>
+      <p class="mini-list-title">このコースで学ぶこと</p>
+      <ul class="mini-list">
+        <li>カウンセリングの基本姿勢</li>
+        <li>安心して話してもらう関わり方</li>
+        <li>傾聴と問いかけの基礎</li>
+        <li>相手の本音を受け取る力</li>
+        <li>言葉にして返す力</li>
+        <li>セッションの流れ</li>
+        <li>自分らしいカウンセリングの形</li>
+        <li>将来的なメニュー化の土台</li>
+      </ul>
+      <p class="mini-list-title">おすすめの方</p>
+      <ul class="mini-list">
+        <li>これからカウンセラーとして活動したい</li>
+        <li>人の話を聞く仕事がしたい</li>
+        <li>安心して本音を話してもらえる人になりたい</li>
+        <li>自分らしいカウンセリングの形を見つけたい</li>
+        <li>将来的に有料メニューとして届けたい</li>
+        <li>誰かの心に寄り添う仕事を始めたい</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /cards-wrapper light -->
+
+<!-- ========== BOTTOM GUIDE ========== -->
+<div class="bottom-guide">
+  <h3 class="guide-title">気になるメニューがある方へ</h3>
+  <p class="guide-sub">
+    LINEに戻って、以下の番号を送ってください。<br>
+    その講座の詳しい案内メッセージが届きます。
+  </p>
+
+  <ul class="line-list">
+    <li><span class="num">講座1</span>先生がいい導線整理セッション</li>
+    <li><span class="num">講座2</span>1ヶ月短期集中コース</li>
+    <li><span class="num">講座3</span>ミドルコース</li>
+    <li><span class="num">講座4</span>継続サポート</li>
+    <li><span class="num">講座5</span>BCBR™ カラーボトル講座</li>
+    <li><span class="num">講座6</span>カウンセラー基礎育成コース</li>
+  </ul>
+
+  <div class="divider-guide"></div>
+
+  <div class="confused-box">
+    <h3 class="confused-title">迷った方へ</h3>
+    <p class="confused-desc">
+      どれを選べばいいかわからなくても大丈夫です。<br>
+      まずLINEで今の状況を教えてください。<br>
+      ゆわが内容を見て、今のあなたに合う入口を一緒に整理します。
+    </p>
+    <a href="https://lin.ee/XXXXXXX" class="cta-btn">
+      LINEで相談する
+      <span class="cta-sub">今の状況をゆわに送る</span>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">YBCA</div>
+  <div class="footer-sub">yuwa Bloom Counseling Academy</div>
+  <div class="golden-line" style="margin-bottom:16px;"></div>
+  <p class="footer-tagline">「先生がいい」と選ばれる人へ。</p>
+</footer>
+
+</body>
+</html>
