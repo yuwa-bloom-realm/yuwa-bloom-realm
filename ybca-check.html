@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「先生がいい」と言われる形チェック | YBCA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #3d1a6e;
+    --purple-mid: #6b3fa0;
+    --purple-light: #c9a8e8;
+    --purple-pale: #f3ebff;
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --gold-pale: #fdf8ee;
+    --cream: #faf7f2;
+    --white: #ffffff;
+    --text-dark: #2a1540;
+    --text-mid: #4a3060;
+    --text-light: #8a6aaa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text-dark);
+    font-family: 'Noto Serif JP', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(160deg, #1a0a35 0%, #2e1260 60%, #1a0a35 100%);
+    text-align: center;
+    padding: 40px 24px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 30%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 50% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 70% 80%, rgba(255,255,255,0.7) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .header-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 12px;
+  }
+  .header-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(18px, 4vw, 26px);
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+  .header-title em {
+    font-style: normal;
+    color: var(--gold-light);
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── INTRO ── */
+  .intro {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 32px;
+    text-align: center;
+  }
+  .intro p {
+    font-size: clamp(14px, 2vw, 15px);
+    color: var(--text-mid);
+    line-height: 2.1;
+    font-weight: 300;
+  }
+  .intro strong {
+    color: var(--purple-deep);
+    font-weight: 500;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    max-width: 480px;
+    margin: 0 auto 40px;
+    padding: 0 24px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.1em;
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--purple-pale);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-mid), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* ── QUIZ CONTAINER ── */
+  .quiz-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .question-card {
+    display: none;
+    animation: fadeUp 0.5s ease both;
+  }
+  .question-card.active {
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .q-text {
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 500;
+    color: var(--purple-deep);
+    line-height: 1.7;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option-btn {
+    background: var(--white);
+    border: 1.5px solid var(--purple-light);
+    border-radius: 12px;
+    padding: 18px 22px;
+    text-align: left;
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(13px, 2vw, 15px);
+    color: var(--text-mid);
+    font-weight: 300;
+    line-height: 1.65;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--purple-pale), var(--gold-pale));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .option-btn span {
+    position: relative;
+    z-index: 1;
+  }
+  .option-btn:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107,63,160,0.12);
+  }
+  .option-btn:hover::before {
+    opacity: 1;
+  }
+  .option-btn.selected {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--purple-pale), var(--gold-pale));
+    box-shadow: 0 4px 16px rgba(107,63,160,0.15);
+  }
+  .option-btn.selected::after {
+    content: '✦';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .next-btn {
+    display: block;
+    width: 100%;
+    margin-top: 28px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--purple-mid), var(--purple-deep));
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(61,26,110,0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .next-btn::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 50px;
+    border: 1px solid rgba(201,168,76,0.35);
+    pointer-events: none;
+  }
+  .next-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(61,26,110,0.4);
+  }
+  .next-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── RESULT ── */
+  #result-section {
+    display: none;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .result-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .result-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .result-type {
+    font-size: clamp(22px, 5vw, 32px);
+    font-weight: 500;
+    color: var(--purple-deep);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .result-type em {
+    font-style: normal;
+    color: var(--purple-mid);
+  }
+
+  .result-card {
+    background: var(--white);
+    border: 1px solid var(--purple-light);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(61,26,110,0.1);
+    margin-bottom: 24px;
+  }
+
+  .result-card-header {
+    background: linear-gradient(135deg, var(--purple-deep), var(--purple-mid));
+    padding: 28px 28px 24px;
+    position: relative;
+  }
+  .result-card-header::after {
+    content: '✦';
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    color: rgba(232,208,138,0.4);
+    font-size: 24px;
+  }
+  .result-card-header h3 {
+    font-size: clamp(14px, 2.5vw, 17px);
+    color: var(--gold-light);
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  .result-block {
+    padding: 28px 28px 0;
+  }
+  .result-block:last-child {
+    padding-bottom: 28px;
+  }
+  .result-block + .result-block {
+    border-top: 1px solid var(--purple-pale);
+  }
+
+  .block-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .block-text {
+    font-size: clamp(14px, 2vw, 15px);
+    color: var(--text-mid);
+    line-height: 2;
+    font-weight: 300;
+  }
+
+  /* reassurance */
+  .reassurance {
+    background: linear-gradient(135deg, var(--purple-pale), var(--gold-pale));
+    border: 1px solid var(--gold-light);
+    border-radius: 16px;
+    padding: 32px 28px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .reassurance::before {
+    content: '"';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    line-height: 1;
+    color: var(--gold-light);
+    opacity: 0.5;
+  }
+  .reassurance p {
+    font-size: clamp(14px, 2.2vw, 16px);
+    color: var(--purple-deep);
+    font-weight: 400;
+    line-height: 2.1;
+  }
+
+  /* LINE CTA */
+  .line-cta {
+    text-align: center;
+    padding: 40px 0 0;
+  }
+  .line-cta-title {
+    font-size: clamp(15px, 2.5vw, 18px);
+    color: var(--purple-deep);
+    font-weight: 500;
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  .line-cta-sub {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
+  .line-btn {
+    display: inline-block;
+    padding: 18px 48px;
+    background: #06C755;
+    color: var(--white);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(6,199,85,0.35);
+    transition: all 0.3s ease;
+  }
+  .line-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(6,199,85,0.4);
+  }
+
+  /* gold divider */
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0;
+  }
+  .gold-divider::before, .gold-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-light));
+  }
+  .gold-divider::after {
+    background: linear-gradient(90deg, var(--gold-light), transparent);
+  }
+  .gold-divider span { color: var(--gold); font-size: 14px; }
+
+  /* footer */
+  .site-footer {
+    background: var(--purple-deep);
+    text-align: center;
+    padding: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.35);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <span class="header-label">YBCA &nbsp;|&nbsp; yuwa Bloom Counseling Academy</span>
+  <h1 class="header-title">「先生がいい」と言われる<br><em>形チェック</em></h1>
+  <p class="header-sub">3分 &nbsp;·&nbsp; 5問 &nbsp;·&nbsp; 選択式</p>
+</header>
+
+<!-- INTRO -->
+<div class="intro">
+  <p>
+    うまくいかないのは、あなたのせいではありません。<br>
+    <strong>まだ整える場所が見えていなかっただけ。</strong><br><br>
+    5つの質問に答えるだけで、<br>
+    今のあなたに合った「整えるポイント」が見えてきます。
+  </p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span id="prog-text">Q1 / 5</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- QUIZ -->
+<div class="quiz-wrap" id="quiz-section">
+
+  <!-- Q1 -->
+  <div class="question-card active" data-q="1">
+    <span class="q-number">Question 01</span>
+    <p class="q-text">今いちばん「うまくいかないな」と<br>感じているのはどれですか？</p>
+    <div class="options">
+      <button class="option-btn" data-type="A"><span>投稿や発信をしても、なかなか反応がない</span></button>
+      <button class="option-btn" data-type="B"><span>無料では喜ばれるのに、有料になると申し込まれない</span></button>
+      <button class="option-btn" data-type="C"><span>自分がどんなメニューを出せばいいかわからない</span></button>
+      <button class="option-btn" data-type="D"><span>お金を受け取ることに、どこか申し訳なさがある</span></button>
+    </div>
+    <button class="next-btn" disabled>次の質問へ　→</button>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" data-q="2">
+    <span class="q-number">Question 02</span>
+    <p class="q-text">発信するとき、<br>いちばん困ることは？</p>
+    <div class="options">
+      <button class="option-btn" data-type="A"><span>誰に向けて書けばいいかわからない</span></button>
+      <button class="option-btn" data-type="B"><span>無料提供と有料の境界線がわからない</span></button>
+      <button class="option-btn" data-type="C"><span>メニューの内容や価格が決められない</span></button>
+      <button class="option-btn" data-type="D"><span>「これで料金をもらっていいのか」と不安になる</span></button>
+    </div>
+    <button class="next-btn" disabled>次の質問へ　→</button>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" data-q="3">
+    <span class="q-number">Question 03</span>
+    <p class="q-text">「仕事として続けていく」イメージで、<br>いちばん引っかかるのは？</p>
+    <div class="options">
+      <button class="option-btn" data-type="A"><span>集客や認知がまだ足りない気がする</span></button>
+      <button class="option-btn" data-type="B"><span>無料のまま続けてしまいそうで不安</span></button>
+      <button class="option-btn" data-type="C"><span>何を売るかが決まっていない</span></button>
+      <button class="option-btn" data-type="D"><span>価格を上げようとすると、自分の中で抵抗が出る</span></button>
+    </div>
+    <button class="next-btn" disabled>次の質問へ　→</button>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" data-q="4">
+    <span class="q-number">Question 04</span>
+    <p class="q-text">今のあなたに近いのはどれですか？</p>
+    <div class="options">
+      <button class="option-btn" data-type="A"><span>発信はしているけど、誰かに刺さっている感じがしない</span></button>
+      <button class="option-btn" data-type="B"><span>モニターや無料セッションは好評だった</span></button>
+      <button class="option-btn" data-type="C"><span>やりたいことはあるけど、形にできていない</span></button>
+      <button class="option-btn" data-type="D"><span>値段を決めるとき、低く設定してしまいがち</span></button>
+    </div>
+    <button class="next-btn" disabled>次の質問へ　→</button>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" data-q="5">
+    <span class="q-number">Question 05</span>
+    <p class="q-text">今、いちばん整えたいことは？</p>
+    <div class="options">
+      <button class="option-btn" data-type="A"><span>自分の言葉が届く人に届く発信を作りたい</span></button>
+      <button class="option-btn" data-type="B"><span>無料と有料の境界線を整えたい</span></button>
+      <button class="option-btn" data-type="C"><span>自分に合ったメニューを一緒に作りたい</span></button>
+      <button class="option-btn" data-type="D"><span>お金を受け取ることへの罪悪感を手放したい</span></button>
+    </div>
+    <button class="next-btn" disabled>結果を見る　✦</button>
+  </div>
+
+</div><!-- /quiz-wrap -->
+
+<!-- RESULT -->
+<div id="result-section">
+  <div class="result-header">
+    <span class="result-label">Your Type</span>
+    <h2 class="result-type" id="result-type-name"></h2>
+  </div>
+
+  <div class="result-card">
+    <div class="result-card-header">
+      <h3 id="result-description"></h3>
+    </div>
+    <div class="result-block">
+      <span class="block-label">今つまずいている理由</span>
+      <p class="block-text" id="result-reason"></p>
+    </div>
+    <div class="result-block">
+      <span class="block-label">次に整えるポイント</span>
+      <p class="block-text" id="result-point"></p>
+    </div>
+  </div>
+
+  <div class="reassurance">
+    <p>
+      あなたが悪いのではありません。<br>
+      まだ整える場所が見えていなかっただけ。<br>
+      優しさはそのままで、形を整えていけます。
+    </p>
+  </div>
+
+  <div class="gold-divider"><span>✦</span></div>
+
+  <div class="line-cta">
+    <p class="line-cta-title">
+      あなたのタイプに合った<br>詳しいメッセージをLINEで受け取る
+    </p>
+    <p class="line-cta-sub">
+      具体的なメニュー設計や個別相談は、<br>
+      LINEでつながった先でお伝えしています。
+    </p>
+    <a href="https://lin.ee/XXXXXXX" class="line-btn">
+      LINEで詳しいメッセージを受け取る
+    </a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>YBCA &nbsp;|&nbsp; yuwa Bloom Counseling Academy</p>
+</footer>
+
+<script>
+  const types = {
+    A: {
+      name: '届け方迷子タイプ',
+      description: '想いや経験は十分にある。\nでも"誰に届けるか"がまだぼんやりしていて、\n必要な人に届く形になりきれていない。',
+      reason: '想いや経験はあるのに、"誰に届ける言葉なのか"がまだぼんやりしていて、必要な人に届く形になりきっていない',
+      point: '「この人に届けたい」が明確になると、投稿や発信の言葉が自然と変わっていく'
+    },
+    B: {
+      name: '無料で喜ばれ止まりタイプ',
+      description: '優しくて、全力で届けられる人。\nだからこそ、無料のまま全部渡しきってしまっていて、\n有料へのステップが見えにくくなっている。',
+      reason: '優しさで全部渡しきってしまっているため、有料でお願いする理由が相手にも自分にも見えにくくなっている',
+      point: '無料と有料の"境界線"をやさしく引くことが、次の一歩'
+    },
+    C: {
+      name: 'メニュー迷子タイプ',
+      description: 'できることも伝えたいことも、たくさんある。\nだからこそ、どれをメニューにすればいいか\n整理できていない状態。',
+      reason: 'できることや伝えたいことが多くて、何をメニューとして出せばいいか整理できていない',
+      point: 'まずは「一番喜ばれたこと」や「一番力になれたこと」から、小さく形にする'
+    },
+    D: {
+      name: '受け取りブロックタイプ',
+      description: '力も優しさも、ちゃんとある。\nでも「受け取っていいのかな」という気持ちが、\n価格設定の前に立ちはだかっている。',
+      reason: '受け取ることへの申し訳なさが、値段設定の前に立ちはだかっている',
+      point: '「受け取る＝奪う」ではなく、「受け取る＝必要な人に届け続けるための循環」として整える'
+    }
+  };
+
+  const scores = { A: 0, B: 0, C: 0, D: 0 };
+  let currentQ = 1;
+  const totalQ = 5;
+
+  function updateProgress(q) {
+    const pct = Math.round(((q - 1) / totalQ) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-text').textContent = `Q${q} / ${totalQ}`;
+    document.getElementById('prog-pct').textContent = pct + '%';
+  }
+
+  // option selection
+  document.querySelectorAll('.question-card').forEach(card => {
+    const nextBtn = card.querySelector('.next-btn');
+    card.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        nextBtn.disabled = false;
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const selected = card.querySelector('.option-btn.selected');
+      if (!selected) return;
+      scores[selected.dataset.type]++;
+
+      const qNum = parseInt(card.dataset.q);
+
+      if (qNum < totalQ) {
+        card.classList.remove('active');
+        currentQ = qNum + 1;
+        updateProgress(currentQ);
+        const next = document.querySelector(`.question-card[data-q="${currentQ}"]`);
+        next.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // show result
+        showResult();
+      }
+    });
+  });
+
+  function showResult() {
+    // find winner
+    let winner = 'A';
+    let max = 0;
+    for (const [k, v] of Object.entries(scores)) {
+      if (v > max) { max = v; winner = k; }
+    }
+
+    const t = types[winner];
+    document.getElementById('result-type-name').textContent = t.name;
+    document.getElementById('result-description').textContent = t.description;
+    document.getElementById('result-reason').textContent = t.reason;
+    document.getElementById('result-point').textContent = t.point;
+
+    document.getElementById('quiz-section').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.querySelector('.intro').style.display = 'none';
+
+    // update progress to 100%
+    document.getElementById('prog-fill').style.width = '100%';
+
+    const resultSection = document.getElementById('result-section');
+    resultSection.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  updateProgress(1);
+</script>
+</body>
+</html>
